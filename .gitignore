@@ -1,0 +1,3 @@
+# Ignore MS Office temporary files
+~$*.xlsx
+~$*.docx
