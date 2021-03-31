@@ -1,3 +1,4 @@
 # Ignore MS Office temporary files
 ~$*.xlsx
 ~$*.docx
+etl/out/*
