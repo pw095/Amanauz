@@ -19,7 +19,7 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'index_hub')) elm
+                         AND ent.ent_code = 'security_sat')) elm
        CROSS JOIN
        (SELECT
                elm_id
@@ -33,4 +33,18 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'index_security_weight')) parent;
+                         AND ent.ent_code = 'security_rate')
+         UNION ALL
+        SELECT
+               elm_id
+          FROM tbl_entity_layer_map elm
+         WHERE EXISTS(SELECT
+                             NULL
+                        FROM tbl_layer layer
+                       WHERE layer.layer_id = elm.elm_layer_id
+                         AND layer.layer_code = 'dds')
+           AND EXISTS(SELECT
+                             NULL
+                        FROM tbl_entity ent
+                       WHERE ent.ent_id = elm.elm_ent_id
+                         AND ent.ent_code = 'security_hub')) parent;
