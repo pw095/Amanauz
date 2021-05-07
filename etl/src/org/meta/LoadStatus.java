@@ -1,3 +1,5 @@
+package org.meta;
+
 public enum LoadStatus {
     RUNNING("running"), SUCCEEDED("succeeded"), FAILED("failed"), ENQUEUED("enqueued"), NOT_STARTED("not_started");
     private String dbStatus;

@@ -1,3 +1,5 @@
+import org.meta.LoadStatus;
+
 class QueueRelationElement extends QueueElement {
 
     private String entityLoadMode = "";

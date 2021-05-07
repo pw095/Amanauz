@@ -1,3 +1,5 @@
+import org.meta.LoadStatus;
+
 import java.time.LocalDateTime;
 
 class QueueElement {

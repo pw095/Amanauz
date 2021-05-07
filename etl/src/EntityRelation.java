@@ -1,11 +1,12 @@
-import java.sql.*;
-import java.time.LocalDateTime;
+import org.data.AbstractEntity;
 
-public interface EntityRelation extends Entity {
+import java.sql.*;
+
+public interface EntityRelation extends AbstractEntity {
 
     @Override
     public default <T extends QueueElement> T postLoad(T queueElement) {
-        queueElement = Entity.super.postLoad(queueElement);
+        queueElement = AbstractEntity.super.postLoad(queueElement);
 
         queueElement.setEntityEffToDt(queueElement.getEntityEffToDt());
         queueElement.setEntityEffFromDt(queueElement.getEntityEffFromDt());

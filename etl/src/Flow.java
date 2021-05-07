@@ -1,3 +1,6 @@
+import org.data.AbstractEntity;
+import org.meta.LoadStatus;
+
 import java.io.IOException;
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -96,7 +99,7 @@ public class Flow {
         fl.startFlow();
 
         Consumer<QueueElement> cons = queueElement -> {
-            Entity entity = null;
+            AbstractEntity entity = null;
             switch (queueElement.getLayerCode()) {
                 case "stage" :
                     switch (queueElement.getEntityCode()) {
