@@ -95,7 +95,7 @@ public final class Meta {
                 stmtSelect.setLong(1, entity.getEntityLayerMapId());
                 try (ResultSet rs = stmtSelect.executeQuery()) {
                     if (rs.next()) {
-                        entity.setIterationNumber(rs.getLong("ell_iteration_number"));
+                        entity.setIterationNumber(rs.getLong("ell_iteration_number")+1);
                     } else {
                         entity.setIterationNumber(1);
                         if (entity.getEntityLoadMode() == LoadMode.INCR) {
@@ -104,7 +104,7 @@ public final class Meta {
                     }
                 }
             }
-            if (entity instanceof ImoexWebSiteEntity) {
+/*            if (entity instanceof ImoexWebSiteEntity) {
 
                 stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_previous_eff_to_dt.sql"));
                 try (PreparedStatement stmtSelect = conn.prepareStatement(stmtString)) {
@@ -115,7 +115,7 @@ public final class Meta {
                         }
                     }
                 }
-            }
+            }*/
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -123,6 +123,9 @@ public final class Meta {
     }
 
     public static synchronized void setEntityInfo(AbstractEntity entity) {
+        System.out.println("elm = " + entity.getEntityLayerMapId());
+        System.out.println("flow_load_id = " + entity.getFlowLoadId());
+        System.out.println("iteration_number = " + entity.getIterationNumber());
         try {
             String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_entity_load_info.sql"));
             try(PreparedStatement stmt = conn.prepareStatement(stmtString)) {
