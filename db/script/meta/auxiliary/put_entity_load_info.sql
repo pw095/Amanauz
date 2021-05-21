@@ -1,0 +1,27 @@
+INSERT
+  INTO tbl_entity_load_log
+  (
+    ell_flow_log_id,
+    ell_elm_id,
+    ell_iteration_number,
+    ell_iteration_insert_row_count,
+    ell_iteration_update_row_count,
+    ell_iteration_delete_row_count,
+    ell_status,
+    ell_start_dttm,
+    ell_finish_dttm,
+    ell_error_message
+  )
+VALUES
+  (
+    :ell_flow_log_id,
+    :ell_elm_id,
+    :ell_iteration_number,
+    :ell_iteration_insert_row_count,
+    :ell_iteration_update_row_count,
+    :ell_iteration_delete_row_count,
+    :ell_status,
+    :ell_start_dttm,
+    :ell_finish_dttm,
+    :ell_error_message
+  )

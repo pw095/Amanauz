@@ -2,8 +2,8 @@ import org.data.AbstractEntity;
 
 import java.sql.*;
 
-public interface EntityRelation extends AbstractEntity {
-
+public interface EntityRelation /*extends AbstractEntity */{
+/*
     @Override
     public default <T extends QueueElement> T postLoad(T queueElement) {
         queueElement = AbstractEntity.super.postLoad(queueElement);
@@ -43,4 +43,5 @@ public interface EntityRelation extends AbstractEntity {
         }
         return queueElement;
     }
+ */
 }

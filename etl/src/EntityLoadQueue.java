@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class EntityLoadQueue {
+/*
 
     class LayerEntityInfo {
         int elmId;
@@ -126,5 +127,6 @@ public class EntityLoadQueue {
             throw new RuntimeException(e);
         }
     }
+*/
 
 }

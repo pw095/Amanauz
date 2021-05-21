@@ -10,7 +10,9 @@ import java.util.stream.Collectors;
 
 public class AuxUtil {
 
-    public static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter dateTimeFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
     public static String getQuery(String pathString) {
         String queryString = null;
         Path path = Paths.get(pathString);

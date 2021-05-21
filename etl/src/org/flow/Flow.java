@@ -1,14 +1,22 @@
+package org.flow;
+
 import org.data.AbstractEntity;
+import org.data.StageIndexSecurityWeight;
+import org.meta.LoadMode;
 import org.meta.LoadStatus;
+import org.meta.Meta;
+import org.meta.Properties;
 
 import java.io.IOException;
+
+import static org.util.AuxUtil.getProperties;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.function.Consumer;
 
 public class Flow {
-
+/*
     public static final String connString = "jdbc:sqlite:../db/file/meta.db";
     public static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
@@ -92,12 +100,21 @@ public class Flow {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-    }
+    }*/
 
     public static void main(String[] args) throws InterruptedException, IOException {
-        Flow fl = new Flow();
-        fl.startFlow();
 
+
+        Properties.getInstance().setProperties(getProperties(args[0]));
+        System.out.println(Properties.getInstance().getProperties().size());
+        System.out.println(Properties.getInstance().getProperty("metaSqlDirectory"));
+        long flowId = Meta.setFlowLogStart();
+        AbstractEntity ent = new StageIndexSecurityWeight(flowId);
+        ent.call();
+        Meta.setFlowLogFinish(flowId, LoadStatus.SUCCEEDED);
+//        Flow fl = new Flow();
+//        fl.startFlow();
+/*
         Consumer<QueueElement> cons = queueElement -> {
             AbstractEntity entity = null;
             switch (queueElement.getLayerCode()) {
@@ -148,6 +165,6 @@ public class Flow {
         EntityLoadQueue entityLoadQueue = new EntityLoadQueue(fl.getFlowId());
         entityLoadQueue.queueElementList.stream().filter(p -> p.getPendingParentCount() == 0).forEach(cons);
         new Thread().sleep(1_000);
-        fl.finishFlow();
+        fl.finishFlow();*/
     }
 }

@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class StgSecurityRate extends FileEntity {
+/*
 
     public StgSecurityRate(long flowLoadId) {
         super(flowLoadId);
@@ -47,5 +48,6 @@ public class StgSecurityRate extends FileEntity {
             e.printStackTrace();
         }
     }
+*/
 
 }

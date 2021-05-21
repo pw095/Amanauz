@@ -1,13 +1,14 @@
 package org.meta;
 
 import org.data.AbstractEntity;
+import org.data.ImoexWebSiteEntity;
 
 import java.sql.*;
 import java.time.LocalDateTime;
 
-import static org.util.AuxUtil.getQuery;
-import static org.util.AuxUtil.dateFormat;
 import static org.meta.Properties.getInstance;
+import static org.util.AuxUtil.*;
+
 public final class Meta {
 
     private static Connection conn;
@@ -40,7 +41,7 @@ public final class Meta {
 
             pstmt.setLong(1, ++flowLoadId);
             pstmt.setString(2, LoadStatus.RUNNING.getDbStatus());
-            pstmt.setString(3, LocalDateTime.now().format(dateFormat));
+            pstmt.setString(3, LocalDateTime.now().format(dateTimeFormat));
 
             pstmt.executeUpdate();
 
@@ -56,11 +57,13 @@ public final class Meta {
     public static synchronized void setFlowLogFinish(long flowLoadId, LoadStatus loadStatus) {
 
         String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("update_flow_log_info.sql"));
-
+        System.out.println("flowLoadId = " + flowLoadId);
         try (PreparedStatement pstmt = conn.prepareStatement(stmtString)) {
             pstmt.setString(1, loadStatus.getDbStatus());
-            pstmt.setString(2, LocalDateTime.now().format(dateFormat));
+            pstmt.setString(2, LocalDateTime.now().format(dateTimeFormat));
             pstmt.setLong(3, flowLoadId);
+
+            pstmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -74,12 +77,12 @@ public final class Meta {
             stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_entity_layer_map_info.sql"));
 
             try (PreparedStatement stmtSelect = conn.prepareStatement(stmtString)) {
-                stmtSelect.setString(1, entity.getEntityLayer());
+                stmtSelect.setString(1, entity.getEntityLayer().getDbLayer());
                 stmtSelect.setString(2, entity.getEntityCode());
                 try (ResultSet rs = stmtSelect.executeQuery()) {
                     if(rs.next()) {
-                        entity.setEntityLayerId(rs.getLong("elm_id"));
-                        entity.setEntityLoadMode(rs.getString("elm_mode"));
+                        entity.setEntityLayerMapId(rs.getLong("elm_id"));
+                        entity.setEntityLoadMode(LoadMode.valueOf(rs.getString("elm_mode").toUpperCase()));
                     } else {
                         throw new RuntimeException("No such Entity!");
                     }
@@ -89,14 +92,26 @@ public final class Meta {
             stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_iteration_number.sql"));
 
             try (PreparedStatement stmtSelect = conn.prepareStatement(stmtString)) {
-                stmtSelect.setLong(1, entity.getEntityLayerId());
+                stmtSelect.setLong(1, entity.getEntityLayerMapId());
                 try (ResultSet rs = stmtSelect.executeQuery()) {
                     if (rs.next()) {
-                        entity.setIterationNumber(rs.getLong("iterationNumber"));
+                        entity.setIterationNumber(rs.getLong("ell_iteration_number"));
                     } else {
                         entity.setIterationNumber(1);
-                        if (entity.getEntityLoadMode().equals("INCR")) {
+                        if (entity.getEntityLoadMode() == LoadMode.INCR) {
                             throw new RuntimeException("No full load found!");
+                        }
+                    }
+                }
+            }
+            if (entity instanceof ImoexWebSiteEntity) {
+
+                stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_previous_eff_to_dt.sql"));
+                try (PreparedStatement stmtSelect = conn.prepareStatement(stmtString)) {
+                    stmtSelect.setLong(1, entity.getEntityLayerMapId());
+                    try (ResultSet rs = stmtSelect.executeQuery()) {
+                        if (rs.next()) {
+                            ((ImoexWebSiteEntity) entity).setPreviousEffectiveToDt(rs.getString("rll_effective_to_dt"));
                         }
                     }
                 }
@@ -104,6 +119,27 @@ public final class Meta {
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
+        }
+    }
+
+    public static synchronized void setEntityInfo(AbstractEntity entity) {
+        try {
+            String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_entity_load_info.sql"));
+            try(PreparedStatement stmt = conn.prepareStatement(stmtString)) {
+                stmt.setLong(1, entity.getFlowLoadId());
+                stmt.setLong(2, entity.getEntityLayerMapId());
+                stmt.setLong(3, entity.getIterationNumber());
+                stmt.setLong(4, entity.getInsertCount());
+                stmt.setLong(5, entity.getUpdateCount());
+                stmt.setLong(6, entity.getDeleteCount());
+                stmt.setString(7, LoadStatus.SUCCEEDED.getDbStatus());
+                stmt.setString(8, entity.getEntityStartLoadTimestamp().format(dateTimeFormat));
+                stmt.setString(9, entity.getEntityFinishLoadTimestamp().format(dateTimeFormat));
+                stmt.setString(10, "");
+                stmt.executeUpdate();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

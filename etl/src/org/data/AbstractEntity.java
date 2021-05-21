@@ -1,7 +1,10 @@
 package org.data;
 
+import org.meta.LoadMode;
+import org.meta.Meta;
+import org.meta.MetaLayer;
+
 import java.sql.*;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.concurrent.Callable;
 
@@ -16,48 +19,25 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
     static private final String dataSelectString = "$$entity_name.sql"; // move to relation
     static private String sqlDirectory;
 
-    private long entityLayerId;
-    long flowLoadId;
-    long iterationNumber;
-    long insertCount;
-    private String entityLoadMode;
-    String entityTruncateOption;
-    String entityLayer;
+    MetaLayer entityLayer;
     String entityCode;
+    LoadMode entityLoadMode;
 
-    LocalDateTime entityStartLoadTimestamp;
-    LocalDateTime entityFinishLoadTimestamp;
+    private long entityLayerMapId;
+    private long flowLoadId;
+    private long iterationNumber;
 
-    LocalDate effectiveFromDt; // move to relation
-    LocalDate effectiveToDt; // move to relation
-
-    private Connection connSource; // move to relation
-    private Connection connTarget;
-
-    protected abstract void detailLoad(PreparedStatement stmtUpdate);
-
-    private String getTruncateSQL() {
-        String lReturn = (sqlDirectory + dataAuxDir + dataTruncScript).replace("$$entity_name", this.entityCode);
-        return lReturn;
+    public long getEntityLayerMapId() {
+        return this.entityLayerMapId;
     }
-
-    private String getInsertSQL() {
-        String lReturn = (sqlDirectory + dataAuxDir + dataInsertScript).replace("$$entity_name", this.entityCode);
-        return lReturn;
+    public void setEntityLayerMapId(long entityLayerMapId) {
+        this.entityLayerMapId = entityLayerMapId;
     }
-
-    public long getEntityLayerId() {
-        return this.entityLayerId;
+    public long getFlowLoadId() {
+        return this.flowLoadId;
     }
-    public void setEntityLayerId(long entityLayerId) {
-        this.entityLayerId = entityLayerId;
-    }
-
-    public String getEntityLoadMode() {
-        return this.entityLoadMode;
-    }
-    public void setEntityLoadMode(String entityLoadMode) {
-        this.entityLoadMode = entityLoadMode;
+    public void setFlowLoadId(long flowLoadId) {
+        this.flowLoadId = flowLoadId;
     }
 
     public long getIterationNumber() {
@@ -67,13 +47,80 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
         this.iterationNumber = iterationNumber;
     }
 
-    public String getEntityLayer() {
+    private long insertCount = 0;
+    private long updateCount = 0;
+    private long deleteCount = 0;
+
+    public void setInsertCount(long insertCount) {
+        this.insertCount = insertCount;
+    }
+    public long getInsertCount() {
+        return this.insertCount;
+    }
+
+    public void setUpdateCount(long updateCount) {
+        this.updateCount = updateCount;
+    }
+    public long getUpdateCount() {
+        return this.updateCount;
+    }
+
+    public void setDeleteCount(long deleteCount) {
+        this.deleteCount = deleteCount;
+    }
+    public long getDeleteCount() {
+        return this.deleteCount;
+    }
+
+
+
+    private LocalDateTime entityStartLoadTimestamp;
+    private LocalDateTime entityFinishLoadTimestamp;
+
+    public void setEntityStartLoadTimestamp(LocalDateTime loadTimestamp) {
+        this.entityStartLoadTimestamp = loadTimestamp;
+    }
+    public LocalDateTime getEntityStartLoadTimestamp() {
+        return this.entityStartLoadTimestamp;
+    }
+
+    public void setEntityFinishLoadTimestamp(LocalDateTime loadTimestamp) {
+        this.entityFinishLoadTimestamp = loadTimestamp;
+    }
+    public LocalDateTime getEntityFinishLoadTimestamp() {
+        return this.entityFinishLoadTimestamp;
+    }
+
+    private Connection connSource; // move to relation
+    private Connection connTarget;
+
+    protected abstract void detailLoad(PreparedStatement stmtUpdate);
+
+    private String getTruncateSQL() {
+        String lReturn = (sqlDirectory + dataAuxDir) + dataTruncScript.replace("$$entity_name", this.entityCode);
+        return lReturn;
+    }
+
+    private String getInsertSQL() {
+        String lReturn = (sqlDirectory + dataAuxDir) + dataInsertScript.replace("$$entity_name", this.entityCode);
+        return lReturn;
+    }
+
+    public LoadMode getEntityLoadMode() {
+        return this.entityLoadMode;
+    }
+    public void setEntityLoadMode(LoadMode entityLoadMode) {
+        this.entityLoadMode = entityLoadMode;
+    }
+
+
+    public MetaLayer getEntityLayer() {
         return this.entityLayer;
     }
     public String getEntityCode() {
         return this.entityCode;
     }
-    private void customOps() {
+/*    private void customOps() {
         if (this.entityLoadMode.equals("FULL")) {
             String stmtString = getQuery(getTruncateSQL());
             try (Statement stmtTruncate = connTarget.createStatement()) {
@@ -82,27 +129,35 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
                 throw new RuntimeException(e);
             }
         }
-    }
+    }*/
 
-    AbstractEntity(long flowLoadId) {
+    AbstractEntity(long flowLoadId, MetaLayer entityLayer, String entityCode) {
         this.flowLoadId = flowLoadId;
+        this.entityLayer = entityLayer;
+        this.entityCode = entityCode;
+
+        Meta.getEntityLayerMapInfo(this);
 
         try {
-            sqlDirectory = getInstance().getProperty("dataSqlDirectory").concat("$$entity_name/sql");
+            sqlDirectory = getInstance().getProperty("dataSqlDirectory").concat(this.entityLayer.getDbLayer()).concat("/").concat(this.entityCode).concat("/sql/");
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
 
         try {
-            connTarget = DriverManager.getConnection(getInstance().getProperty("targetURL"));
+            connTarget = DriverManager.getConnection(getInstance().getProperty(this.entityLayer.toString().concat("_targetURL")));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
     public AbstractEntity call() {
+
+        this.setEntityStartLoadTimestamp(LocalDateTime.now());
+//        System.out.println("entityLayerMapId" + this.getEntityLayerMapId());
         String insertSQL = getQuery(getInsertSQL());
         try {
+//            System.out.println(insertSQL);
             try(PreparedStatement stmtUpdate = connTarget.prepareStatement(insertSQL)) {
                 detailLoad(stmtUpdate);
             }
@@ -110,6 +165,8 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
+        this.setEntityFinishLoadTimestamp(LocalDateTime.now());
+        Meta.setEntityInfo(this);
         return this;
     }
 /*
