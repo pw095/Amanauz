@@ -4,6 +4,7 @@ import org.data.AbstractEntity;
 import org.data.ImoexWebSiteEntity;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import static org.meta.Properties.getInstance;
@@ -104,18 +105,22 @@ public final class Meta {
                     }
                 }
             }
-/*            if (entity instanceof ImoexWebSiteEntity) {
-
+            String rllEffectiveToDt = "2021-04-30";
+            if (entity.getEntityLoadMode() == LoadMode.INCR) {
                 stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_previous_eff_to_dt.sql"));
                 try (PreparedStatement stmtSelect = conn.prepareStatement(stmtString)) {
                     stmtSelect.setLong(1, entity.getEntityLayerMapId());
                     try (ResultSet rs = stmtSelect.executeQuery()) {
                         if (rs.next()) {
-                            ((ImoexWebSiteEntity) entity).setPreviousEffectiveToDt(rs.getString("rll_effective_to_dt"));
+                            rllEffectiveToDt = rs.getString("rll_effective_to_dt");
                         }
                     }
                 }
-            }*/
+            }
+            if (entity instanceof ImoexWebSiteEntity) {
+                ((ImoexWebSiteEntity) entity).setPreviousEffectiveToDt(rllEffectiveToDt);
+                ((ImoexWebSiteEntity) entity).setEffectiveFromDt(LocalDate.parse(rllEffectiveToDt, dateFormat).plusDays(1).format(dateFormat));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -141,8 +146,71 @@ public final class Meta {
                 stmt.setString(10, "");
                 stmt.executeUpdate();
             }
+
+            stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_entity_load_log_id.sql"));
+
+            try (PreparedStatement stmtSelect = conn.prepareStatement(stmtString)) {
+                stmtSelect.setLong(1, entity.getFlowLoadId());
+                stmtSelect.setLong(2, entity.getEntityLayerMapId());
+                try (ResultSet rs = stmtSelect.executeQuery()) {
+                    if (rs.next()) {
+                        entity.setEntityLoadLogId(rs.getLong("ell_id"));
+                    } else {
+                        throw new RuntimeException("Дребедень какая-то!");
+                    }
+                }
+            }
+
+            if (entity.getInsertCount() + entity.getUpdateCount() + entity.getDeleteCount() > 0) {
+                if (entity instanceof ImoexWebSiteEntity) {
+                    stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_entity_relation_load_log.sql"));
+                    try (PreparedStatement stmt = conn.prepareStatement(stmtString)) {
+                        stmt.setLong(1, entity.getEntityLoadLogId());
+                        stmt.setString(2, entity.getEntityLoadMode().getDbMode());
+                        stmt.setString(3, ((ImoexWebSiteEntity) entity).getEffectiveFromDt());
+                        stmt.setString(4, ((ImoexWebSiteEntity) entity).getEffectiveToDt());
+
+                        stmt.executeUpdate();
+                    }
+                }
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+/*
+    public static synchronized void setEntityRelationInfo(AbstractEntity entity) {
+        try {
+            String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_entity_relation_load_log.sql"));
+            try(PreparedStatement stmt = conn.prepareStatement(stmtString)) {
+                stmt.setLong(1, entity.getEntityLoadLogId());
+                stmt.setString(2, entity.getEntityLoadMode().getDbMode());
+                stmt.setString(3, ((ImoexWebSiteEntity) entity).getEffectiveFromDt());
+                stmt.setString(4, ((ImoexWebSiteEntity) entity).getEffectiveToDt());
+
+                stmt.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static synchronized void getEntityRelationEffectiveDt(AbstractEntity entity) {
+        try {
+            String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_entity_relation_effective_dt.sql"));
+            try(PreparedStatement stmt = conn.prepareStatement(stmtString)) {
+                stmt.setLong(1, entity.getEntityLoadLogId());
+                stmt.setString(2, entity.getEntityLoadMode().getDbMode());
+                stmt.setString(3, ((ImoexWebSiteEntity) entity).getEffectiveFromDt());
+                stmt.setString(4, ((ImoexWebSiteEntity) entity).getEffectiveToDt());
+
+                stmt.executeUpdate();
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    */
 }

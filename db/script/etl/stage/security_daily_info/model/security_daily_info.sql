@@ -1,0 +1,31 @@
+DROP TABLE security_daily_info;
+CREATE TABLE security_daily_info
+  (
+    security_id                TEXT,
+    board_id                   TEXT,
+    short_name                 TEXT,
+    previous_price             TEXT,
+    lot_size                   INTEGER,
+    face_value                 REAL,
+    status                     TEXT,
+    decimals                   INTEGER,
+    security_name              TEXT,
+    remarks                    TEXT,
+    market_code                TEXT,
+    instr_id                   TEXT,
+    min_step                   REAL,
+    prev_wa_price              REAL,
+    face_unit                  TEXT,
+    previous_date              TEXT,
+    issue_size                 INTEGER,
+    isin                       TEXT,
+    lat_name                   TEXT,
+    reg_number                 TEXT,
+    previous_legal_close_price REAL,
+    previous_admitted_quote    REAL,
+    currency_id                TEXT,
+    security_type              TEXT,
+    list_level                 INTEGER,
+    settle_date                TEXT,
+    tech$load_id               INTEGER NOT NULL
+  );

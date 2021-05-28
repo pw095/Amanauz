@@ -1,0 +1,55 @@
+http://iss.moex.com/iss/history/engines/stock/markets/shares/boards/tqbr/securities.json?iss.meta=off&iss.only=history
+
+http://iss.moex.com/iss/history/engines/stock/markets/shares/boards/tqbr/securities.json?iss.meta=off&iss.only=history.cursor&history.cursor.columns=TOTAL,PAGESIZE,INDEX
+http://iss.moex.com/iss/history/engines/stock/markets/shares/boards/tqbr/securities.json?iss.meta=off&iss.only=history&history.columns=BOARDID,TRADEDATE,SHORTNAME,SECID,NUMTRADES,VALUE,OPEN,LOW,HIGH,CLOSE,VOLUME
+
+
+http://iss.moex.com/iss/statistics/engines/stock/markets/index/analytics/IMOEX.json?iss.meta=off&iss.only=analytics
+
+
+/*
+http://iss.moex.com/iss/engines/stock/markets/shares/securities/?securities=AFKS&securities.columns=SECID,BOARDID,SHORTNAME,LOTSIZE,FACEVALUE,STATUS,BOARDNAME,SECNAME,MARKETCODE,INSTID,FACEUNIT,ISSUESIZE,ISIN,LATNAME,REGNUMBER,CURRENCYID,SECTYPE,LISTLEVEL
+http://iss.moex.com/iss/engines/stock/markets/shares/securities/?iss.only=securities&securities.columns=SECID,BOARDID,SHORTNAME,LOTSIZE,FACEVALUE,STATUS,BOARDNAME,SECNAME,MARKETCODE,INSTID,FACEUNIT,ISSUESIZE,ISIN,LATNAME,REGNUMBER,CURRENCYID,SECTYPE,LISTLEVEL
+
+http://iss.moex.com/iss/engines/stock/markets/shares/securities/?iss.only=securities&securities=AFKS&columns=BOARID,OPEN,LOW,HIGH,LAST,WAPRICE,CLOSEPRICE,NUMTRADES,VOLTODAY,VALTODAY,VALTODAY_USD,VALTODAY_RUR
+http://iss.moex.com/iss/engines/stock/markets/shares/securities/?iss.only=marketdata&securities=AFKS&marketdata.columns=SECID,BOARDID,OPEN,LOW,HIGH,LAST,WAPRICE,CLOSEPRICE,NUMTRADES,VOLTODAY,VALTODAY,VALTODAY_USD,VALTODAY_RUR
+*/
+
+Исторические данные по котировкам ценных бумаг:
+Описание столбцов (в действительности есть почему-то далеко не все, нужно внимательно смотреть, какие данные можно реально забрать):
+http://iss.moex.com/iss/history/engines/stock/markets/shares/securities/columns
+Отсюда можно забирать исторические данные (имеет смысл начать с 1997-01-01):
+http://iss.moex.com/iss/history/engines/stock/markets/shares/securities.json?iss.meta=off&iss.only=history&history.columns=BOARDID,TRADEDATE,SHORTNAME,SECID,NUMTRADES,VALUE,OPEN,LOW,HIGH,CLOSE,VOLUME&date=2001-03-02
+
+
+Отсюда можно взять актуальные на текущую дату данные по акциям (размер лота есть только тут, issuesize, но issuedate нет нигде):
+Описание столбцов:
+http://iss.moex.com/iss/engines/stock/markets/shares/securities/columns
+Актуальные данные:
+http://iss.moex.com/iss/engines/stock/markets/shares/securities?iss.only=securities&columns=SECID,BOARID,OPEN,LOW,HIGH,LAST,WAPRICE,CLOSEPRICE,NUMTRADES,VOLTODAY,VALTODAY,VALTODAY_USD,VALTODAY_RUR
+Здесь результаты торгов (скорее всего лучше их отсюда не брать, т.к. они только за один (текущий или предыдущий) день, но атрибутный состав здесь реально неплохой!):
+http://iss.moex.com/iss/engines/stock/markets/shares/securities?iss.only=marketdata&marketdata.columns=SECID,BOARDID,OPEN,LOW,HIGH,LAST,WAPRICE,CLOSEPRICE,NUMTRADES,VOLTODAY,VALTODAY,VALTODAY_USD,VALTODAY_RUR
+
+
+Отсюда можно скачать данные по привязке акций к эмитентам (записи не уникальны, вообще всякой дребедени довольно много). По всей вероятности, данные актуальны на текущую дату.
+http://iss.moex.com/iss/securities?engine=stock&start=500
+Только рынок акций:
+http://iss.moex.com/iss/securities?engine=stock&market=shares&start=500
+Только рынок облигаций:
+http://iss.moex.com/iss/securities?engine=stock&market=bonds&start=500
+
+
+Веса акций в индексах:
+Описание столбцов (в действительности, извлечь можно далеко не всё):
+http://iss.moex.com/iss/statistics/engines/stock/markets/index/analytics/columns
+Данные по конкретному индексу.
+http://iss.moex.com/iss/statistics/engines/stock/markets/index/analytics/IMOEX.json?iss.meta=off&iss.only=analytics.cursor&analytics.cursor.columns=TOTAL,PAGESIZE,NEXT_DATE
+http://iss.moex.com/iss/statistics/engines/stock/markets/index/analytics/IMOEX.json?iss.meta=off&iss.only=analytics
+
+Надо ещё выяснить, где раздобыть котиров
+
+
+Некоторые справочники:
+http://iss.moex.com/iss/index
+http://iss.moex.com/iss/securitygroups
+http://iss.moex.com/iss/engines

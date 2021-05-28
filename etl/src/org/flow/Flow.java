@@ -1,7 +1,6 @@
 package org.flow;
 
-import org.data.AbstractEntity;
-import org.data.StageIndexSecurityWeight;
+import org.data.*;
 import org.meta.LoadMode;
 import org.meta.LoadStatus;
 import org.meta.Meta;
@@ -13,6 +12,8 @@ import static org.util.AuxUtil.getProperties;
 import java.sql.*;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class Flow {
@@ -109,8 +110,43 @@ public class Flow {
         System.out.println(Properties.getInstance().getProperties().size());
         System.out.println(Properties.getInstance().getProperty("metaSqlDirectory"));
         long flowId = Meta.setFlowLogStart();
-        AbstractEntity ent = new StageIndexSecurityWeight(flowId);
-        ent.call();
+        List<AbstractEntity> entityList = new ArrayList<>();
+//        AbstractEntity ent = new StageIndexSecurityWeight(flowId);
+
+        // Данные за несколько дней, листов много
+//        entityList.add(new StageIndexSecurityWeight(flowId));
+//        entityList.add(new StageSecuritySharesRate(flowId));
+
+        // Данные за 1 день, но много листов
+        entityList.add(new StageSecurityEmitentMap(flowId));
+
+        // Данные за 1 день, но лист 1
+/*        entityList.add(new StageSecurityDailyMarketdata(flowId));
+        entityList.add(new StageSecurityDailyInfo(flowId));
+        entityList.add(new StageSecurityEngines(flowId));
+        entityList.add(new StageSecurityMarkets(flowId));
+        entityList.add(new StageSecurityBoards(flowId));
+        entityList.add(new StageSecurityBoardGroups(flowId));
+        entityList.add(new StageSecurityTypes(flowId));
+        entityList.add(new StageSecurityGroups(flowId));
+        entityList.add(new StageSecurityCollections(flowId));*/
+        for (AbstractEntity entity : entityList) {
+            entity.call();
+        }
+/*        AbstractEntity ent = new StageSecurityDailyMarketdata(flowId);
+        AbstractEntity ent = new StageSecurityEngines(flowId);
+        AbstractEntity ent = new StageSecurityMarkets(flowId);
+        AbstractEntity ent = new StageSecurityBoards(flowId);
+        AbstractEntity ent = new StageSecurityBoardGroups(flowId);
+
+        AbstractEntity ent = new StageSecurityTypes(flowId);
+        AbstractEntity ent1 = new StageSecurityGroups(flowId);
+        AbstractEntity ent2 = new StageSecurityCollections(flowId);
+        System.out.println("ent1: " + ent1.getEntityCode());
+        System.out.println("ent2: " + ent2.getEntityCode());
+        ent1.call();
+        ent2.call();*/
+
         Meta.setFlowLogFinish(flowId, LoadStatus.SUCCEEDED);
 //        Flow fl = new Flow();
 //        fl.startFlow();

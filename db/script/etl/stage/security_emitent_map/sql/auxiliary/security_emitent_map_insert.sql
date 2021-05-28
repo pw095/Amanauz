@@ -1,0 +1,41 @@
+INSERT
+  INTO security_emitent_map
+  (
+    id,
+    security_id,
+    short_name,
+    reg_number,
+    security_name,
+    isin,
+    security_is_traded,
+    emitent_id,
+    emitent_title,
+    emitent_inn,
+    emitent_okpo,
+    emitent_gos_reg,
+    security_type,
+    security_group,
+    primary_board_id,
+    market_price_board_id,
+    tech$load_id
+  )
+VALUES
+  (
+    :id,
+    :security_id,
+    :short_name,
+    :reg_number,
+    :security_name,
+    :isin,
+    :security_is_traded,
+    :emitent_id,
+    :emitent_title,
+    :emitent_inn,
+    :emitent_okpo,
+    :emitent_gos_reg,
+    :security_type,
+    :security_group,
+    :primary_board_id,
+    :market_price_board_id,
+    :tech$load_id
+  )

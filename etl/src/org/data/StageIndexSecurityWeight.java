@@ -9,31 +9,42 @@ import java.util.List;
 public class StageIndexSecurityWeight extends ImoexWebSiteEntity {
 
     static class StageIndexSecurityWeightData extends ImoexData {
-        String indexName;
+        String indexId;
         String tradeDate;
-        String securityId;
+        String ticker;
+        String shortNames;
+        String secIds;
         double weight;
+        int    tradingSession;
 
-        public StageIndexSecurityWeightData(String indexName, String tradeDate, String securityId, double weight) {
-            this.indexName = indexName;
+        public StageIndexSecurityWeightData(String indexId,
+                                            String tradeDate,
+                                            String ticker,
+                                            String shortNames,
+                                            String secIds,
+                                            double weight,
+                                            int    tradingSession) {
+            this.indexId = indexId;
             this.tradeDate = tradeDate;
-            this.securityId = securityId;
+            this.ticker = ticker;
+            this.shortNames = shortNames;
+            this.secIds = secIds;
             this.weight = weight;
+            this.tradingSession = tradingSession;
         }
 
     }
 
     public StageIndexSecurityWeight(long flowLoadId) {
-        super(flowLoadId, "index_security_weight"/*, loadMode*/);
+        super(flowLoadId, "index_security_weight");
     }
 
     public void detailLoad(PreparedStatement stmtUpdate) {
-        String urlStringRaw = "http://iss.moex.com/iss/statistics/engines/stock/markets/index/analytics/IMOEX.json?iss.meta=off&iss.only=analytics";
-        String urlStringMeta = urlStringRaw.concat(".cursor&analytics.cursor.columns=TOTAL,PAGESIZE,NEXT_DATE");
-        String urlStringData = urlStringRaw.concat("&analytics.columns=indexid,tradedate,secids,weight");
+        String urlStringRaw = "http://iss.moex.com/iss/statistics/engines/stock/markets/index/analytics/IMOEX.json?iss.meta=off&iss.only=analytics&limit=100";
+        String urlStringData = urlStringRaw.concat("&analytics.columns=indexid,tradedate,ticker,shortnames,secids,weight,tradingsession");
 
         try {
-            completeLoad(stmtUpdate, urlStringMeta, urlStringData);
+            historyLoad(stmtUpdate, urlStringData, "analytics");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -45,7 +56,10 @@ public class StageIndexSecurityWeight extends ImoexWebSiteEntity {
         data = new StageIndexSecurityWeightData(jsonArray.optString(0),
                                                 jsonArray.optString(1),
                                                 jsonArray.optString(2),
-                                                jsonArray.optDouble(3));
+                                                jsonArray.optString(3),
+                                                jsonArray.optString(4),
+                                                jsonArray.optDouble(5),
+                                                jsonArray.optInt(6));
 //        System.out.println(data.tradeDate);
         return data;
     }
@@ -56,11 +70,14 @@ public class StageIndexSecurityWeight extends ImoexWebSiteEntity {
         for(ImoexData iter : dataArray) {
             StageIndexSecurityWeightData jter = (StageIndexSecurityWeightData) iter;
 //            System.out.println(jter.tradeDate);
-                stmtUpdate.setString(1, jter.indexName);
+                stmtUpdate.setString(1, jter.indexId);
                 stmtUpdate.setString(2, jter.tradeDate);
-                stmtUpdate.setString(3, jter.securityId);
-                stmtUpdate.setDouble(4, jter.weight);
-                stmtUpdate.setLong(5, this.getFlowLoadId());
+                stmtUpdate.setString(3, jter.ticker);
+                stmtUpdate.setString(4, jter.shortNames);
+                stmtUpdate.setString(5, jter.secIds);
+                stmtUpdate.setDouble(6, jter.weight);
+                stmtUpdate.setInt(7, jter.tradingSession);
+                stmtUpdate.setLong(8, this.getFlowLoadId());
                 stmtUpdate.addBatch();
             }
             setInsertCount(getInsertCount() + stmtUpdate.executeBatch().length);

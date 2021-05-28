@@ -16,14 +16,15 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
     static private final String dataAuxDir = "auxiliary/";
     static private final String dataTruncScript = "$$entity_name_truncate.sql";
     static private final String dataInsertScript = "$$entity_name_insert.sql";
-    static private final String dataSelectString = "$$entity_name.sql"; // move to relation
-    static private String sqlDirectory;
+//    static private final String dataSelectString = "$$entity_name.sql"; // move to relation
+    private String sqlDirectory;
 
     MetaLayer entityLayer;
     String entityCode;
     LoadMode entityLoadMode;
 
     private long entityLayerMapId;
+    private long entityLoadLogId;
     private long flowLoadId;
     private long iterationNumber;
 
@@ -32,6 +33,12 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
     }
     public void setEntityLayerMapId(long entityLayerMapId) {
         this.entityLayerMapId = entityLayerMapId;
+    }
+    public long getEntityLoadLogId() {
+        return this.entityLoadLogId;
+    }
+    public void setEntityLoadLogId(long entityLoadLogId) {
+        this.entityLoadLogId = entityLoadLogId;
     }
     public long getFlowLoadId() {
         return this.flowLoadId;

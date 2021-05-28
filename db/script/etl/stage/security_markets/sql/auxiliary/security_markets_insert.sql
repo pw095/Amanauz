@@ -1,0 +1,25 @@
+INSERT
+  INTO security_markets
+  (
+    id,
+    trade_engine_id,
+    trade_engine_name,
+    trade_engine_title,
+    market_name,
+    market_title,
+    market_id,
+    marketplace,
+    tech$load_id
+  )
+VALUES
+  (
+    :id,
+    :trade_engine_id,
+    :trade_engine_name,
+    :trade_engine_title,
+    :market_name,
+    :market_title,
+    :market_id,
+    :marketplace,
+    :tech$load_id
+  )

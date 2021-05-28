@@ -1,0 +1,31 @@
+INSERT
+  INTO security_board_groups
+  (
+    id,
+    trade_engine_id,
+    trade_engine_name,
+    trade_engine_title,
+    market_id,
+    market_name,
+    name,
+    title,
+    is_default,
+    board_group_id,
+    is_traded,
+    tech$load_id
+  )
+VALUES
+  (
+    :id,
+    :trade_engine_id,
+    :trade_engine_name,
+    :trade_engine_title,
+    :market_id,
+    :market_name,
+    :name,
+    :title,
+    :is_default,
+    :board_group_id,
+    :is_traded,
+    :tech$load_id
+  )
