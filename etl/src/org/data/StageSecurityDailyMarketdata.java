@@ -198,7 +198,8 @@ public class StageSecurityDailyMarketdata extends ImoexWebSiteEntity {
         urlStringData = urlStringRaw.concat("shares").concat(urlColumnList);
 
         try {
-            singleIterationLoad(stmtUpdate, urlStringData, "marketdata");
+            noHistoryLoad(stmtUpdate, urlStringData, "marketdata",false);
+//            singleIterationLoad(stmtUpdate, urlStringData, "marketdata");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -206,7 +207,8 @@ public class StageSecurityDailyMarketdata extends ImoexWebSiteEntity {
         urlStringData = urlStringRaw.concat("bonds").concat(urlColumnList);
 
         try {
-            singleIterationLoad(stmtUpdate, urlStringData, "marketdata");
+            noHistoryLoad(stmtUpdate, urlStringData, "marketdata", false);
+//            singleIterationLoad(stmtUpdate, urlStringData, "marketdata");
         } catch (Exception e) {
             e.printStackTrace();
         }

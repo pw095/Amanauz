@@ -4,7 +4,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.meta.LoadMode;
 import org.meta.MetaLayer;
+import org.w3c.dom.Document;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
@@ -19,14 +24,14 @@ import static org.util.AuxUtil.dateFormat;
 
 public abstract class ImoexWebSiteEntity extends AbstractEntity {
 
-    private static class ImoexMetaData {
+    /*private static class ImoexMetaData {
         String loadDate;
         int pageSize;
         int pageCount;
-    }
+    }*/
     static abstract class ImoexData {}
 
-    private List<ImoexMetaData> imoexMetaDataArray = new ArrayList<>();
+//    private List<ImoexMetaData> imoexMetaDataArray = new ArrayList<>();
     private List<ImoexData> imoexDataArray = new ArrayList<>();
     String previousEffectiveToDt;
     private String effectiveFromDt;
@@ -58,89 +63,8 @@ public abstract class ImoexWebSiteEntity extends AbstractEntity {
 
     public ImoexWebSiteEntity(long flowLoadId, String entityCode) {
         super(flowLoadId, MetaLayer.STAGE, entityCode);
-//        previousEffectiveToDt = LocalDate.of(2021, Month.MAY, 01).format(dateFormat);
-//        this.entityLoadMode = LoadMode.valueOf(loadMode.toUpperCase());
-        /*if (entityLoadMode == LoadMode.FULL) {
-            previousEffectiveToDt = LocalDate.of(1900, Month.JANUARY, 01);
-        } else {
-            //previousEffectiveToDt = ;
-        }*/
     }
-/*
-    private void loadMetaData(String urlString) throws Exception {
-//        String urlString = "http://iss.moex.com/iss/statistics/engines/stock/markets/index/analytics/IMOEX.json?iss.meta=off&iss.only=analytics.cursor&analytics.cursor.columns=TOTAL,PAGESIZE,NEXT_DATE";
 
-        String currentLoadDate = previousEffectiveToDt;
-        String nextLoadDate = "";
-        long iterationCount = 0;
-
-        for(; (!nextLoadDate.isEmpty() || iterationCount == 0) && !LocalDate.parse(currentLoadDate, dateFormat).isAfter(LocalDate.now()); currentLoadDate = nextLoadDate, ++iterationCount) {
-            URL url = new URL(urlString.concat("&date=" + currentLoadDate));
-//            System.out.println(iterationCount);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("GET");
-
-            int status = conn.getResponseCode();
-
-            try (BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream()))) {
-                String inputLine;
-                StringBuffer content = new StringBuffer();
-
-                while ((inputLine = in.readLine()) != null) {
-                    content.append(inputLine);
-                }
-
-                JSONArray arr = null;
-
-
-                try {
-                    arr = new JSONObject(content.toString()).optJSONObject("analytics.cursor").getJSONArray("data");
-                } catch (NullPointerException e) {e.printStackTrace();}
-
-//                System.out.println("currentDate = " + currentLoadDate);
-                try {
-//                    System.out.println(content.toString());
-                    arr = new JSONObject(content.toString()).optJSONObject("history.cursor").getJSONArray("data");
-                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    System.out.println("content = " + content.toString());
-//                    throw new RuntimeException(e);
-                }
-
-                for (Object o : arr) {
-
-                    JSONArray test = (JSONArray) o;
-                    double tupleCount = test.optDouble(0);
-                    nextLoadDate = test.optString(2).isEmpty() ? LocalDate.parse(currentLoadDate, dateFormat).plusDays(1).format(dateFormat) : test.optString(2);
-//                    try {
-//                        nextLoadDate = test.optString(2);
-//                        System.out.println("nextLoadDate  1");
-//                        if (nextLoadDate.isEmpty()) {
-//                            System.out.println("nextLoadDate  111111");
-//                        }
-//                    } catch (NullPointerException e) {
-//                        nextLoadDate = LocalDate.parse(currentLoadDate, dateFormat).plusDays(1).format(dateFormat);
-//                        System.out.println("nextLoadDate  2");
-//                    }
-                    System.out.println("nextLoadDate = " + nextLoadDate + " currentLoadDate = " + currentLoadDate);
-
-                    // На нулевой итерации (iterationCount = 0) обрабатывается дата, данные за которую были загружены на предыдущем этапе загрузки.
-                    // В ходе предыдущего запуска
-                    // Если tupleCount = 0, то данных на текущую дату (currentLoadDate) нет.
-                    if (iterationCount > 0 && tupleCount > 0) {
-                        ImoexMetaData imoexMetaData = new ImoexMetaData();
-                        imoexMetaData.pageSize = test.optInt(1);
-                        imoexMetaData.pageCount = (int) Math.ceil(tupleCount / test.optDouble(1));
-                        imoexMetaData.loadDate = currentLoadDate;
-                        imoexMetaDataArray.add(imoexMetaData);
-                    }
-                }
-
-            }
-            conn.disconnect();
-        }
-    }
-*/
     public void historyLoad(PreparedStatement stmtUpdate, String urlString, String objectJSON) throws Exception {
         for(LocalDate currentDate = LocalDate.parse(this.getEffectiveFromDt(), dateFormat); !currentDate.isAfter(LocalDate.now()); currentDate = currentDate.plusDays(1)) {
             multipleIterationsLoad(stmtUpdate, urlString.concat("&date=").concat(currentDate.format(dateFormat)), objectJSON);
@@ -148,15 +72,40 @@ public abstract class ImoexWebSiteEntity extends AbstractEntity {
         }
     }
 
-    public void noHistoryLoad(PreparedStatement stmtUpdate, String urlString, String objectJSON) throws Exception {
-        this.setEffectiveToDt(LocalDate.now().format(dateFormat));
-        multipleIterationsLoad(stmtUpdate, urlString, objectJSON);
+    public void noHistoryLoad(PreparedStatement stmtUpdate, String urlString, String objectJSON, boolean multipleFlag) throws Exception {
+        if (multipleFlag) {
+            multipleIterationsLoad(stmtUpdate, urlString, objectJSON);
+        } else {
+            singleIterationLoad(stmtUpdate, urlString, objectJSON);
+        }
+        this.setEffectiveFromDt(LocalDate.of(1900, 01, 01).format(dateFormat));
+        this.setEffectiveToDt(LocalDate.of(2999, 12, 31).format(dateFormat));
+    }
+
+    public void multipleIterationsLoad(PreparedStatement stmtUpdate, String urlString, String objectJSON) throws Exception {
+        boolean exitFlag = true;
+        for (int ind = 0; ind < 500 && exitFlag; ++ind) {
+            exitFlag = coreLoad(urlString.concat("&start=" + String.valueOf(ind * pageSize)), objectJSON);
+            // В буфере одновременно Храним не более 50_000 записей
+            if (imoexDataArray.size() >= 50_000) {
+                saveData(stmtUpdate, imoexDataArray);
+                imoexDataArray.clear();
+            }
+        }
+        saveData(stmtUpdate, imoexDataArray);
+        imoexDataArray.clear();
+    }
+
+    public void singleIterationLoad(PreparedStatement stmtUpdate, String urlString, String objectJSON) throws Exception {
+        coreLoad(urlString, objectJSON);
+        saveData(stmtUpdate, imoexDataArray);
+        imoexDataArray.clear();
     }
 
     public boolean coreLoad(String urlString, String objectJSON) throws Exception {
         boolean exitFlag = true;
         URL url = new URL(urlString);
-//        System.out.println(url);
+        System.out.println(url);
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setRequestMethod("GET");
 
@@ -185,25 +134,7 @@ public abstract class ImoexWebSiteEntity extends AbstractEntity {
         return exitFlag;
     }
 
-    public void multipleIterationsLoad(PreparedStatement stmtUpdate, String urlString, String objectJSON) throws Exception {
-        boolean exitFlag = true;
-        for (int ind = 0; ind < 500 && exitFlag; ++ind) {
-            exitFlag = coreLoad(urlString.concat("&start=" + String.valueOf(ind * pageSize)), objectJSON);
-            // В буфере одновременно Храним не более 50_000 записей
-            if (imoexDataArray.size() >= 50_000) {
-                saveData(stmtUpdate, imoexDataArray);
-                imoexDataArray.clear();
-            }
-        }
-        saveData(stmtUpdate, imoexDataArray);
-        imoexDataArray.clear();
-    }
 
-    public void singleIterationLoad(PreparedStatement stmtUpdate, String urlString, String objectJSON) throws Exception {
-        coreLoad(urlString, objectJSON);
-        saveData(stmtUpdate, imoexDataArray);
-        imoexDataArray.clear();
-    }
 /*        for(int ind=0; ind < 500 && exitFlag; ++ind) {
             URL url = new URL(urlString.concat("&start=" + String.valueOf(ind * pageSize)));
             System.out.println(url);
@@ -336,8 +267,9 @@ public abstract class ImoexWebSiteEntity extends AbstractEntity {
 
         saveData(stmtUpdate, imoexDataArray);
         imoexDataArray.clear();
-*/
     }
+*/
+
 
 
 /*    void completeLoad(PreparedStatement stmtUpdate, String urlStringMeta, String urlStringData) throws Exception {

@@ -1,0 +1,25 @@
+INSERT
+  INTO foreign_currency_dictionary
+  (
+    tech$load_id,
+    tech$load_dttm,
+    id,
+    name,
+    eng_name,
+    nominal,
+    parent_code,
+    iso_num_code,
+    iso_char_code
+  )
+VALUES
+  (
+    :tech$load_id,
+    :tech$load_dttm,
+    :id,
+    :name,
+    :eng_name,
+    :nominal,
+    :parent_code,
+    :iso_num_code,
+    :iso_char_code
+  )

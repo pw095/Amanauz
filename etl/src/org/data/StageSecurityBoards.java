@@ -52,7 +52,8 @@ public class StageSecurityBoards extends ImoexWebSiteEntity {
 
         try {
 //            completeLoad(stmtUpdate, null, urlStringData);
-            singleIterationLoad(stmtUpdate, urlStringData, "boards");
+//            singleIterationLoad(stmtUpdate, urlStringData, "boards");
+            noHistoryLoad(stmtUpdate, urlStringData, "boards", false);
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -34,7 +34,8 @@ public class StageSecurityEngines extends ImoexWebSiteEntity {
 
         try {
 //            completeLoad(stmtUpdate, null, urlStringData);
-            singleIterationLoad(stmtUpdate, urlStringData, "engines");
+            noHistoryLoad(stmtUpdate, urlStringData, "engines", false);
+//            singleIterationLoad(stmtUpdate, urlStringData, "engines");
         } catch (Exception e) {
             e.printStackTrace();
         }

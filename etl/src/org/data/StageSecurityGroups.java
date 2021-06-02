@@ -36,7 +36,8 @@ public class StageSecurityGroups extends ImoexWebSiteEntity {
 
         try {
 //            completeLoad(stmtUpdate, null, urlStringData);
-            singleIterationLoad(stmtUpdate, urlStringData, "securitygroups");
+//            singleIterationLoad(stmtUpdate, urlStringData, "securitygroups");
+            noHistoryLoad(stmtUpdate, urlStringData, "securitygroups", false);
         } catch (Exception e) {
             e.printStackTrace();
         }

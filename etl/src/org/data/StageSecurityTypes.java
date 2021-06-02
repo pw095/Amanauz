@@ -45,7 +45,8 @@ public class StageSecurityTypes extends ImoexWebSiteEntity {
 
         try {
 //            completeLoad(stmtUpdate, null, urlStringData);
-            singleIterationLoad(stmtUpdate, urlStringData, "securitytypes");
+//            singleIterationLoad(stmtUpdate, urlStringData, "securitytypes");
+            noHistoryLoad(stmtUpdate, urlStringData, "securitytypes", false);
         } catch (Exception e) {
             e.printStackTrace();
         }

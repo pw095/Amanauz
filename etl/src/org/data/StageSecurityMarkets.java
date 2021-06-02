@@ -48,7 +48,8 @@ public class StageSecurityMarkets extends ImoexWebSiteEntity {
 
         try {
 //            completeLoad(stmtUpdate, null, urlStringData);
-            singleIterationLoad(stmtUpdate, urlStringData, "markets");
+//            singleIterationLoad(stmtUpdate, urlStringData, "markets");
+            noHistoryLoad(stmtUpdate, urlStringData, "markets", false);
         } catch (Exception e) {
             e.printStackTrace();
         }

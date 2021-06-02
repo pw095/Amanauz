@@ -1,6 +1,8 @@
 DROP TABLE security_daily_info;
 CREATE TABLE security_daily_info
   (
+    tech$load_id               INTEGER NOT NULL,
+    tech$load_dttm             INTEGER NOT NULL,
     security_id                TEXT,
     board_id                   TEXT,
     short_name                 TEXT,
@@ -26,6 +28,5 @@ CREATE TABLE security_daily_info
     currency_id                TEXT,
     security_type              TEXT,
     list_level                 INTEGER,
-    settle_date                TEXT,
-    tech$load_id               INTEGER NOT NULL
+    settle_date                TEXT
   );

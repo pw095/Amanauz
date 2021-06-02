@@ -76,7 +76,7 @@ public class StageSecurityEmitentMap extends ImoexWebSiteEntity {
         urlStringData = urlStringRaw.concat("shares").concat(urlColumnList);
 
         try {
-            noHistoryLoad(stmtUpdate, urlStringData, "securities");
+            noHistoryLoad(stmtUpdate, urlStringData, "securities", true);
 //            multipleIterationsLoad(stmtUpdate, urlStringData, "securities");
 //            completeLoad(stmtUpdate, urlStringMeta, urlStringData);
         } catch (Exception e) {
@@ -86,7 +86,7 @@ public class StageSecurityEmitentMap extends ImoexWebSiteEntity {
         urlStringData = urlStringRaw.concat("bonds").concat(urlColumnList);
 
         try {
-            noHistoryLoad(stmtUpdate, urlStringData, "securities");
+            noHistoryLoad(stmtUpdate, urlStringData, "securities", true);
 //            multipleIterationsLoad(stmtUpdate, urlStringData, "securities");
         } catch (Exception e) {
             e.printStackTrace();

@@ -1,6 +1,8 @@
 INSERT
   INTO security_daily_info
   (
+    tech$load_id,
+    tech$load_dttm,
     security_id,
     board_id,
     short_name,
@@ -26,11 +28,12 @@ INSERT
     currency_id,
     security_type,
     list_level,
-    settle_date,
-    tech$load_id
+    settle_date
   )
 VALUES
   (
+    :tech$load_id,
+    :tech$load_dttm,
     :security_id,
     :board_id,
     :short_name,
@@ -56,6 +59,5 @@ VALUES
     :currency_id,
     :security_type,
     :list_level,
-    :settle_date,
-    :tech$load_id
+    :settle_date
   )

@@ -1,7 +1,6 @@
 package org.flow;
 
 import org.data.*;
-import org.meta.LoadMode;
 import org.meta.LoadStatus;
 import org.meta.Meta;
 import org.meta.Properties;
@@ -9,12 +8,9 @@ import org.meta.Properties;
 import java.io.IOException;
 
 import static org.util.AuxUtil.getProperties;
-import java.sql.*;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Consumer;
 
 public class Flow {
 /*
@@ -118,18 +114,23 @@ public class Flow {
 //        entityList.add(new StageSecuritySharesRate(flowId));
 
         // Данные за 1 день, но много листов
-        entityList.add(new StageSecurityEmitentMap(flowId));
+//        entityList.add(new StageSecurityEmitentMap(flowId));
 
         // Данные за 1 день, но лист 1
-/*        entityList.add(new StageSecurityDailyMarketdata(flowId));
-        entityList.add(new StageSecurityDailyInfo(flowId));
-        entityList.add(new StageSecurityEngines(flowId));
+//        entityList.add(new StageSecurityDailyMarketdata(flowId));
+//        entityList.add(new StageSecurityDailyInfo(flowId));
+        /*entityList.add(new StageSecurityEngines(flowId));
         entityList.add(new StageSecurityMarkets(flowId));
         entityList.add(new StageSecurityBoards(flowId));
         entityList.add(new StageSecurityBoardGroups(flowId));
         entityList.add(new StageSecurityTypes(flowId));
         entityList.add(new StageSecurityGroups(flowId));
         entityList.add(new StageSecurityCollections(flowId));*/
+
+        // Данные справочника с cbr.ru, лист 1
+//        entityList.add(new StageForeignCurrencyDictionary(flowId));
+        // Данные не из справочника, но лист тоже всегда 1.
+        entityList.add(new StageForeignCurrencyRate(flowId));
         for (AbstractEntity entity : entityList) {
             entity.call();
         }

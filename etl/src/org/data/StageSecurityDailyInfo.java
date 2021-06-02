@@ -7,63 +7,65 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
+import static org.util.AuxUtil.dateTimeFormat;
+
 public class StageSecurityDailyInfo extends ImoexWebSiteEntity {
 
     static class StageSecurityDailyInfoData extends ImoexData {
-        String     securityId;
-        String     boardId;
-        String     shortName;
-        BigDecimal previousPrice;
-        int        lotSize;
-        BigDecimal faceValue;
-        String     status;
-        int        decimals;
-        String     securityName;
-        String     remarks;
-        String     marketCode;
-        String     instrId;
-        BigDecimal minStep;
-        BigDecimal prevWaPrice;
-        String     faceUnit;
-        String     previousDate;
-        long       issueSize;
-        String     isin;
-        String     latName;
-        String     regNumber;
-        BigDecimal previousLegalClosePrice;
-        BigDecimal previousAdmittedQuote;
-        String     currencyId;
-        String     securityType;
-        int        listLevel;
-        String     settleDate;
+        String securityId;
+        String boardId;
+        String shortName;
+        double previousPrice;
+        int    lotSize;
+        double faceValue;
+        String status;
+        int    decimals;
+        String securityName;
+        String remarks;
+        String marketCode;
+        String instrId;
+        double minStep;
+        double prevWaPrice;
+        String faceUnit;
+        String previousDate;
+        long   issueSize;
+        String isin;
+        String latName;
+        String regNumber;
+        double previousLegalClosePrice;
+        double previousAdmittedQuote;
+        String currencyId;
+        String securityType;
+        int    listLevel;
+        String settleDate;
 
 
-        public StageSecurityDailyInfoData(String     securityId,
-                                          String     boardId,
-                                          String     shortName,
-                                          BigDecimal previousPrice,
-                                          int        lotSize,
-                                          BigDecimal faceValue,
-                                          String     status,
-                                          int        decimals,
-                                          String     securityName,
-                                          String     remarks,
-                                          String     marketCode,
-                                          String     instrId,
-                                          BigDecimal minStep,
-                                          BigDecimal prevWaPrice,
-                                          String     faceUnit,
-                                          String     previousDate,
-                                          long       issueSize,
-                                          String     isin,
-                                          String     latName,
-                                          String     regNumber,
-                                          BigDecimal previousLegalClosePrice,
-                                          BigDecimal previousAdmittedQuote,
-                                          String     currencyId,
-                                          String     securityType,
-                                          int        listLevel,
-                                          String     settleDate) {
+        public StageSecurityDailyInfoData(String securityId,
+                                          String boardId,
+                                          String shortName,
+                                          double previousPrice,
+                                          int    lotSize,
+                                          double faceValue,
+                                          String status,
+                                          int    decimals,
+                                          String securityName,
+                                          String remarks,
+                                          String marketCode,
+                                          String instrId,
+                                          double minStep,
+                                          double prevWaPrice,
+                                          String faceUnit,
+                                          String previousDate,
+                                          long   issueSize,
+                                          String isin,
+                                          String latName,
+                                          String regNumber,
+                                          double previousLegalClosePrice,
+                                          double previousAdmittedQuote,
+                                          String currencyId,
+                                          String securityType,
+                                          int    listLevel,
+                                          String settleDate) {
             this.securityId = securityId;
             this.boardId = boardId;
             this.shortName = shortName;
@@ -108,7 +110,8 @@ public class StageSecurityDailyInfo extends ImoexWebSiteEntity {
 
         try {
 //            completeLoad(stmtUpdate, urlStringMeta, urlStringData);
-            singleIterationLoad(stmtUpdate, urlStringData, "data");
+//            singleIterationLoad(stmtUpdate, urlStringData, "data");
+            noHistoryLoad(stmtUpdate, urlStringData, "securities", false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -117,7 +120,8 @@ public class StageSecurityDailyInfo extends ImoexWebSiteEntity {
 
         try {
 //            completeLoad(stmtUpdate, urlStringMeta, urlStringData);
-            singleIterationLoad(stmtUpdate, urlStringData, "data");
+//            singleIterationLoad(stmtUpdate, urlStringData, "data");
+            noHistoryLoad(stmtUpdate, urlStringData, "securities", false);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -128,31 +132,25 @@ public class StageSecurityDailyInfo extends ImoexWebSiteEntity {
         data = new StageSecurityDailyInfoData(jsonArray.optString(0),
                                               jsonArray.optString(1),
                                               jsonArray.optString(2),
-                                                jsonArray.optBigDecimal(3, BigDecimal.ZERO),
-//                                              new BigDecimal(jsonArray.optDouble(3)),
+                                              jsonArray.optDouble(3),
                                               jsonArray.optInt(4),
-                                                jsonArray.optBigDecimal(5, BigDecimal.ZERO),
-//                                              new BigDecimal(jsonArray.optString(5)),
+                                              jsonArray.optDouble(5),
                                               jsonArray.optString(6),
                                               jsonArray.optInt(7),
                                               jsonArray.optString(8),
                                               jsonArray.optString(9),
                                               jsonArray.optString(10),
                                               jsonArray.optString(11),
-                                                jsonArray.optBigDecimal(12, BigDecimal.ZERO),
-                                                jsonArray.optBigDecimal(13, BigDecimal.ZERO),
-//                                              new BigDecimal(jsonArray.optString(12)),
-//                                              new BigDecimal(jsonArray.optString(13)),
+                                              jsonArray.optDouble(12),
+                                              jsonArray.optDouble(13),
                                               jsonArray.optString(14),
                                               jsonArray.optString(15),
                                               jsonArray.optLong(16),
                                               jsonArray.optString(17),
                                               jsonArray.optString(18),
                                               jsonArray.optString(19),
-                                                jsonArray.optBigDecimal(20, BigDecimal.ZERO),
-                                                jsonArray.optBigDecimal(21, BigDecimal.ZERO),
-//                                              new BigDecimal(jsonArray.optString(20)),
-//                                              new BigDecimal(jsonArray.optString(21)),
+                                              jsonArray.optDouble(20),
+                                              jsonArray.optDouble(21),
                                               jsonArray.optString(22),
                                               jsonArray.optString(23),
                                               jsonArray.optInt(24),
@@ -169,33 +167,34 @@ public class StageSecurityDailyInfo extends ImoexWebSiteEntity {
 //            System.out.println(jter.tradeDate);
 
 
-                stmtUpdate.setString(1, jter.securityId);
-                stmtUpdate.setString(2, jter.boardId);
-                stmtUpdate.setString(3, jter.shortName);
-                stmtUpdate.setBigDecimal(4, jter.previousPrice);
-                stmtUpdate.setInt(5, jter.lotSize);
-                stmtUpdate.setBigDecimal(6, jter.faceValue);
-                stmtUpdate.setString(7, jter.status);
-                stmtUpdate.setInt(8, jter.decimals);
-                stmtUpdate.setString(9, jter.securityName);
-                stmtUpdate.setString(10, jter.remarks);
-                stmtUpdate.setString(11, jter.marketCode);
-                stmtUpdate.setString(12, jter.instrId);
-                stmtUpdate.setBigDecimal(13, jter.minStep);
-                stmtUpdate.setBigDecimal(14, jter.prevWaPrice);
-                stmtUpdate.setString(15, jter.faceUnit);
-                stmtUpdate.setString(16, jter.previousDate);
-                stmtUpdate.setLong(17, jter.issueSize);
-                stmtUpdate.setString(18, jter.isin);
-                stmtUpdate.setString(19, jter.latName);
-                stmtUpdate.setString(20, jter.regNumber);
-                stmtUpdate.setBigDecimal(21, jter.previousLegalClosePrice);
-                stmtUpdate.setBigDecimal(22, jter.previousAdmittedQuote);
-                stmtUpdate.setString(23, jter.currencyId);
-                stmtUpdate.setString(24, jter.securityType);
-                stmtUpdate.setInt(25, jter.listLevel);
-                stmtUpdate.setString(26, jter.settleDate);
-                stmtUpdate.setLong(27, this.getFlowLoadId());
+                stmtUpdate.setLong(1, this.getFlowLoadId());
+                stmtUpdate.setString(2, this.getEntityStartLoadTimestamp().format(dateTimeFormat));
+                stmtUpdate.setString(3, jter.securityId);
+                stmtUpdate.setString(4, jter.boardId);
+                stmtUpdate.setString(5, jter.shortName);
+                stmtUpdate.setDouble(6, jter.previousPrice);
+                stmtUpdate.setInt(7, jter.lotSize);
+                stmtUpdate.setDouble(8, jter.faceValue);
+                stmtUpdate.setString(9, jter.status);
+                stmtUpdate.setInt(10, jter.decimals);
+                stmtUpdate.setString(11, jter.securityName);
+                stmtUpdate.setString(12, jter.remarks);
+                stmtUpdate.setString(13, jter.marketCode);
+                stmtUpdate.setString(14, jter.instrId);
+                stmtUpdate.setDouble(15, jter.minStep);
+                stmtUpdate.setDouble(16, jter.prevWaPrice);
+                stmtUpdate.setString(17, jter.faceUnit);
+                stmtUpdate.setString(18, jter.previousDate);
+                stmtUpdate.setLong(19, jter.issueSize);
+                stmtUpdate.setString(20, jter.isin);
+                stmtUpdate.setString(21, jter.latName);
+                stmtUpdate.setString(22, jter.regNumber);
+                stmtUpdate.setDouble(23, jter.previousLegalClosePrice);
+                stmtUpdate.setDouble(24, jter.previousAdmittedQuote);
+                stmtUpdate.setString(25, jter.currencyId);
+                stmtUpdate.setString(26, jter.securityType);
+                stmtUpdate.setInt(27, jter.listLevel);
+                stmtUpdate.setString(28, jter.settleDate);
                 stmtUpdate.addBatch();
             }
             setInsertCount(getInsertCount() + stmtUpdate.executeBatch().length);

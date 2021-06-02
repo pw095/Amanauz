@@ -164,7 +164,7 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
 //        System.out.println("entityLayerMapId" + this.getEntityLayerMapId());
         String insertSQL = getQuery(getInsertSQL());
         try {
-//            System.out.println(insertSQL);
+            System.out.println(insertSQL);
             try(PreparedStatement stmtUpdate = connTarget.prepareStatement(insertSQL)) {
                 detailLoad(stmtUpdate);
             }
