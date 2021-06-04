@@ -1,4 +1,4 @@
-DROP TABLE tbl_elm_dependency;
+DROP TABLE IF EXISTS tbl_elm_dependency;
 CREATE TABLE tbl_elm_dependency
   (
     elmd_id            INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

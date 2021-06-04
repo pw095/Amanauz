@@ -56,7 +56,7 @@ public class StageSecurityBoards extends SnapshotEntity implements ImoexSourceEn
                                "is_primary";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, load(urlStringData, objectJSON));
+        load(stmtUpdate, urlStringData, objectJSON);
     }
 
     @Override

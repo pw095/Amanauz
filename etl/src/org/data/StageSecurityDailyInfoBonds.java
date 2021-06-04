@@ -154,7 +154,7 @@ public class StageSecurityDailyInfoBonds extends SnapshotEntity implements Imoex
                                "SETTLEDATE,LOTVALUE";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, load(urlStringData, objectJSON));
+        load(stmtUpdate, urlStringData, objectJSON);
     }
 
     @Override

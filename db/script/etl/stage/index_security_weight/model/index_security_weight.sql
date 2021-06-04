@@ -1,4 +1,4 @@
-DROP TABLE index_security_weight;
+DROP TABLE IF EXISTS index_security_weight;
 CREATE TABLE index_security_weight
   (
     tech$load_id    INTEGER NOT NULL,

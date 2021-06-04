@@ -1,4 +1,4 @@
-DROP TABLE security_types;
+DROP TABLE IF EXISTS security_types;
 CREATE TABLE security_types
   (
     tech$load_id        INTEGER NOT NULL,

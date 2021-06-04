@@ -1,4 +1,4 @@
-DROP TABLE tbl_entity_load_log;
+DROP TABLE IF EXISTS tbl_entity_load_log;
 CREATE TABLE tbl_entity_load_log
   (
     ell_id                         INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

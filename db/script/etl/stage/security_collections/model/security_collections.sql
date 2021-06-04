@@ -1,4 +1,4 @@
-DROP TABLE security_collections;
+DROP TABLE IF EXISTS security_collections;
 CREATE TABLE security_collections
   (
     tech$load_id      INTEGER NOT NULL,

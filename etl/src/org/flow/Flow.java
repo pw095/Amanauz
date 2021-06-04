@@ -53,8 +53,8 @@ public class Flow {
         List<AbstractEntity> entityList = new ArrayList<>();
 
 //        Данные за несколько дней, листов много
-        entityList.add(new StageIndexSecurityWeight(flow)); // OK
-        entityList.add(new StageSecurityRateShares(flow)); // OK
+//        entityList.add(new StageIndexSecurityWeight(flow)); // OK
+//        entityList.add(new StageSecurityRateShares(flow)); // OK
         entityList.add(new StageSecurityRateBonds(flow)); // OK
 /*
 //        Данные за 1 день, но много листов

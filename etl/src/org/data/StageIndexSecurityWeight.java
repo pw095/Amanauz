@@ -49,7 +49,7 @@ public class StageIndexSecurityWeight extends PeriodEntity implements ImoexSourc
         final String urlColumnList = "indexid,tradedate,ticker,shortnames,secids,weight,tradingsession";
 
         final String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, periodMultiLoad(urlStringData, this, objectJSON));
+        periodMultiLoad(stmtUpdate, urlStringData, this, objectJSON);
     }
 
     @Override

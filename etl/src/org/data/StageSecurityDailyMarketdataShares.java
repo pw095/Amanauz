@@ -206,7 +206,7 @@ public class StageSecurityDailyMarketdataShares extends SnapshotEntity implement
                                "ISSUECAPITALIZATION_UPDATETIME,ETFSETTLECURRENCY,VALTODAY_RUR,TRADINGSESSION";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, load(urlStringData, objectJSON));
+        load(stmtUpdate, urlStringData, objectJSON);
 
     }
 

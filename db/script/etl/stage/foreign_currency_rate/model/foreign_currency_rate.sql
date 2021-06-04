@@ -1,4 +1,4 @@
-DROP TABLE foreign_currency_rate;
+DROP TABLE IF EXISTS foreign_currency_rate;
 CREATE TABLE foreign_currency_rate
   (
     tech$load_id   INTEGER NOT NULL,

@@ -147,7 +147,7 @@ public class StageSecurityRateBonds extends PeriodEntity implements ImoexSourceE
                                      "CURRENCYID,CBRCLOSE,YIELDTOOFFER,YIELDLASTCOUPON,OFFERDATE,FACEUNIT,TRADINGSESSION";
 
         final String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, periodMultiLoad(urlStringData, this, objectJSON));
+        periodMultiLoad(stmtUpdate, urlStringData, this, objectJSON);
     }
 
     @Override

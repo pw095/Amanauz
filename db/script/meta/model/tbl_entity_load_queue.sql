@@ -1,4 +1,4 @@
-DROP TABLE tbl_entity_load_queue;
+DROP TABLE IF EXISTS tbl_entity_load_queue;
 CREATE TABLE tbl_entity_load_queue
   (
     elq_id                         INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

@@ -1,4 +1,4 @@
-DROP TABLE tbl_entity_layer_map;
+DROP TABLE IF EXISTS tbl_entity_layer_map;
 CREATE TABLE tbl_entity_layer_map
   (
     elm_id       INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

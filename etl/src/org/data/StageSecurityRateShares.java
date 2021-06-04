@@ -94,7 +94,7 @@ public class StageSecurityRateShares extends PeriodEntity implements ImoexSource
                                      "MP2VALTRD,MARKETPRICE3TRADESVALUE,ADMITTEDVALUE,WAVAL,TRADINGSESSION";
 
         final String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, periodMultiLoad(urlStringData, this, objectJSON));
+        periodMultiLoad(stmtUpdate, urlStringData, this, objectJSON);
     }
 
     @Override

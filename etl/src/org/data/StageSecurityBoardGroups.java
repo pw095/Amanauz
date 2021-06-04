@@ -64,7 +64,7 @@ public class StageSecurityBoardGroups extends SnapshotEntity implements ImoexSou
                                "title,is_default,board_group_id,is_traded";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, load(urlStringData, objectJSON));
+        load(stmtUpdate, urlStringData, objectJSON);
     }
 
     @Override

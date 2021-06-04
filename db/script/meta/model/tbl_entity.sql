@@ -1,4 +1,4 @@
-DROP TABLE tbl_entity;
+DROP TABLE IF EXISTS tbl_entity;
 CREATE TABLE tbl_entity
   (
     ent_id   INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

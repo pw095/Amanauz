@@ -1,4 +1,4 @@
-DROP TABLE security_rate_bonds;
+DROP TABLE IF EXISTS security_rate_bonds;
 CREATE TABLE security_rate_bonds
   (
     tech$load_id                INTEGER NOT NULL,

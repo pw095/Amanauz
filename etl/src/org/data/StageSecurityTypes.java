@@ -52,7 +52,7 @@ public class StageSecurityTypes extends SnapshotEntity implements ImoexSourceEnt
                                "security_type_title,security_group_name";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, load(urlStringData, objectJSON));
+        load(stmtUpdate, urlStringData, objectJSON);
     }
 
     @Override

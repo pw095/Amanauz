@@ -40,7 +40,7 @@ public class StageSecurityCollections extends SnapshotEntity implements ImoexSou
         String urlColumnList = "id,name,title,security_group_id";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, load(urlStringData, objectJSON));
+        load(stmtUpdate, urlStringData, objectJSON);
     }
 
     @Override

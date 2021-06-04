@@ -1,4 +1,4 @@
-DROP TABLE security_emitent_map;
+DROP TABLE IF EXISTS security_emitent_map;
 CREATE TABLE security_emitent_map
   (
     tech$load_id          INTEGER NOT NULL,

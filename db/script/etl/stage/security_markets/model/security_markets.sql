@@ -1,4 +1,4 @@
-DROP TABLE security_markets;
+DROP TABLE IF EXISTS security_markets;
 CREATE TABLE security_markets
   (
     tech$load_id       INTEGER NOT NULL,

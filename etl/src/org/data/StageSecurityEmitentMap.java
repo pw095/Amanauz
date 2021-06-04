@@ -80,10 +80,10 @@ public class StageSecurityEmitentMap extends SnapshotEntity implements ImoexSour
 
         String urlStringData;
         urlStringData = urlStringRaw.concat("shares").concat(urlColumnList);
-        saveData(stmtUpdate, mutliLoad(urlStringData, objectJSON));
+        multiLoad(stmtUpdate, urlStringData, objectJSON);
 
         urlStringData = urlStringRaw.concat("bonds").concat(urlColumnList);
-        saveData(stmtUpdate, mutliLoad(urlStringData, objectJSON));
+        multiLoad(stmtUpdate, urlStringData, objectJSON);
 
     }
 

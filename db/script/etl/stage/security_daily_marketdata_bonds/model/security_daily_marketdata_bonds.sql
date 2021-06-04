@@ -1,4 +1,4 @@
-DROP TABLE security_daily_marketdata_bonds;
+DROP TABLE IF EXISTS security_daily_marketdata_bonds;
 CREATE TABLE security_daily_marketdata_bonds
   (
     tech$load_id                    INTEGER NOT NULL,

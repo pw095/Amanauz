@@ -1,4 +1,4 @@
-DROP TABLE tbl_file_load_queue;
+DROP TABLE IF EXISTS tbl_file_load_queue;
 CREATE TABLE tbl_file_load_queue
   (
     flq_id       INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

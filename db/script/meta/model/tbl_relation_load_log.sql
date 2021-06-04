@@ -1,4 +1,4 @@
-DROP TABLE tbl_relation_load_log;
+DROP TABLE IF EXISTS tbl_relation_load_log;
 CREATE TABLE tbl_relation_load_log
   (
     rll_id                INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

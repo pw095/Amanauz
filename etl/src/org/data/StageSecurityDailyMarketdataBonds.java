@@ -217,7 +217,7 @@ public class StageSecurityDailyMarketdataBonds extends SnapshotEntity implements
                                "BEICLOSE,CBRCLOSE,YIELDTOOFFER,YIELDLASTCOUPON,TRADINGSESSION";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, load(urlStringData, objectJSON));
+        load(stmtUpdate, urlStringData, objectJSON);
     }
 
     @Override

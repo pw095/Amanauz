@@ -53,7 +53,7 @@ public class StageSecurityMarkets extends SnapshotEntity implements ImoexSourceE
                                "market_title,market_id,marketplace";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, load(urlStringData, objectJSON));
+        load(stmtUpdate, urlStringData, objectJSON);
     }
 
     @Override

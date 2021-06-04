@@ -1,4 +1,4 @@
-DROP TABLE security_rate_shares;
+DROP TABLE IF EXISTS security_rate_shares;
 CREATE TABLE security_rate_shares
   (
     tech$load_id                INTEGER NOT NULL,

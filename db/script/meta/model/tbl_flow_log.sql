@@ -1,4 +1,4 @@
-DROP TABLE tbl_flow_log;
+DROP TABLE IF EXISTS tbl_flow_log;
 CREATE TABLE tbl_flow_log
   (
     flow_id          INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

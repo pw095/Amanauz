@@ -1,4 +1,4 @@
-DROP TABLE tbl_file_load_log;
+DROP TABLE IF EXISTS tbl_file_load_log;
 CREATE TABLE tbl_file_load_log
   (
     fll_id       INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,

@@ -117,7 +117,7 @@ public class StageSecurityDailyInfoShares extends SnapshotEntity implements Imoe
                                "LISTLEVEL,SETTLEDATE";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, load(urlStringData, objectJSON));
+        load(stmtUpdate, urlStringData, objectJSON);
     }
 
     @Override

@@ -1,4 +1,4 @@
-DROP TABLE foreign_currency_dictionary;
+DROP TABLE IF EXISTS foreign_currency_dictionary;
 CREATE TABLE foreign_currency_dictionary
   (
     tech$load_id   INTEGER NOT NULL,

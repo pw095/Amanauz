@@ -37,7 +37,7 @@ public class StageSecurityEngines extends SnapshotEntity implements ImoexSourceE
         String urlColumnList = "id,name,title";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
-        saveData(stmtUpdate, load(urlStringData, objectJSON));
+        load(stmtUpdate, urlStringData, objectJSON);
     }
 
     @Override

@@ -1,4 +1,4 @@
-DROP TABLE security_boards;
+DROP TABLE IF EXISTS security_boards;
 CREATE TABLE security_boards
   (
     tech$load_id   INTEGER NOT NULL,

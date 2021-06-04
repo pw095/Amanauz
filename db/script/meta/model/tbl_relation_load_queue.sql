@@ -1,4 +1,4 @@
-DROP TABLE tbl_relation_load_queue;
+DROP TABLE IF EXISTS tbl_relation_load_queue;
 CREATE TABLE tbl_relation_load_queue
   (
     rlq_id                INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
