@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: org.flow.Flow
+Class-Path: sqlite-jdbc-3.34.0.jar json-20180130.jar
+

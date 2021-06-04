@@ -1,23 +1,25 @@
 INSERT
   INTO index_security_weight
   (
+    tech$load_id,
+    tech$load_dttm,
     index_id,
     trade_date,
     ticker,
     short_names,
     secids,
     weight,
-    trading_session,
-    tech$load_id
+    trading_session
   )
 VALUES
   (
+    :tech$load_id,
+    :tech$load_dttm,
     :index_id,
     :trade_date,
     :ticker,
     :short_names,
     :secids,
     :weight,
-    :trading_session,
-    :tech$load_id
+    :trading_session
   )

@@ -1,14 +1,17 @@
 package org.data;
 
+import org.flow.Flow;
 import org.json.JSONArray;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class StageSecurityMarkets extends ImoexWebSiteEntity {
+import static org.util.AuxUtil.dateTimeFormat;
 
-    static class StageSecurityMarketsData extends ImoexData {
+public class StageSecurityMarkets extends SnapshotEntity implements ImoexSourceEntity {
+
+    static class StageSecurityMarketsData extends ExternalData {
         int    id;
         int    tradeEngineId;
         String tradeEngineName;
@@ -17,7 +20,6 @@ public class StageSecurityMarkets extends ImoexWebSiteEntity {
         String marketTitle;
         int    marketId;
         String marketPlace;
-
 
         public StageSecurityMarketsData(int    id,
                                         int    tradeEngineId,
@@ -39,23 +41,23 @@ public class StageSecurityMarkets extends ImoexWebSiteEntity {
 
     }
 
-    public StageSecurityMarkets(long flowLoadId) {
-        super(flowLoadId, "security_markets");
+    public StageSecurityMarkets(Flow flow) {
+        super(flow, "security_markets");
     }
 
+    @Override
     public void detailLoad(PreparedStatement stmtUpdate) {
-        String urlStringData = "http://iss.moex.com/iss/index.json?iss.meta=off&iss.only=markets&markets.columns=id,trade_engine_id,trade_engine_name,trade_engine_title,market_name,market_title,market_id,marketplace";
+        final String objectJSON = "markets";
+        String urlStringRaw = "http://iss.moex.com/iss/index.json?iss.meta=off&iss.only=markets&markets.columns=";
+        String urlColumnList = "id,trade_engine_id,trade_engine_name,trade_engine_title,market_name," +
+                               "market_title,market_id,marketplace";
 
-        try {
-//            completeLoad(stmtUpdate, null, urlStringData);
-//            singleIterationLoad(stmtUpdate, urlStringData, "markets");
-            noHistoryLoad(stmtUpdate, urlStringData, "markets", false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String urlStringData = urlStringRaw.concat(urlColumnList);
+        saveData(stmtUpdate, load(urlStringData, objectJSON));
     }
 
-    StageSecurityMarketsData accumulateData(JSONArray jsonArray) {
+    @Override
+    public StageSecurityMarketsData accumulateData(JSONArray jsonArray) {
         StageSecurityMarketsData data;
         data = new StageSecurityMarketsData(jsonArray.optInt(0), // id
                                             jsonArray.optInt(1), // trade_engine_id
@@ -68,25 +70,24 @@ public class StageSecurityMarkets extends ImoexWebSiteEntity {
         return data;
     }
 
-    void saveData(PreparedStatement stmtUpdate, List<? extends ImoexData> dataArray) {
+    @Override
+    public void saveData(PreparedStatement stmtUpdate, List<? extends ExternalData> dataArray) {
         try {
-            System.out.println("iter.count = " + dataArray.size());
-            for(ImoexData iter : dataArray) {
+            for(ExternalData iter : dataArray) {
                 StageSecurityMarketsData jter = (StageSecurityMarketsData) iter;
-//                System.out.println("jter.marketName = " + jter.marketName);
-                stmtUpdate.setInt(1, jter.id);
-                stmtUpdate.setInt(2, jter.tradeEngineId);
-                stmtUpdate.setString(3, jter.tradeEngineName);
-                stmtUpdate.setString(4, jter.tradeEngineTitle);
-                stmtUpdate.setString(5, jter.tradeEngineTitle);
-                stmtUpdate.setString(6, jter.marketTitle);
-                stmtUpdate.setInt(7, jter.marketId);
-                stmtUpdate.setString(8, jter.marketPlace);
-                stmtUpdate.setLong(9, this.getFlowLoadId());
+                stmtUpdate.setLong(1, this.getFlowLoadId());
+                stmtUpdate.setString(2, this.getFlowLogStartTimestamp().format(dateTimeFormat));
+                stmtUpdate.setInt(3, jter.id);
+                stmtUpdate.setInt(4, jter.tradeEngineId);
+                stmtUpdate.setString(5, jter.tradeEngineName);
+                stmtUpdate.setString(6, jter.tradeEngineTitle);
+                stmtUpdate.setString(7, jter.marketName);
+                stmtUpdate.setString(8, jter.marketTitle);
+                stmtUpdate.setInt(9, jter.marketId);
+                stmtUpdate.setString(10, jter.marketPlace);
                 stmtUpdate.addBatch();
             }
             setInsertCount(getInsertCount() + stmtUpdate.executeBatch().length);
-//            System.out.println("Length: " + stmtUpdate.executeBatch().length);
             stmtUpdate.clearBatch();
         } catch (SQLException e) {
             e.printStackTrace();

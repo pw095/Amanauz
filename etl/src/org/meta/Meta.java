@@ -1,7 +1,8 @@
 package org.meta;
 
 import org.data.AbstractEntity;
-import org.data.ImoexWebSiteEntity;
+import org.data.PeriodEntity;
+import org.flow.Flow;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -22,27 +23,24 @@ public final class Meta {
         }
     }
 
-    public static synchronized long setFlowLogStart() {
+    public static synchronized long setFlowLogStart(Flow flow) {
         long flowLoadId = 0;
 
-//        String stmtString = getQuery(getInstance().getProperty("meteSqlDirectory").concat("set_flow_log_start.sql"));
-
-//        String sqlSelectString = "SELECT MAX(flow_id) AS flow_id FROM tbl_flow_log";
-//        String sqlInsertString = "INSERT INTO tbl_flow_log(flow_id, flow_status, flow_start_dttm) VALUES(?, ?, ?)";
         String stmtSelectString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_max_flow_log_id.sql"));
         String stmtInsertString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_flow_log_info.sql"));
         try(Statement stmt = conn.createStatement();
             PreparedStatement pstmt = conn.prepareStatement(stmtInsertString);
             ResultSet rs = stmt.executeQuery(stmtSelectString)) {
             if (rs.next()) {
-                flowLoadId = rs.getLong("flow_id");
+                flow.setFlowLoadId(rs.getLong("flow_id") + 1);
             } else {
-                flowLoadId = 0;
+                flow.setFlowLoadId(0);
             }
 
-            pstmt.setLong(1, ++flowLoadId);
+            flow.setFlowLogStartTimestamp(LocalDateTime.now());
+            pstmt.setLong(1, flow.getFlowLoadId());
             pstmt.setString(2, LoadStatus.RUNNING.getDbStatus());
-            pstmt.setString(3, LocalDateTime.now().format(dateTimeFormat));
+            pstmt.setString(3, flow.getFlowLogStartTimestamp().format(dateTimeFormat));
 
             pstmt.executeUpdate();
 
@@ -58,7 +56,6 @@ public final class Meta {
     public static synchronized void setFlowLogFinish(long flowLoadId, LoadStatus loadStatus) {
 
         String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("update_flow_log_info.sql"));
-        System.out.println("flowLoadId = " + flowLoadId);
         try (PreparedStatement pstmt = conn.prepareStatement(stmtString)) {
             pstmt.setString(1, loadStatus.getDbStatus());
             pstmt.setString(2, LocalDateTime.now().format(dateTimeFormat));
@@ -71,6 +68,25 @@ public final class Meta {
         }
     }
 
+    public static synchronized void getPreviousEffectiveFromDt(PeriodEntity entity) {
+        try {
+            String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_previous_eff_to_dt.sql"));
+            String rllEffectiveToDt = null;
+
+            try (PreparedStatement stmtSelect = conn.prepareStatement(stmtString)) {
+                stmtSelect.setLong(1, entity.getEntityLayerMapId());
+                try (ResultSet rs = stmtSelect.executeQuery()) {
+                    if (rs.next()) {
+                        rllEffectiveToDt = rs.getString("rll_effective_to_dt");
+                    }
+                }
+            }
+            entity.setEffectiveFromDt(LocalDate.parse(rllEffectiveToDt, dateFormat).plusDays(1).format(dateFormat));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
     public static synchronized void getEntityLayerMapInfo(AbstractEntity entity) {
         try {
             String stmtString;
@@ -105,22 +121,6 @@ public final class Meta {
                     }
                 }
             }
-            String rllEffectiveToDt = "2021-04-30";
-            if (entity.getEntityLoadMode() == LoadMode.INCR) {
-                stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_previous_eff_to_dt.sql"));
-                try (PreparedStatement stmtSelect = conn.prepareStatement(stmtString)) {
-                    stmtSelect.setLong(1, entity.getEntityLayerMapId());
-                    try (ResultSet rs = stmtSelect.executeQuery()) {
-                        if (rs.next()) {
-                            rllEffectiveToDt = rs.getString("rll_effective_to_dt");
-                        }
-                    }
-                }
-            }
-            if (entity instanceof ImoexWebSiteEntity) {
-                ((ImoexWebSiteEntity) entity).setPreviousEffectiveToDt(rllEffectiveToDt);
-                ((ImoexWebSiteEntity) entity).setEffectiveFromDt(LocalDate.parse(rllEffectiveToDt, dateFormat).plusDays(1).format(dateFormat));
-            }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
@@ -128,9 +128,6 @@ public final class Meta {
     }
 
     public static synchronized void setEntityInfo(AbstractEntity entity) {
-        System.out.println("elm = " + entity.getEntityLayerMapId());
-        System.out.println("flow_load_id = " + entity.getFlowLoadId());
-        System.out.println("iteration_number = " + entity.getIterationNumber());
         try {
             String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_entity_load_info.sql"));
             try(PreparedStatement stmt = conn.prepareStatement(stmtString)) {
@@ -162,13 +159,13 @@ public final class Meta {
             }
 
             if (entity.getInsertCount() + entity.getUpdateCount() + entity.getDeleteCount() > 0) {
-                if (entity instanceof ImoexWebSiteEntity) {
+                if (entity instanceof PeriodEntity) {
                     stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_entity_relation_load_log.sql"));
                     try (PreparedStatement stmt = conn.prepareStatement(stmtString)) {
                         stmt.setLong(1, entity.getEntityLoadLogId());
                         stmt.setString(2, entity.getEntityLoadMode().getDbMode());
-                        stmt.setString(3, ((ImoexWebSiteEntity) entity).getEffectiveFromDt());
-                        stmt.setString(4, ((ImoexWebSiteEntity) entity).getEffectiveToDt());
+                        stmt.setString(3, ((PeriodEntity) entity).getEffectiveFromDt());
+                        stmt.setString(4, ((PeriodEntity) entity).getEffectiveToDt());
 
                         stmt.executeUpdate();
                     }
@@ -178,39 +175,4 @@ public final class Meta {
             e.printStackTrace();
         }
     }
-/*
-    public static synchronized void setEntityRelationInfo(AbstractEntity entity) {
-        try {
-            String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_entity_relation_load_log.sql"));
-            try(PreparedStatement stmt = conn.prepareStatement(stmtString)) {
-                stmt.setLong(1, entity.getEntityLoadLogId());
-                stmt.setString(2, entity.getEntityLoadMode().getDbMode());
-                stmt.setString(3, ((ImoexWebSiteEntity) entity).getEffectiveFromDt());
-                stmt.setString(4, ((ImoexWebSiteEntity) entity).getEffectiveToDt());
-
-                stmt.executeUpdate();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static synchronized void getEntityRelationEffectiveDt(AbstractEntity entity) {
-        try {
-            String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_entity_relation_effective_dt.sql"));
-            try(PreparedStatement stmt = conn.prepareStatement(stmtString)) {
-                stmt.setLong(1, entity.getEntityLoadLogId());
-                stmt.setString(2, entity.getEntityLoadMode().getDbMode());
-                stmt.setString(3, ((ImoexWebSiteEntity) entity).getEffectiveFromDt());
-                stmt.setString(4, ((ImoexWebSiteEntity) entity).getEffectiveToDt());
-
-                stmt.executeUpdate();
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-    */
 }

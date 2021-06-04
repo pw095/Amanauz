@@ -1,14 +1,17 @@
 package org.data;
 
+import org.flow.Flow;
 import org.json.JSONArray;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class StageSecurityTypes extends ImoexWebSiteEntity {
+import static org.util.AuxUtil.dateTimeFormat;
 
-    static class StageSecurityTypesData extends ImoexData {
+public class StageSecurityTypes extends SnapshotEntity implements ImoexSourceEntity {
+
+    static class StageSecurityTypesData extends ExternalData {
         int    id;
         int    tradeEngineId;
         String tradeEngineName;
@@ -36,53 +39,54 @@ public class StageSecurityTypes extends ImoexWebSiteEntity {
 
     }
 
-    public StageSecurityTypes(long flowLoadId) {
-        super(flowLoadId, "security_types");
+    public StageSecurityTypes(Flow flow) {
+        super(flow, "security_types");
     }
 
+    @Override
     public void detailLoad(PreparedStatement stmtUpdate) {
-        String urlStringData = "http://iss.moex.com/iss/index.json?iss.meta=off&iss.only=securitytypes&securitytypes.columns=id,trade_engine_id,trade_engine_name,trade_engine_title,security_type_name,security_type_title,security_group_name";
+        final String objectJSON = "securitytypes";
+        String urlStringRaw = "http://iss.moex.com/iss/index.json" +
+                              "?iss.meta=off&iss.only=securitytypes&securitytypes.columns=";
+        String urlColumnList = "id,trade_engine_id,trade_engine_name,trade_engine_title,security_type_name," +
+                               "security_type_title,security_group_name";
 
-        try {
-//            completeLoad(stmtUpdate, null, urlStringData);
-//            singleIterationLoad(stmtUpdate, urlStringData, "securitytypes");
-            noHistoryLoad(stmtUpdate, urlStringData, "securitytypes", false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String urlStringData = urlStringRaw.concat(urlColumnList);
+        saveData(stmtUpdate, load(urlStringData, objectJSON));
     }
 
-    StageSecurityTypesData accumulateData(JSONArray jsonArray) {
+    @Override
+    public StageSecurityTypesData accumulateData(JSONArray jsonArray) {
         StageSecurityTypesData data;
         data = new StageSecurityTypesData(jsonArray.optInt(0), // id
-                jsonArray.optInt(1), // trade_engine_id
-                jsonArray.optString(2), // trade_engine_name
-                jsonArray.optString(3), // trade_engine_title
-                jsonArray.optString(4), // security_type_name
-                jsonArray.optString(5), // security_type_title
-                jsonArray.optString(6));    // security_group_name
+                                          jsonArray.optInt(1), // trade_engine_id
+                                          jsonArray.optString(2), // trade_engine_name
+                                          jsonArray.optString(3), // trade_engine_title
+                                          jsonArray.optString(4), // security_type_name
+                                          jsonArray.optString(5), // security_type_title
+                                          jsonArray.optString(6)); // security_group_name
 
         return data;
     }
 
-    void saveData(PreparedStatement stmtUpdate, List<? extends ImoexData> dataArray) {
+    @Override
+    public void saveData(PreparedStatement stmtUpdate, List<? extends ExternalData> dataArray) {
         try {
             System.out.println("iter.count = " + dataArray.size());
-            for(ImoexData iter : dataArray) {
+            for(ExternalData iter : dataArray) {
                 StageSecurityTypesData jter = (StageSecurityTypesData) iter;
-//                System.out.println("jter.marketName = " + jter.marketName);
-                stmtUpdate.setInt(1, jter.id);
-                stmtUpdate.setInt(2, jter.tradeEngineId);
-                stmtUpdate.setString(3, jter.tradeEngineName);
-                stmtUpdate.setString(4, jter.tradeEngineTitle);
-                stmtUpdate.setString(5, jter.securityTypeName);
-                stmtUpdate.setString(6, jter.securityTypeTitle);
-                stmtUpdate.setString(7, jter.securityGroupName);
-                stmtUpdate.setLong(8, this.getFlowLoadId());
+                stmtUpdate.setLong(1, this.getFlowLoadId());
+                stmtUpdate.setString(2, this.getFlowLogStartTimestamp().format(dateTimeFormat));
+                stmtUpdate.setInt(3, jter.id);
+                stmtUpdate.setInt(4, jter.tradeEngineId);
+                stmtUpdate.setString(5, jter.tradeEngineName);
+                stmtUpdate.setString(6, jter.tradeEngineTitle);
+                stmtUpdate.setString(7, jter.securityTypeName);
+                stmtUpdate.setString(8, jter.securityTypeTitle);
+                stmtUpdate.setString(9, jter.securityGroupName);
                 stmtUpdate.addBatch();
             }
             setInsertCount(getInsertCount() + stmtUpdate.executeBatch().length);
-//            System.out.println("Length: " + stmtUpdate.executeBatch().length);
             stmtUpdate.clearBatch();
         } catch (SQLException e) {
             e.printStackTrace();

@@ -1,5 +1,6 @@
 package org.data;
 
+import org.flow.Flow;
 import org.meta.LoadMode;
 import org.meta.Meta;
 import org.meta.MetaLayer;
@@ -16,7 +17,6 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
     static private final String dataAuxDir = "auxiliary/";
     static private final String dataTruncScript = "$$entity_name_truncate.sql";
     static private final String dataInsertScript = "$$entity_name_insert.sql";
-//    static private final String dataSelectString = "$$entity_name.sql"; // move to relation
     private String sqlDirectory;
 
     MetaLayer entityLayer;
@@ -26,6 +26,7 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
     private long entityLayerMapId;
     private long entityLoadLogId;
     private long flowLoadId;
+    private LocalDateTime flowLogStartTimestamp;
     private long iterationNumber;
 
     public long getEntityLayerMapId() {
@@ -45,6 +46,12 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
     }
     public void setFlowLoadId(long flowLoadId) {
         this.flowLoadId = flowLoadId;
+    }
+    public LocalDateTime getFlowLogStartTimestamp() {
+        return this.flowLogStartTimestamp;
+    }
+    public void setFlowLogStartTimestamp(LocalDateTime flowLogStartTimestamp) {
+        this.flowLogStartTimestamp = flowLogStartTimestamp;
     }
 
     public long getIterationNumber() {
@@ -98,7 +105,6 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
         return this.entityFinishLoadTimestamp;
     }
 
-    private Connection connSource; // move to relation
     private Connection connTarget;
 
     protected abstract void detailLoad(PreparedStatement stmtUpdate);
@@ -120,26 +126,16 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
         this.entityLoadMode = entityLoadMode;
     }
 
-
     public MetaLayer getEntityLayer() {
         return this.entityLayer;
     }
     public String getEntityCode() {
         return this.entityCode;
     }
-/*    private void customOps() {
-        if (this.entityLoadMode.equals("FULL")) {
-            String stmtString = getQuery(getTruncateSQL());
-            try (Statement stmtTruncate = connTarget.createStatement()) {
-                stmtTruncate.executeUpdate(stmtString);
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-        }
-    }*/
 
-    AbstractEntity(long flowLoadId, MetaLayer entityLayer, String entityCode) {
-        this.flowLoadId = flowLoadId;
+    AbstractEntity(Flow flow, MetaLayer entityLayer, String entityCode) {
+        setFlowLoadId(flow.getFlowLoadId());
+        setFlowLogStartTimestamp(flow.getFlowLogStartTimestamp());
         this.entityLayer = entityLayer;
         this.entityCode = entityCode;
 
@@ -161,10 +157,8 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
     public AbstractEntity call() {
 
         this.setEntityStartLoadTimestamp(LocalDateTime.now());
-//        System.out.println("entityLayerMapId" + this.getEntityLayerMapId());
         String insertSQL = getQuery(getInsertSQL());
         try {
-            System.out.println(insertSQL);
             try(PreparedStatement stmtUpdate = connTarget.prepareStatement(insertSQL)) {
                 detailLoad(stmtUpdate);
             }
@@ -176,53 +170,4 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
         Meta.setEntityInfo(this);
         return this;
     }
-/*
-    public abstract QueueElement load(QueueElement queueElement);
-
-    public default <T extends QueueElement> T preLoad(T queueElement) {
-        queueElement.setLoadStatus(LoadStatus.RUNNING);
-        queueElement.setStartDttm(LocalDateTime.now());
-
-        String sqlUpdateString = "UPDATE tbl_entity_load_queue SET elq_status = ?, elq_start_dttm = ? WHERE elq_flow_id = ? AND elq_elm_id = ?";
-        try(Connection conn = DriverManager.getConnection(Flow.connString);
-            PreparedStatement preparedStatement = conn.prepareStatement(sqlUpdateString)) {
-
-            preparedStatement.setString(1, queueElement.getLoadStatus().getDbStatus());
-            preparedStatement.setString(2, queueElement.getStartDttm().format(Flow.dateFormat));
-            preparedStatement.setInt(3, queueElement.getFlowId());
-            preparedStatement.setInt(4, queueElement.getElmId());
-
-            preparedStatement.executeUpdate();
-
-        } catch(SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-
-        return queueElement;
-    }
-
-    public default <T extends QueueElement> T postLoad(T queueElement) {
-
-        queueElement.setLoadStatus(LoadStatus.SUCCEEDED);
-        queueElement.setFinishDttm(LocalDateTime.now());
-
-        String sqlUpdateString = "UPDATE tbl_entity_load_queue SET elq_status = ?, elq_finish_dttm = ? WHERE elq_flow_id = ? AND elq_elm_id = ?";
-        try(Connection conn = DriverManager.getConnection(Flow.connString);
-            PreparedStatement preparedStatement = conn.prepareStatement(sqlUpdateString)) {
-
-            preparedStatement.setString(1, queueElement.getLoadStatus().getDbStatus());
-            preparedStatement.setString(2, queueElement.getFinishDttm().format(Flow.dateFormat));
-            preparedStatement.setInt(3, queueElement.getFlowId());
-            preparedStatement.setInt(4, queueElement.getElmId());
-
-            preparedStatement.executeUpdate();
-
-        } catch(SQLException e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
-
-        return queueElement;
-    }*/
 }

@@ -1,16 +1,18 @@
 package org.data;
 
+import org.flow.Flow;
 import org.json.JSONArray;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class StageSecurityBoards extends ImoexWebSiteEntity {
+import static org.util.AuxUtil.dateTimeFormat;
 
-    static class StageSecurityBoardsData extends ImoexData {
+public class StageSecurityBoards extends SnapshotEntity implements ImoexSourceEntity {
+
+    static class StageSecurityBoardsData extends ExternalData {
         int    id;
-
         int    boardGroupId;
         int    engineId;
         int    marketId;
@@ -20,16 +22,15 @@ public class StageSecurityBoards extends ImoexWebSiteEntity {
         int    hasCandles;
         int    isPrimary;
 
-
         public StageSecurityBoardsData(int    id,
-                                      int    boardGroupId,
-                                      int    engineId,
-                                      int    marketId,
-                                      String boardId,
-                                      String boardTitle,
-                                      int    isTraded,
-                                      int    hasCandles,
-                                      int    isPrimary) {
+                                       int    boardGroupId,
+                                       int    engineId,
+                                       int    marketId,
+                                       String boardId,
+                                       String boardTitle,
+                                       int    isTraded,
+                                       int    hasCandles,
+                                       int    isPrimary) {
             this.id = id;
             this.boardGroupId = boardGroupId;
             this.engineId = engineId;
@@ -43,56 +44,55 @@ public class StageSecurityBoards extends ImoexWebSiteEntity {
 
     }
 
-    public StageSecurityBoards(long flowLoadId) {
-        super(flowLoadId, "security_boards");
+    public StageSecurityBoards(Flow flow) {
+        super(flow, "security_boards");
     }
 
+    @Override
     public void detailLoad(PreparedStatement stmtUpdate) {
-        String urlStringData = "http://iss.moex.com/iss/index.json?iss.meta=off&iss.only=boards&markets.columns=id,board_group_id,engine_id,market_id,boardid,board_title,is_traded,has_candles,is_primary";
+        final String objectJSON = "boards";
+        String urlStringRaw = "http://iss.moex.com/iss/index.json?iss.meta=off&iss.only=boards&markets.columns=";
+        String urlColumnList = "id,board_group_id,engine_id,market_id,boardid,board_title,is_traded,has_candles," +
+                               "is_primary";
 
-        try {
-//            completeLoad(stmtUpdate, null, urlStringData);
-//            singleIterationLoad(stmtUpdate, urlStringData, "boards");
-            noHistoryLoad(stmtUpdate, urlStringData, "boards", false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String urlStringData = urlStringRaw.concat(urlColumnList);
+        saveData(stmtUpdate, load(urlStringData, objectJSON));
     }
 
-    StageSecurityBoardsData accumulateData(JSONArray jsonArray) {
+    @Override
+    public StageSecurityBoardsData accumulateData(JSONArray jsonArray) {
         StageSecurityBoardsData data;
         data = new StageSecurityBoardsData(jsonArray.optInt(0), // id
-                jsonArray.optInt(1), // board_group_id
-                jsonArray.optInt(2), // engine_id
-                jsonArray.optInt(3), // market_id
-                jsonArray.optString(4), // boardid
-                jsonArray.optString(5), // board_title
-                jsonArray.optInt(6),    // is_traded
-                jsonArray.optInt(7),    // has_candles
-                jsonArray.getInt(8));  // is_primary
+                                           jsonArray.optInt(1), // board_group_id
+                                           jsonArray.optInt(2), // engine_id
+                                           jsonArray.optInt(3), // market_id
+                                           jsonArray.optString(4), // boardid
+                                           jsonArray.optString(5), // board_title
+                                           jsonArray.optInt(6),    // is_traded
+                                           jsonArray.optInt(7),    // has_candles
+                                           jsonArray.getInt(8));  // is_primary
         return data;
     }
 
-    void saveData(PreparedStatement stmtUpdate, List<? extends ImoexData> dataArray) {
+    @Override
+    public void saveData(PreparedStatement stmtUpdate, List<? extends ExternalData> dataArray) {
         try {
-            System.out.println("iter.count = " + dataArray.size());
-            for(ImoexData iter : dataArray) {
+            for(ExternalData iter : dataArray) {
                 StageSecurityBoardsData jter = (StageSecurityBoardsData) iter;
-//                System.out.println("jter.marketName = " + jter.marketName);
-                stmtUpdate.setInt(1, jter.id);
-                stmtUpdate.setInt(2, jter.boardGroupId);
-                stmtUpdate.setInt(3, jter.engineId);
-                stmtUpdate.setInt(4, jter.marketId);
-                stmtUpdate.setString(5, jter.boardId);
-                stmtUpdate.setString(6, jter.boardTitle);
-                stmtUpdate.setInt(7, jter.isTraded);
-                stmtUpdate.setInt(8, jter.hasCandles);
-                stmtUpdate.setInt(9, jter.isPrimary);
-                stmtUpdate.setLong(10, this.getFlowLoadId());
+                stmtUpdate.setLong(1, this.getFlowLoadId());
+                stmtUpdate.setString(2, this.getFlowLogStartTimestamp().format(dateTimeFormat));
+                stmtUpdate.setInt(3, jter.id);
+                stmtUpdate.setInt(4, jter.boardGroupId);
+                stmtUpdate.setInt(5, jter.engineId);
+                stmtUpdate.setInt(6, jter.marketId);
+                stmtUpdate.setString(7, jter.boardId);
+                stmtUpdate.setString(8, jter.boardTitle);
+                stmtUpdate.setInt(9, jter.isTraded);
+                stmtUpdate.setInt(10, jter.hasCandles);
+                stmtUpdate.setInt(11, jter.isPrimary);
                 stmtUpdate.addBatch();
             }
             setInsertCount(getInsertCount() + stmtUpdate.executeBatch().length);
-//            System.out.println("Length: " + stmtUpdate.executeBatch().length);
             stmtUpdate.clearBatch();
         } catch (SQLException e) {
             e.printStackTrace();

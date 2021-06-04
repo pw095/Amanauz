@@ -1,6 +1,8 @@
 INSERT
   INTO security_markets
   (
+    tech$load_id,
+    tech$load_dttm,
     id,
     trade_engine_id,
     trade_engine_name,
@@ -8,11 +10,12 @@ INSERT
     market_name,
     market_title,
     market_id,
-    marketplace,
-    tech$load_id
+    marketplace
   )
 VALUES
   (
+    :tech$load_id,
+    :tech$load_dttm,
     :id,
     :trade_engine_id,
     :trade_engine_name,
@@ -20,6 +23,5 @@ VALUES
     :market_name,
     :market_title,
     :market_id,
-    :marketplace,
-    :tech$load_id
+    :marketplace
   )

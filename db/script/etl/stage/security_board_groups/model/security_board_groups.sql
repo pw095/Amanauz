@@ -1,6 +1,8 @@
 DROP TABLE security_board_groups;
 CREATE TABLE security_board_groups
   (
+    tech$load_id       INTEGER NOT NULL,
+    tech$load_dttm     TEXT    NOT NULL,
     id                 INTEGER,
     trade_engine_id    INTEGER,
     trade_engine_name  TEXT,
@@ -11,6 +13,5 @@ CREATE TABLE security_board_groups
     title              TEXT,
     is_default         INTEGER,
     board_group_id     INTEGER,
-    is_traded          INTEGER,
-    tech$load_id       INTEGER NOT NULL
+    is_traded          INTEGER
   );

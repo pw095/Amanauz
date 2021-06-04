@@ -1,5 +1,6 @@
 package org.data;
 
+import org.flow.Flow;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -10,13 +11,12 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.data.ImoexWebSiteEntity.ImoexData;
 import static org.util.AuxUtil.dateFormat;
 import static org.util.AuxUtil.dateTimeFormat;
 
-public class StageForeignCurrencyRate extends CbrWebSiteEntity {
+public class StageForeignCurrencyRate extends PeriodEntity implements CbrSourceEntity {
 
-    static class StageForeignCurrencyRateData extends ImoexData {
+    static class StageForeignCurrencyRateData extends ExternalData {
         String tradeDate;
         String id;
         long   nominal;
@@ -34,29 +34,27 @@ public class StageForeignCurrencyRate extends CbrWebSiteEntity {
 
     }
 
-    public StageForeignCurrencyRate(long flowLoadId) {
-        super(flowLoadId, "foreign_currency_rate");
-    }
-
-    public void detailLoad(PreparedStatement stmtUpdate) {
-        //http://www.cbr.ru/scripts/XML_dynamic.asp?date_req1=01/05/2021&date_req2=28/05/2021&VAL_NM_RQ=R01010
-        String urlStringRaw = "http://www.cbr.ru/scripts/XML_dynamic.asp?VAL_NM_RQ=";
-        String urlStringData;
-
-        this.setEffectiveFromDt("2021-05-01");
-        this.setEffectiveToDt("2021-05-31");
-        urlStringData = urlStringRaw.concat("R01010");
-
-        try {
-            historyCbrLoad(stmtUpdate, urlStringData);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+    public StageForeignCurrencyRate(Flow flow) {
+        super(flow, "foreign_currency_rate");
     }
 
     @Override
-    List<? extends ImoexData> parseXML(Document document) {
+    public void detailLoad(PreparedStatement stmtUpdate) {
+        String urlStringRaw = "http://www.cbr.ru/scripts/XML_dynamic.asp?VAL_NM_RQ=";
+        String urlStringData;
+        Document document;
+        urlStringData = urlStringRaw.concat("R01010")
+                .concat("&date_req1=")
+                .concat(LocalDate.parse(this.getEffectiveFromDt(), dateFormat).format(cbrPutDateFormat))
+                .concat("&date_req2=")
+                .concat(LocalDate.parse(this.getEffectiveToDt(), dateFormat).format(cbrPutDateFormat));
+
+        document = load(urlStringData);
+        saveData(stmtUpdate, accumulateData(document));
+    }
+
+    @Override
+    public List<? extends ExternalData> accumulateData(Document document) {
 
         List<StageForeignCurrencyRateData> dataList = new ArrayList<>();
         NodeList nodeList = document.getDocumentElement().getChildNodes();
@@ -80,7 +78,6 @@ public class StageForeignCurrencyRate extends CbrWebSiteEntity {
                             value = Double.valueOf(currentItem.replace(",", "."));
                             break;
                     }
-                    System.out.println(itemInfo.getNodeName() + " " + currentItem);
                 }
             }
             dataList.add
@@ -93,21 +90,17 @@ public class StageForeignCurrencyRate extends CbrWebSiteEntity {
         return dataList;
     }
 
-
-
-    void saveData(PreparedStatement stmtUpdate, List<? extends ImoexData> dataArray) {
+    @Override
+    public void saveData(PreparedStatement stmtUpdate, List<? extends ExternalData> dataArray) {
         try {
-            System.out.println("iter.count = " + dataArray.size());
-            for(ImoexData iter : dataArray) {
+            for(ExternalData iter : dataArray) {
                 StageForeignCurrencyRateData jter = (StageForeignCurrencyRateData) iter;
-
                 stmtUpdate.setLong(1, this.getFlowLoadId());
-                stmtUpdate.setString(2, this.getEntityStartLoadTimestamp().format(dateTimeFormat));
+                stmtUpdate.setString(2, this.getFlowLogStartTimestamp().format(dateTimeFormat));
                 stmtUpdate.setString(3, jter.tradeDate);
                 stmtUpdate.setString(4, jter.id);
                 stmtUpdate.setLong(5, jter.nominal);
                 stmtUpdate.setDouble(6, jter.value);
-
                 stmtUpdate.addBatch();
             }
             setInsertCount(getInsertCount() + stmtUpdate.executeBatch().length);

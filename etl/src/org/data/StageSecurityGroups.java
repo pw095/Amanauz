@@ -1,24 +1,26 @@
 package org.data;
 
+import org.flow.Flow;
 import org.json.JSONArray;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class StageSecurityGroups extends ImoexWebSiteEntity {
+import static org.util.AuxUtil.dateTimeFormat;
 
-    static class StageSecurityGroupsData extends ImoexData {
+public class StageSecurityGroups extends SnapshotEntity implements ImoexSourceEntity {
+
+    static class StageSecurityGroupsData extends ExternalData {
         int    id;
         String name;
         String title;
         int    isHidden;
 
-
         public StageSecurityGroupsData(int    id,
-                                        String name,
-                                        String title,
-                                        int    isHidden) {
+                                       String name,
+                                       String title,
+                                       int    isHidden) {
             this.id = id;
             this.name = name;
             this.title = title;
@@ -27,46 +29,46 @@ public class StageSecurityGroups extends ImoexWebSiteEntity {
 
     }
 
-    public StageSecurityGroups(long flowLoadId) {
-        super(flowLoadId, "security_groups");
+    public StageSecurityGroups(Flow flow) {
+        super(flow, "security_groups");
     }
 
+    @Override
     public void detailLoad(PreparedStatement stmtUpdate) {
-        String urlStringData = "http://iss.moex.com/iss/index.json?iss.meta=off&iss.only=securitygroups&securitygroups.columns=id,name,title,is_hidden";
+        final String objectJSON = "securitygroups";
+        String urlStringRaw = "http://iss.moex.com/iss/index.json" +
+                              "?iss.meta=off&iss.only=securitygroups&securitygroups.columns=";
+        String urlColumnList = "id,name,title,is_hidden";
 
-        try {
-//            completeLoad(stmtUpdate, null, urlStringData);
-//            singleIterationLoad(stmtUpdate, urlStringData, "securitygroups");
-            noHistoryLoad(stmtUpdate, urlStringData, "securitygroups", false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String urlStringData = urlStringRaw.concat(urlColumnList);
+        saveData(stmtUpdate, load(urlStringData, objectJSON));
     }
 
-    StageSecurityGroupsData accumulateData(JSONArray jsonArray) {
+    @Override
+    public StageSecurityGroupsData accumulateData(JSONArray jsonArray) {
         StageSecurityGroupsData data;
-        data = new StageSecurityGroupsData(jsonArray.optInt(0),
-                                            jsonArray.optString(1),
-                                            jsonArray.optString(2),
-                                            jsonArray.optInt(3));
+        data = new StageSecurityGroupsData(jsonArray.optInt(0), // id
+                                           jsonArray.optString(1), // name
+                                           jsonArray.optString(2), // title
+                                           jsonArray.optInt(3)); // is_hidden
         return data;
     }
 
-    void saveData(PreparedStatement stmtUpdate, List<? extends ImoexData> dataArray) {
+    @Override
+    public void saveData(PreparedStatement stmtUpdate, List<? extends ExternalData> dataArray) {
         try {
-            System.out.println("iter.count = " + dataArray.size());
-            for(ImoexData iter : dataArray) {
+            for(ExternalData iter : dataArray) {
                 StageSecurityGroupsData jter = (StageSecurityGroupsData) iter;
 
-                stmtUpdate.setInt(1, jter.id);
-                stmtUpdate.setString(2, jter.name);
-                stmtUpdate.setString(3, jter.title);
-                stmtUpdate.setInt(4, jter.isHidden);
-                stmtUpdate.setLong(5, this.getFlowLoadId());
+                stmtUpdate.setLong(1, this.getFlowLoadId());
+                stmtUpdate.setString(2, this.getFlowLogStartTimestamp().format(dateTimeFormat));
+                stmtUpdate.setInt(3, jter.id);
+                stmtUpdate.setString(4, jter.name);
+                stmtUpdate.setString(5, jter.title);
+                stmtUpdate.setInt(6, jter.isHidden);
                 stmtUpdate.addBatch();
             }
             setInsertCount(getInsertCount() + stmtUpdate.executeBatch().length);
-//            System.out.println("Length: " + stmtUpdate.executeBatch().length);
             stmtUpdate.clearBatch();
         } catch (SQLException e) {
             e.printStackTrace();

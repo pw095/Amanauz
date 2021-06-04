@@ -1,15 +1,14 @@
 DROP TABLE tbl_entity_load_queue;
 CREATE TABLE tbl_entity_load_queue
   (
-    elq_id                         INTEGER PRIMARY KEY NOT NULL,
-    elq_flow_id                    INTEGER             NOT NULL,
-    elq_elm_id                     INTEGER             NOT NULL,
-    elq_pending_parent_cnt         INTEGER             NOT NULL,
-    elq_iteration_number           INTEGER             NOT NULL,
+    elq_id                         INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+    elq_flow_id                    INTEGER                           NOT NULL,
+    elq_elm_id                     INTEGER                           NOT NULL,
+    elq_iteration_number           INTEGER                           NOT NULL,
     elq_iteration_insert_row_count INTEGER,
     elq_iteration_update_row_count INTEGER,
     elq_iteration_delete_row_count INTEGER,
-    elq_status                     TEXT                NOT NULL,
+    elq_status                     TEXT                              NOT NULL,
     elq_start_dttm                 TEXT,
     elq_finish_dttm                TEXT,
     elq_error_message              TEXT,

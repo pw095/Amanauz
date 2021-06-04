@@ -1,17 +1,19 @@
 INSERT
   INTO security_groups
   (
+    tech$load_id,
+    tech$load_dttm,
     id,
     name,
     title,
-    is_hidden,
-    tech$load_id
+    is_hidden
   )
 VALUES
   (
+    :tech$load_id,
+    :tech$load_dttm,
     :id,
     :name,
     :title,
-    :is_hidden,
-    :tech$load_id
+    :is_hidden
   )

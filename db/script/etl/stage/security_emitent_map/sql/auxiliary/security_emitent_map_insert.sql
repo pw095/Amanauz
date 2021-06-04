@@ -1,6 +1,8 @@
 INSERT
   INTO security_emitent_map
   (
+    tech$load_id,
+    tech$load_dttm,
     id,
     security_id,
     short_name,
@@ -16,11 +18,12 @@ INSERT
     security_type,
     security_group,
     primary_board_id,
-    market_price_board_id,
-    tech$load_id
+    market_price_board_id
   )
 VALUES
   (
+    :tech$load_id,
+    :tech$load_dttm,
     :id,
     :security_id,
     :short_name,
@@ -36,6 +39,5 @@ VALUES
     :security_type,
     :security_group,
     :primary_board_id,
-    :market_price_board_id,
-    :tech$load_id
+    :market_price_board_id
   )

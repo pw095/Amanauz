@@ -1,23 +1,25 @@
 INSERT
   INTO security_types
   (
+    tech$load_id,
+    tech$load_dttm,
     id,
     trade_engine_id,
     trade_engine_name,
     trade_engine_title,
     security_type_name,
     security_type_title,
-    security_group_name,
-    tech$load_id
+    security_group_name
   )
 VALUES
   (
+    :tech$load_id,
+    :tech$load_dttm,
     :id,
     :trade_engine_id,
     :trade_engine_name,
     :trade_engine_title,
     :security_type_name,
     :security_type_title,
-    :security_group_name,
-    :tech$load_id
+    :security_group_name
   )

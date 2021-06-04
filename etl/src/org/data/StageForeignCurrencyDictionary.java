@@ -1,6 +1,6 @@
 package org.data;
 
-import org.json.JSONArray;
+import org.flow.Flow;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -11,11 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.util.AuxUtil.dateTimeFormat;
-import static org.data.ImoexWebSiteEntity.ImoexData;
 
-public class StageForeignCurrencyDictionary extends CbrWebSiteEntity {
+public class StageForeignCurrencyDictionary extends SnapshotEntity implements CbrSourceEntity {
 
-    static class StageForeignCurrencyDictionaryData extends ImoexWebSiteEntity.ImoexData {
+    static class StageForeignCurrencyDictionaryData extends ExternalData {
         String id;
         String name;
         String engName;
@@ -42,45 +41,27 @@ public class StageForeignCurrencyDictionary extends CbrWebSiteEntity {
 
     }
 
-    public StageForeignCurrencyDictionary(long flowLoadId) {
-        super(flowLoadId, "foreign_currency_dictionary");
-    }
-
-    public void detailLoad(PreparedStatement stmtUpdate) {
-//        http://iss.moex.com/iss/engines/stock/markets/shares/securities.json?iss.meta=off&iss.only=securities&securities.columns=SECID,BOARDID,SHORTNAME,PREVPRICE,LOTSIZE,FACEVALUE,STATUS,BOARNAME,DECIMALS,SECNAME,REMARKS,MARKETCODE,INSTRID,MINSTEP,PREVWAPRICE,FACEUNIT,PREVDATE,ISSUESIZE,ISIN,LATNAME,REGNUMBER,PREVLEGALCLOSEPRICE,PREVADMITTEDQUOTE,CURRENCYID,SECTYPE,LISTLEVEL,SETTLEDATE
-        String urlStringRaw = "http://www.cbr.ru/scripts/XML_valFull.asp?d=";
-        String urlStringData;
-/*        String urlColumnList = "/securities.json?iss.meta=off&iss.only=securities&securities.columns=SECID,BOARDID,SHORTNAME,PREVPRICE,LOTSIZE,FACEVALUE,STATUS,BOARNAME,DECIMALS,SECNAME,REMARKS,MARKETCODE,INSTRID,MINSTEP,PREVWAPRICE,FACEUNIT,PREVDATE,ISSUESIZE,ISIN,LATNAME,REGNUMBER,PREVLEGALCLOSEPRICE,PREVADMITTEDQUOTE,CURRENCYID,SECTYPE,LISTLEVEL,SETTLEDATE";
-        String urlStringMeta = null;*/
-        urlStringData = urlStringRaw.concat("0");
-
-        try {
-            noHistoryCbrLoad(stmtUpdate, urlStringData);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        urlStringData = urlStringRaw.concat("1");
-
-        try {
-            noHistoryCbrLoad(stmtUpdate, urlStringData);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-/*
-        urlStringData = urlStringRaw.concat("bonds").concat(urlColumnList);
-
-        try {
-//            completeLoad(stmtUpdate, urlStringMeta, urlStringData);
-//            singleIterationLoad(stmtUpdate, urlStringData, "data");
-            noHistoryLoad(stmtUpdate, urlStringData, "securities", false);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }*/
+    public StageForeignCurrencyDictionary(Flow flow) {
+        super(flow, "foreign_currency_dictionary");
     }
 
     @Override
-    List<? extends ImoexData> parseXML(Document document) {
+    public void detailLoad(PreparedStatement stmtUpdate) {
+        String urlStringRaw = "http://www.cbr.ru/scripts/XML_valFull.asp?d=";
+        String urlStringData;
+        Document document;
+
+        urlStringData = urlStringRaw.concat("0");
+        document = load(urlStringData);
+        saveData(stmtUpdate, accumulateData(document));
+
+        urlStringData = urlStringRaw.concat("1");
+        document = load(urlStringData);
+        saveData(stmtUpdate, accumulateData(document));
+    }
+
+    @Override
+    public List<? extends ExternalData> accumulateData(Document document) {
 
         List<StageForeignCurrencyDictionaryData> dataList = new ArrayList<>();
         NodeList nodeList = document.getDocumentElement().getChildNodes();
@@ -120,7 +101,6 @@ public class StageForeignCurrencyDictionary extends CbrWebSiteEntity {
                             isoCharCode = currentItem;
                             break;
                     }
-                    System.out.println(itemInfo.getNodeName() + " " + currentItem);
                 }
             }
             dataList.add(new StageForeignCurrencyDictionaryData(nodeItem.getAttributes().getNamedItem("ID").getTextContent(),
@@ -134,16 +114,13 @@ public class StageForeignCurrencyDictionary extends CbrWebSiteEntity {
         return dataList;
     }
 
-
-
-    void saveData(PreparedStatement stmtUpdate, List<? extends ImoexData> dataArray) {
+    @Override
+    public void saveData(PreparedStatement stmtUpdate, List<? extends ExternalData> dataArray) {
         try {
-            System.out.println("iter.count = " + dataArray.size());
-            for(ImoexData iter : dataArray) {
+            for(ExternalData iter : dataArray) {
                 StageForeignCurrencyDictionaryData jter = (StageForeignCurrencyDictionaryData) iter;
-
                 stmtUpdate.setLong(1, this.getFlowLoadId());
-                stmtUpdate.setString(2, this.getEntityStartLoadTimestamp().format(dateTimeFormat));
+                stmtUpdate.setString(2, this.getFlowLogStartTimestamp().format(dateTimeFormat));
                 stmtUpdate.setString(3, jter.id);
                 stmtUpdate.setString(4, jter.name);
                 stmtUpdate.setString(5, jter.engName);
@@ -151,11 +128,9 @@ public class StageForeignCurrencyDictionary extends CbrWebSiteEntity {
                 stmtUpdate.setString(7, jter.parentCode);
                 stmtUpdate.setString(8, jter.isoNumCode);
                 stmtUpdate.setString(9, jter.isoCharCode);
-
                 stmtUpdate.addBatch();
             }
             setInsertCount(getInsertCount() + stmtUpdate.executeBatch().length);
-//            System.out.println("Length: " + stmtUpdate.executeBatch().length);
             stmtUpdate.clearBatch();
         } catch (SQLException e) {
             e.printStackTrace();

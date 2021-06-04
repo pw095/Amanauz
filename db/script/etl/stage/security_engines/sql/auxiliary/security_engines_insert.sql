@@ -1,15 +1,17 @@
 INSERT
   INTO security_engines
   (
+    tech$load_id,
+    tech$load_dttm,
     id,
     name,
-    title,
-    tech$load_id
+    title
   )
 VALUES
   (
+    :tech$load_id,
+    :tech$load_dttm,
     :id,
     :name,
-    :title,
-    :tech$load_id
+    :title
   )

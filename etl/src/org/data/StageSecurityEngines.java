@@ -1,19 +1,20 @@
 package org.data;
 
+import org.flow.Flow;
 import org.json.JSONArray;
 
-import java.math.BigDecimal;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class StageSecurityEngines extends ImoexWebSiteEntity {
+import static org.util.AuxUtil.dateTimeFormat;
 
-    static class StageSecurityEnginesData extends ImoexData {
+public class StageSecurityEngines extends SnapshotEntity implements ImoexSourceEntity {
+
+    static class StageSecurityEnginesData extends ExternalData {
         int    id;
         String name;
         String title;
-
 
         public StageSecurityEnginesData(int    id,
                                         String name,
@@ -25,44 +26,42 @@ public class StageSecurityEngines extends ImoexWebSiteEntity {
 
     }
 
-    public StageSecurityEngines(long flowLoadId) {
-        super(flowLoadId, "security_engines");
+    public StageSecurityEngines(Flow flow) {
+        super(flow, "security_engines");
     }
 
+    @Override
     public void detailLoad(PreparedStatement stmtUpdate) {
-        String urlStringData = "http://iss.moex.com/iss/index.json?iss.meta=off&iss.only=engines&engines.columns=id,name,title";
+        final String objectJSON = "engines";
+        String urlStringRaw = "http://iss.moex.com/iss/index.json?iss.meta=off&iss.only=engines&engines.columns=";
+        String urlColumnList = "id,name,title";
 
-        try {
-//            completeLoad(stmtUpdate, null, urlStringData);
-            noHistoryLoad(stmtUpdate, urlStringData, "engines", false);
-//            singleIterationLoad(stmtUpdate, urlStringData, "engines");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        String urlStringData = urlStringRaw.concat(urlColumnList);
+        saveData(stmtUpdate, load(urlStringData, objectJSON));
     }
 
-    StageSecurityEnginesData accumulateData(JSONArray jsonArray) {
+    @Override
+    public StageSecurityEnginesData accumulateData(JSONArray jsonArray) {
         StageSecurityEnginesData data;
-        data = new StageSecurityEnginesData(jsonArray.optInt(0),
-                                            jsonArray.optString(1),
-                                            jsonArray.optString(2));
+        data = new StageSecurityEnginesData(jsonArray.optInt(0), // id
+                                            jsonArray.optString(1), // name
+                                            jsonArray.optString(2)); // title
         return data;
     }
 
-    void saveData(PreparedStatement stmtUpdate, List<? extends ImoexData> dataArray) {
+    @Override
+    public void saveData(PreparedStatement stmtUpdate, List<? extends ExternalData> dataArray) {
         try {
-            System.out.println("iter.count = " + dataArray.size());
-            for(ImoexData iter : dataArray) {
+            for(ExternalData iter : dataArray) {
                 StageSecurityEnginesData jter = (StageSecurityEnginesData) iter;
-
-                stmtUpdate.setInt(1, jter.id);
-                stmtUpdate.setString(2, jter.name);
-                stmtUpdate.setString(3, jter.title);
-                stmtUpdate.setLong(4, this.getFlowLoadId());
+                stmtUpdate.setLong(1, this.getFlowLoadId());
+                stmtUpdate.setString(2, this.getFlowLogStartTimestamp().format(dateTimeFormat));
+                stmtUpdate.setInt(3, jter.id);
+                stmtUpdate.setString(4, jter.name);
+                stmtUpdate.setString(5, jter.title);
                 stmtUpdate.addBatch();
             }
             setInsertCount(getInsertCount() + stmtUpdate.executeBatch().length);
-//            System.out.println("Length: " + stmtUpdate.executeBatch().length);
             stmtUpdate.clearBatch();
         } catch (SQLException e) {
             e.printStackTrace();

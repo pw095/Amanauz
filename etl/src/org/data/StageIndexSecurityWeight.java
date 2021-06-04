@@ -1,14 +1,17 @@
 package org.data;
 
+import org.flow.Flow;
 import org.json.JSONArray;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 
-public class StageIndexSecurityWeight extends ImoexWebSiteEntity {
+import static org.util.AuxUtil.dateTimeFormat;
 
-    static class StageIndexSecurityWeightData extends ImoexData {
+public class StageIndexSecurityWeight extends PeriodEntity implements ImoexSourceEntity {
+
+    static class StageIndexSecurityWeightData extends ExternalData {
         String indexId;
         String tradeDate;
         String ticker;
@@ -35,53 +38,50 @@ public class StageIndexSecurityWeight extends ImoexWebSiteEntity {
 
     }
 
-    public StageIndexSecurityWeight(long flowLoadId) {
-        super(flowLoadId, "index_security_weight");
+    public StageIndexSecurityWeight(Flow flow) {
+        super(flow, "index_security_weight");
     }
 
     public void detailLoad(PreparedStatement stmtUpdate) {
-        String urlStringRaw = "http://iss.moex.com/iss/statistics/engines/stock/markets/index/analytics/IMOEX.json?iss.meta=off&iss.only=analytics&limit=100";
-        String urlStringData = urlStringRaw.concat("&analytics.columns=indexid,tradedate,ticker,shortnames,secids,weight,tradingsession");
+        final String objectJSON = "analytics";
+        final String urlStringRaw = "http://iss.moex.com/iss/statistics/engines/stock/markets/index/analytics/IMOEX.json" +
+                                    "?iss.meta=off&iss.only=analytics&limit=100&analytics.columns=";
+        final String urlColumnList = "indexid,tradedate,ticker,shortnames,secids,weight,tradingsession";
 
-        try {
-            historyLoad(stmtUpdate, urlStringData, "analytics");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
+        final String urlStringData = urlStringRaw.concat(urlColumnList);
+        saveData(stmtUpdate, periodMultiLoad(urlStringData, this, objectJSON));
     }
 
-    StageIndexSecurityWeightData accumulateData(JSONArray jsonArray) {
+    @Override
+    public StageIndexSecurityWeightData accumulateData(JSONArray jsonArray) {
         StageIndexSecurityWeightData data;
-        data = new StageIndexSecurityWeightData(jsonArray.optString(0),
-                                                jsonArray.optString(1),
-                                                jsonArray.optString(2),
-                                                jsonArray.optString(3),
-                                                jsonArray.optString(4),
-                                                jsonArray.optDouble(5),
-                                                jsonArray.optInt(6));
-//        System.out.println(data.tradeDate);
+        data = new StageIndexSecurityWeightData(jsonArray.optString(0), // indexid
+                                                jsonArray.optString(1), // tradedate
+                                                jsonArray.optString(2), // ticker
+                                                jsonArray.optString(3), // shortnames
+                                                jsonArray.optString(4), // secids
+                                                jsonArray.optDouble(5), // weight
+                                                jsonArray.optInt(6)); // tradingsession
         return data;
     }
 
-    void saveData(PreparedStatement stmtUpdate, List<? extends ImoexData> dataArray) {
+    @Override
+    public void saveData(PreparedStatement stmtUpdate, List<? extends ExternalData> dataArray) {
         try {
-            System.out.println("iter.count = " + dataArray.size());
-        for(ImoexData iter : dataArray) {
-            StageIndexSecurityWeightData jter = (StageIndexSecurityWeightData) iter;
-//            System.out.println(jter.tradeDate);
-                stmtUpdate.setString(1, jter.indexId);
-                stmtUpdate.setString(2, jter.tradeDate);
-                stmtUpdate.setString(3, jter.ticker);
-                stmtUpdate.setString(4, jter.shortNames);
-                stmtUpdate.setString(5, jter.secIds);
-                stmtUpdate.setDouble(6, jter.weight);
-                stmtUpdate.setInt(7, jter.tradingSession);
-                stmtUpdate.setLong(8, this.getFlowLoadId());
+            for(ExternalData iter : dataArray) {
+                StageIndexSecurityWeightData jter = (StageIndexSecurityWeightData) iter;
+                stmtUpdate.setLong(1, this.getFlowLoadId());
+                stmtUpdate.setString(2, this.getFlowLogStartTimestamp().format(dateTimeFormat));
+                stmtUpdate.setString(3, jter.indexId); // indexid
+                stmtUpdate.setString(4, jter.tradeDate); // tradedate
+                stmtUpdate.setString(5, jter.ticker); // ticker
+                stmtUpdate.setString(6, jter.shortNames); // shortnames
+                stmtUpdate.setString(7, jter.secIds); // secids
+                stmtUpdate.setDouble(8, jter.weight); // weight
+                stmtUpdate.setInt(9, jter.tradingSession); // tradingsession
                 stmtUpdate.addBatch();
             }
             setInsertCount(getInsertCount() + stmtUpdate.executeBatch().length);
-//            System.out.println("Length: " + stmtUpdate.executeBatch().length);
             stmtUpdate.clearBatch();
         } catch (SQLException e) {
             e.printStackTrace();

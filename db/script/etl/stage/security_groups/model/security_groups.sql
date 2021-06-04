@@ -1,9 +1,10 @@
 DROP TABLE security_groups;
 CREATE TABLE security_groups
   (
-    id           INTEGER,
-    name         TEXT,
-    title        TEXT,
-    is_hidden    INTEGER,
-    tech$load_id INTEGER NOT NULL
+    tech$load_id   INTEGER NOT NULL,
+    tech$load_dttm TEXT    NOT NULL,
+    id             INTEGER,
+    name           TEXT,
+    title          TEXT,
+    is_hidden      INTEGER
   );

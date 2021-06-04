@@ -1,6 +1,8 @@
 INSERT
   INTO security_board_groups
   (
+    tech$load_id,
+    tech$load_dttm,
     id,
     trade_engine_id,
     trade_engine_name,
@@ -11,11 +13,12 @@ INSERT
     title,
     is_default,
     board_group_id,
-    is_traded,
-    tech$load_id
+    is_traded
   )
 VALUES
   (
+    :tech$load_id,
+    :tech$load_dttm,
     :id,
     :trade_engine_id,
     :trade_engine_name,
@@ -26,6 +29,5 @@ VALUES
     :title,
     :is_default,
     :board_group_id,
-    :is_traded,
-    :tech$load_id
+    :is_traded
   )

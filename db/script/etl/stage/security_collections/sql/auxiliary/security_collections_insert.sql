@@ -1,17 +1,19 @@
 INSERT
   INTO security_collections
   (
+    tech$load_id,
+    tech$load_dttm,
     id,
     name,
     title,
-    security_group_id,
-    tech$load_id
+    security_group_id
   )
 VALUES
   (
+    :tech$load_id,
+    :tech$load_dttm,
     :id,
     :name,
     :title,
-    :security_group_id,
-    :tech$load_id
+    :security_group_id
   )
