@@ -6,8 +6,8 @@ INSERT
     index_id,
     trade_date,
     ticker,
-    short_names,
-    secids,
+    short_name,
+    security_id,
     weight,
     trading_session
   )
@@ -18,8 +18,8 @@ VALUES
     :index_id,
     :trade_date,
     :ticker,
-    :short_names,
-    :secids,
+    :short_name,
+    :security_id,
     :weight,
     :trading_session
   )

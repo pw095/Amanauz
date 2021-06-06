@@ -2,4 +2,4 @@
 ~$*.xlsx
 ~$*.docx
 etl/out/*
-db/file/stage.db*
+db/file/*

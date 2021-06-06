@@ -6,8 +6,8 @@ CREATE TABLE index_security_weight
     index_id        TEXT,
     trade_date      TEXT,
     ticker          TEXT,
-    short_names     TEXT,
-    secids          TEXT,
+    short_name      TEXT,
+    security_id     TEXT,
     weight          REAL,
     trading_session INTEGER
   );
