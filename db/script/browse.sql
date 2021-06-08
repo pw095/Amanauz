@@ -108,63 +108,99 @@ WITH
      w_raw AS
      (
          SELECT
+                hash_key,
+                load_dt,
+                sha1(concat_value) AS hash_value,
+                index_id,
+                trade_date,
                 security_id,
-                board_id,
-                face_value,
-                previous_date,
-                sha1(concat_value) AS sha1_value,
-                load_dt
+                ticker,
+                short_name,
+                weight,
+                trading_session
            FROM (SELECT
+                        hash_key,
+                        load_dt,
+                        '_' || IFNULL(CAST(ticker          AS TEXT), '!@#$%^&*') ||
+                        '_' || IFNULL(CAST(short_name      AS TEXT), '!@#$%^&*') ||
+                        '_' || IFNULL(CAST(weight          AS TEXT), '!@#$%^&*') ||
+                        '_' || IFNULL(CAST(trading_session AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        index_id,
+                        trade_date,
                         security_id,
-                        board_id,
-                        face_value,
-                        previous_date,
-                        '_' || IFNULL(CAST(face_value    AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(previous_date AS TEXT), '!@#$%^&*') || '_' AS concat_value,
-                        load_dt
+                        ticker,
+                        short_name,
+                        weight,
+                        trading_session
                    FROM (SELECT
-                                security_id,
-                                board_id,
-                                face_value,
-                                previous_date,
+                                hash_key,
                                 load_dt,
-                                ROW_NUMBER() OVER (PARTITION BY security_id, board_id, load_dt
-                                                       ORDER BY load_dttm DESC)                AS rn
+                                ROW_NUMBER() OVER (PARTITION BY hash_key,
+                                                                load_dt
+                                                       ORDER BY load_dttm DESC) AS rn,
+                                index_id,
+                                trade_date,
+                                security_id,
+                                ticker,
+                                short_name,
+                                weight,
+                                trading_session
                            FROM (SELECT
-                                        data.security_id,
-                                        data.board_id,
-                                        data.face_value,
-                                        data.previous_date,
-                                        DATE(tech$load_dttm) AS load_dt,
-                                        tech$load_dttm       AS load_dttm
-                                   FROM security_daily_info data))
+                                        sha1(CAST(index_id    AS TEXT) ||
+                                             CAST(trade_date  AS TEXT) ||
+                                             CAST(security_id AS TEXT))   AS hash_key,
+                                        DATE(tech$load_dttm)              AS load_dt,
+                                        tech$load_dttm                    AS load_dttm,
+                                        index_id,
+                                        trade_date,
+                                        security_id,
+                                        ticker,
+                                        short_name,
+                                        weight,
+                                        trading_session
+                                   FROM index_security_weight
+                                  WHERE tech$load_id IN (100, 101, 102, 103)
+                                    AND security_id = 'AFLT'
+                                    AND trade_date = '2021-05-12'))
                   WHERE rn = 1)
      )
 SELECT
+       hash_key                                                                   AS tech$hash_key,
+       load_dt                                                                    AS tech$effective_dt,
+       LEAD(DATE(load_dt, '-1 DAY'), 1, '2999-12-31') OVER (PARTITION BY hash_key
+                                                                ORDER BY load_dt) AS tech$expiration_dt,
+       hash_value                                                                 AS tech$hash_value,
+       index_id,
+       trade_date,
        security_id,
-       board_id,
-       face_value,
-       previous_date,
-       load_dt                                                                                 AS tech$effective_dt,
-       LEAD(DATE(load_dt, '-1 DAY'), 1, '2999-12-31') OVER (PARTITION BY security_id, board_id
-                                                                ORDER BY load_dt)              AS tech$expiration_dt,
-       sha1_value
+       ticker,
+       short_name,
+       weight,
+       trading_session
   FROM (SELECT
+               hash_key,
+               load_dt,
+               hash_value,
+               index_id,
+               trade_date,
                security_id,
-               board_id,
-               face_value,
-               previous_date,
-               sha1_value,
-               load_dt
+               ticker,
+               short_name,
+               weight,
+               trading_session
           FROM (SELECT
+                       hash_key,
+                       load_dt,
+                       hash_value,
+                       LAG(hash_value) OVER (PARTITION BY hash_key
+                                                 ORDER BY load_dt) AS lag_hash_value,
+                       index_id,
+                       trade_date,
                        security_id,
-                       board_id,
-                       face_value,
-                       previous_date,
-                       sha1_value,
-                       LAG(sha1_value) OVER (PARTITION BY security_id, board_id
-                                                 ORDER BY load_dt)              AS lag_sha1_value,
-                       load_dt
+                       ticker,
+                       short_name,
+                       weight,
+                       trading_session
                   FROM w_raw)
-         WHERE sha1_value != lag_sha1_value
-            OR lag_sha1_value IS NULL);
+         WHERE hash_value != lag_hash_value
+            OR lag_hash_value IS NULL);
