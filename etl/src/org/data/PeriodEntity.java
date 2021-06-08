@@ -29,9 +29,9 @@ public abstract class PeriodEntity extends AbstractEntity {
     public PeriodEntity(Flow flow, String entityCode) {
         super(flow, MetaLayer.STAGE, entityCode);
         if (getEntityLoadMode() == LoadMode.INCR) {
-            Meta.getPreviousEffectiveFromDt(this);
+            Meta.getPreviousEffectiveToDt(this);
         } else {
-            setEffectiveFromDt("2021-01-01");
+            setEffectiveFromDt("2001-01-01");
         }
         this.setEffectiveToDt(flow.getFlowLogStartTimestamp().format(dateFormat));
     }

@@ -52,33 +52,36 @@ public class Flow {
         Flow flow = new Flow();
         List<AbstractEntity> entityList = new ArrayList<>();
 
-//        Данные за несколько дней, листов много
-//        entityList.add(new StageIndexSecurityWeight(flow)); // OK
-//        entityList.add(new StageSecurityRateShares(flow)); // OK
-        entityList.add(new StageSecurityRateBonds(flow)); // OK
-/*
-//        Данные за 1 день, но много листов
-        entityList.add(new StageSecurityEmitentMap(flow)); // OK
-
 //        Данные за 1 день, но лист 1
         entityList.add(new StageSecurityDailyInfoShares(flow)); // OK
         entityList.add(new StageSecurityDailyInfoBonds(flow)); // OK
         entityList.add(new StageSecurityEngines(flow)); // OK
+
         entityList.add(new StageSecurityMarkets(flow)); // OK
         entityList.add(new StageSecurityBoardGroups(flow)); // OK
+
         entityList.add(new StageSecurityBoards(flow)); // OK
         entityList.add(new StageSecurityCollections(flow)); // OK
         entityList.add(new StageSecurityDailyMarketdataBonds(flow)); // OK
         entityList.add(new StageSecurityDailyMarketdataShares(flow)); // OK
 
-
         entityList.add(new StageSecurityTypes(flow)); // OK
-        entityList.add(new StageSecurityGroups(flow)); // OK*/
+        entityList.add(new StageSecurityGroups(flow)); // OK
 
 //        Данные справочника с cbr.ru, лист 1
         entityList.add(new StageForeignCurrencyDictionary(flow)); // OK
 //        Данные не из справочника, но лист тоже всегда 1.
         entityList.add(new StageForeignCurrencyRate(flow)); // OK
+
+//        Данные за 1 день, но много листов
+        entityList.add(new StageSecurityEmitentMap(flow)); // OK
+
+//        Данные за несколько дней, листов много
+        entityList.add(new StageIndexSecurityWeight(flow)); // OK
+        entityList.add(new StageSecurityRateShares(flow)); // OK
+        entityList.add(new StageSecurityRateBonds(flow)); // OK
+
+
 
         for (AbstractEntity entity : entityList) {
             entity.call();

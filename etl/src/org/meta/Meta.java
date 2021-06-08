@@ -68,7 +68,7 @@ public final class Meta {
         }
     }
 
-    public static synchronized void getPreviousEffectiveFromDt(PeriodEntity entity) {
+    public static synchronized void getPreviousEffectiveToDt(PeriodEntity entity) {
         try {
             String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_previous_eff_to_dt.sql"));
             String rllEffectiveToDt = null;
@@ -81,7 +81,7 @@ public final class Meta {
                     }
                 }
             }
-            entity.setEffectiveFromDt(LocalDate.parse(rllEffectiveToDt, dateFormat).plusDays(1).format(dateFormat));
+            entity.setEffectiveFromDt(LocalDate.parse(rllEffectiveToDt, dateFormat).minusDays(7).format(dateFormat));
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
