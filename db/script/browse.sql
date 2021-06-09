@@ -103,12 +103,62 @@ PRAGMA analysis_limit=-1;
 select t.* from sqlite_master m, pragma_index_list(m.name) t, pragma_index_info;
 
 
+select load_extension('C:/Users/pw095/Documents/Git/Amanauz/db/file/sha1.dll');
 
+SELECT * FROM foreign_currency_dictionary WHERE id = 'R01010';
+SELECT *
+  FROM foreign_currency_rate;
+
+SELECT count(*)
+  FROM security_daily_info_bonds;
+
+SELECT COUNT(*) AS cnt
+  FROM security_rate_shares;
+
+SELECT * FROM security_rate_shares;
+
+
+SELECT
+       board_id,
+       trade_date,
+       security_id,
+       COUNT(*) AS cnt
+  FROM security_rate_shares
+ GROUP BY
+          board_id,
+          trade_date,
+          security_id
+HAVING COUNT(*) > 1;
+
+SELECT *
+  FROM security_rate_bonds;
+
+SELECT
+       board_id,
+       trade_date,
+       security_id,
+       COUNT(*) AS cnt
+  FROM security_rate_bonds
+ GROUP BY
+          board_id,
+          trade_date,
+          security_id
+HAVING COUNT(*) > 1;
+SELECT
+       index_id,
+       trade_date,
+       security_id,
+       COUNT(*) AS cnt
+  FROM index_security_weight
+ GROUP BY
+          index_id,
+          trade_date,
+          security_id
+HAVING COUNT(*) > 1;
 WITH
      w_raw AS
      (
          SELECT
-                hash_key,
                 load_dt,
                 sha1(concat_value) AS hash_value,
                 index_id,
@@ -119,7 +169,6 @@ WITH
                 weight,
                 trading_session
            FROM (SELECT
-                        hash_key,
                         load_dt,
                         '_' || IFNULL(CAST(ticker          AS TEXT), '!@#$%^&*') ||
                         '_' || IFNULL(CAST(short_name      AS TEXT), '!@#$%^&*') ||
@@ -133,9 +182,10 @@ WITH
                         weight,
                         trading_session
                    FROM (SELECT
-                                hash_key,
                                 load_dt,
-                                ROW_NUMBER() OVER (PARTITION BY hash_key,
+                                ROW_NUMBER() OVER (PARTITION BY index_id,
+                                                                trade_date,
+                                                                security_id,
                                                                 load_dt
                                                        ORDER BY load_dttm DESC) AS rn,
                                 index_id,
@@ -158,18 +208,16 @@ WITH
                                         short_name,
                                         weight,
                                         trading_session
-                                   FROM index_security_weight
-                                  WHERE tech$load_id IN (100, 101, 102, 103)
-                                    AND security_id = 'AFLT'
-                                    AND trade_date = '2021-05-12'))
+                                   FROM index_security_weight))
                   WHERE rn = 1)
      )
 SELECT
-       hash_key                                                                   AS tech$hash_key,
-       load_dt                                                                    AS tech$effective_dt,
-       LEAD(DATE(load_dt, '-1 DAY'), 1, '2999-12-31') OVER (PARTITION BY hash_key
-                                                                ORDER BY load_dt) AS tech$expiration_dt,
-       hash_value                                                                 AS tech$hash_value,
+       load_dt                                                                       AS tech$effective_dt,
+       LEAD(DATE(load_dt, '-1 DAY'), 1, '2999-12-31') OVER (PARTITION BY index_id,
+                                                                         trade_date,
+                                                                         security_id
+                                                                ORDER BY load_dt)    AS tech$expiration_dt,
+       hash_value                                                                    AS tech$hash_value,
        index_id,
        trade_date,
        security_id,
@@ -178,7 +226,6 @@ SELECT
        weight,
        trading_session
   FROM (SELECT
-               hash_key,
                load_dt,
                hash_value,
                index_id,
@@ -189,10 +236,11 @@ SELECT
                weight,
                trading_session
           FROM (SELECT
-                       hash_key,
                        load_dt,
                        hash_value,
-                       LAG(hash_value) OVER (PARTITION BY hash_key
+                       LAG(hash_value) OVER (PARTITION BY index_id,
+                                                          trade_date,
+                                                          security_id
                                                  ORDER BY load_dt) AS lag_hash_value,
                        index_id,
                        trade_date,
