@@ -13,4 +13,5 @@ CREATE TABLE tech$index_security_weight
     weight             REAL    NOT NULL,
     trading_session    INTEGER NOT NULL,
     PRIMARY KEY(index_id, trade_date, security_id, tech$effective_dt)
-  );
+  )
+WITHOUT ROWID;
