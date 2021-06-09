@@ -155,6 +155,53 @@ SELECT
           trade_date,
           security_id
 HAVING COUNT(*) > 1;
+
+
+SELECT
+       index_id,
+       trade_date,
+       ticker,
+       COUNT(*) AS cnt
+  FROM index_security_weight
+ GROUP BY
+          index_id,
+          trade_date,
+          ticker
+HAVING COUNT(*) > 1;
+
+SELECT
+       COUNT(tech$load_id),
+       COUNT(tech$load_dttm),
+       COUNT(index_id),
+       COUNT(trade_date),
+       COUNT(ticker),
+       COUNT(short_name),
+       COUNT(security_id),
+       COUNT(weight),
+       COUNT(trading_session)
+  FROM index_security_weight;
+
+select load_extension('C:/Users/pw095/Documents/Git/Amanauz/db/file/sha1.dll');
+ATTACH DATABASE 'C:/Users/pw095/Documents/Git/Amanauz/db/file/repl.db' AS repl;
+DETACH DATABASE repl;
+SELECT * FROM repl.sqlite_master;
+SELECT * FROM repl.tech$index_security_weight;
+SELECT distinct tech$load_id FROM index_security_weight;
+INSERT
+  INTO repl.tech$index_security_weight
+  (
+    tech$load_id,
+    tech$effective_dt,
+    tech$expiration_dt,
+    tech$hash_value,
+    index_id,
+    trade_date,
+    ticker,
+    short_name,
+    security_id,
+    weight,
+    trading_session
+  )
 WITH
      w_raw AS
      (
@@ -208,10 +255,12 @@ WITH
                                         short_name,
                                         weight,
                                         trading_session
-                                   FROM index_security_weight))
+                                   FROM index_security_weight
+                                  WHERE tech$load_id >= 2))
                   WHERE rn = 1)
      )
 SELECT
+       1                                                                             AS tech$load_id,
        load_dt                                                                       AS tech$effective_dt,
        LEAD(DATE(load_dt, '-1 DAY'), 1, '2999-12-31') OVER (PARTITION BY index_id,
                                                                          trade_date,
@@ -252,3 +301,7 @@ SELECT
                   FROM w_raw)
          WHERE hash_value != lag_hash_value
             OR lag_hash_value IS NULL);
+
+
+
+

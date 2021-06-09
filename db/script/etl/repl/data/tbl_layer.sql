@@ -5,7 +5,7 @@ INSERT
   )
 VALUES
   (
-    'ods'
+    'repl'
   )
 ON CONFLICT(layer_code) DO UPDATE
    SET layer_desc = excluded.layer_desc

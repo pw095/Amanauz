@@ -31,7 +31,7 @@ public abstract class PeriodEntity extends AbstractEntity {
         if (getEntityLoadMode() == LoadMode.INCR) {
             Meta.getPreviousEffectiveToDt(this);
         } else {
-            setEffectiveFromDt("2001-01-01");
+            setEffectiveFromDt("2021-05-01");
         }
         this.setEffectiveToDt(flow.getFlowLogStartTimestamp().format(dateFormat));
     }

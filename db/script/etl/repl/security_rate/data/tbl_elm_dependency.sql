@@ -14,7 +14,7 @@ SELECT
                              NULL
                         FROM tbl_layer layer
                        WHERE layer.layer_id = elm.elm_layer_id
-                         AND layer.layer_code = 'ods')
+                         AND layer.layer_code = 'repl')
            AND EXISTS(SELECT
                              NULL
                         FROM tbl_entity ent

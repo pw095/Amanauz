@@ -14,8 +14,8 @@ SELECT
   FROM tbl_layer layer
        CROSS JOIN
        tbl_entity ent
- WHERE layer.layer_code = 'ods'
-   AND ent.ent_code = 'index_security_weight'
+ WHERE layer.layer_code = 'repl'
+   AND ent.ent_code = 'security_rate'
 ON CONFLICT(elm_ent_id, elm_layer_id) DO UPDATE
    SET elm_mode = excluded.elm_mode,
        elm_enabled = excluded.elm_enabled
