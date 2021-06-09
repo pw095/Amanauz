@@ -12,7 +12,7 @@ INSERT
     security_id,
     weight,
     trading_session
-  );
+  )
 WITH
      w_raw AS
      (
