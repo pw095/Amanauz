@@ -26,14 +26,18 @@ public abstract class PeriodEntity extends AbstractEntity {
         this.effectiveToDt = effectiveToDt;
     }
 
-    public PeriodEntity(Flow flow, String entityCode) {
-        super(flow, MetaLayer.STAGE, entityCode);
+    public PeriodEntity(Flow flow, MetaLayer metaLayer, String entityCode) {
+        super(flow, metaLayer, entityCode);
         if (getEntityLoadMode() == LoadMode.INCR) {
             Meta.getPreviousEffectiveToDt(this);
         } else {
-            setEffectiveFromDt("2021-05-01");
+            setEffectiveFromDt("2001-01-01");
         }
-        this.setEffectiveToDt(flow.getFlowLogStartTimestamp().format(dateFormat));
+        if (metaLayer == MetaLayer.STAGE) {
+            setEffectiveToDt(flow.getFlowLogStartTimestamp().format(dateFormat));
+        } else {
+            Meta.getCurrentEffectiveToDt(this);
+        }
     }
 
 }

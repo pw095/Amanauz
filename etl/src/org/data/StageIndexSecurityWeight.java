@@ -2,7 +2,9 @@ package org.data;
 
 import org.flow.Flow;
 import org.json.JSONArray;
+import org.meta.MetaLayer;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -39,7 +41,12 @@ public class StageIndexSecurityWeight extends PeriodEntity implements ImoexSourc
     }
 
     public StageIndexSecurityWeight(Flow flow) {
-        super(flow, "index_security_weight");
+        super(flow, MetaLayer.STAGE, "index_security_weight");
+    }
+
+    @Override
+    public void callLoad(Connection conn) {
+        concreteLoad(conn);
     }
 
     public void detailLoad(PreparedStatement stmtUpdate) {

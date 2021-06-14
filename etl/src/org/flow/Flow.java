@@ -78,15 +78,17 @@ public class Flow {
         entityList.add(new StageSecurityEmitentMap(flow)); // OK
 */
 //        Данные за несколько дней, листов много
-        entityList.add(new StageIndexSecurityWeight(flow)); // OK
+//        entityList.add(new StageIndexSecurityWeight(flow)); // OK
 //        entityList.add(new StageSecurityRateShares(flow)); // OK
 //        entityList.add(new StageSecurityRateBonds(flow)); // OK
 
 
 
+        entityList.add(new ReplicationEntity(flow, "index_security_weight"));
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
+//        new ReplIndexSecurityWeight(flow).call();
         System.out.println(flow.getFlowLoadId());
         Meta.setFlowLogFinish(flow.getFlowLoadId(), LoadStatus.SUCCEEDED);
 

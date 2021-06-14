@@ -1,10 +1,12 @@
 package org.data;
 
 import org.flow.Flow;
+import org.meta.MetaLayer;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -42,7 +44,12 @@ public class StageForeignCurrencyDictionary extends SnapshotEntity implements Cb
     }
 
     public StageForeignCurrencyDictionary(Flow flow) {
-        super(flow, "foreign_currency_dictionary");
+        super(flow, MetaLayer.STAGE, "foreign_currency_dictionary");
+    }
+
+    @Override
+    public void callLoad(Connection conn) {
+        concreteLoad(conn);
     }
 
     @Override

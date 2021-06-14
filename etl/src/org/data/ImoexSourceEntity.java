@@ -14,7 +14,7 @@ import java.util.List;
 
 import static org.util.AuxUtil.dateFormat;
 
-public interface ImoexSourceEntity extends ExternalSourceEntity {
+public interface ImoexSourceEntity extends StageEntity {
     public abstract <T extends ExternalData> T accumulateData(JSONArray jsonArray);
 
     default public void postLoad(PreparedStatement stmtUpdate, List<? extends ExternalData> dataArray) {

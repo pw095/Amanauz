@@ -2,7 +2,9 @@ package org.data;
 
 import org.flow.Flow;
 import org.json.JSONArray;
+import org.meta.MetaLayer;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -29,7 +31,12 @@ public class StageSecurityCollections extends SnapshotEntity implements ImoexSou
     }
 
     public StageSecurityCollections(Flow flow) {
-        super(flow, "security_collections");
+        super(flow, MetaLayer.STAGE, "security_collections");
+    }
+
+    @Override
+    public void callLoad(Connection conn) {
+        concreteLoad(conn);
     }
 
     @Override

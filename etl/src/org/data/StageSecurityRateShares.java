@@ -2,7 +2,9 @@ package org.data;
 
 import org.flow.Flow;
 import org.json.JSONArray;
+import org.meta.MetaLayer;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -81,7 +83,12 @@ public class StageSecurityRateShares extends PeriodEntity implements ImoexSource
     }
 
     public StageSecurityRateShares(Flow flow) {
-        super(flow, "security_rate_shares");
+        super(flow, MetaLayer.STAGE, "security_rate_shares");
+    }
+
+    @Override
+    public void callLoad(Connection conn) {
+        concreteLoad(conn);
     }
 
     @Override

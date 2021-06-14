@@ -2,7 +2,9 @@ package org.data;
 
 import org.flow.Flow;
 import org.json.JSONArray;
+import org.meta.MetaLayer;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -138,7 +140,12 @@ public class StageSecurityDailyInfoBonds extends SnapshotEntity implements Imoex
     }
 
     public StageSecurityDailyInfoBonds(Flow flow) {
-        super(flow, "security_daily_info_bonds");
+        super(flow, MetaLayer.STAGE, "security_daily_info_bonds");
+    }
+
+    @Override
+    public void callLoad(Connection conn) {
+        concreteLoad(conn);
     }
 
     @Override

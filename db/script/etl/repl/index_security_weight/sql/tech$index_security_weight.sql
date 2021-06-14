@@ -1,5 +1,5 @@
 INSERT
-  INTO repl.tech$index_security_weight
+  INTO tech$index_security_weight
   (
     tech$load_id,
     tech$effective_dt,
@@ -21,9 +21,9 @@ WITH
                 sha1(concat_value) AS hash_value,
                 index_id,
                 trade_date,
-                security_id,
                 ticker,
                 short_name,
+                security_id,
                 weight,
                 trading_session
            FROM (SELECT
@@ -34,9 +34,9 @@ WITH
                         '_' || IFNULL(CAST(trading_session AS TEXT), '!@#$%^&*') || '_' AS concat_value,
                         index_id,
                         trade_date,
-                        security_id,
                         ticker,
                         short_name,
+                        security_id,
                         weight,
                         trading_session
                    FROM (SELECT
@@ -44,9 +44,9 @@ WITH
                                 ROW_NUMBER() OVER (wnd) AS rn,
                                 index_id,
                                 trade_date,
-                                security_id,
                                 ticker,
                                 short_name,
+                                security_id,
                                 weight,
                                 trading_session
                            FROM (SELECT
@@ -54,13 +54,13 @@ WITH
                                         tech$load_dttm       AS tech$load_dttm,
                                         index_id,
                                         trade_date,
-                                        security_id,
                                         ticker,
                                         short_name,
+                                        security_id,
                                         weight,
                                         trading_session
-                                   FROM index_security_weight
-                                  WHERE tech$load_id >= :tech$load_id)
+                                   FROM src.index_security_weight
+                                  WHERE tech$load_dttm > :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY index_id,
                                                      trade_date,
                                                      security_id,
@@ -69,15 +69,15 @@ WITH
                   WHERE rn = 1)
      )
 SELECT
-       1                                                              AS tech$load_id,
+       :tech$load_id                                                  AS tech$load_id,
        tech$load_dt                                                   AS tech$effective_dt,
        LEAD(DATE(tech$load_dt, '-1 DAY'), 1, '2999-12-31') OVER (wnd) AS tech$expiration_dt,
        hash_value                                                     AS tech$hash_value,
        index_id,
        trade_date,
-       security_id,
        ticker,
        short_name,
+       security_id,
        weight,
        trading_session
   FROM (SELECT
@@ -85,9 +85,9 @@ SELECT
                hash_value,
                index_id,
                trade_date,
-               security_id,
                ticker,
                short_name,
+               security_id,
                weight,
                trading_session
           FROM (SELECT
@@ -96,9 +96,9 @@ SELECT
                        LAG(hash_value) OVER (wnd) AS lag_hash_value,
                        index_id,
                        trade_date,
-                       security_id,
                        ticker,
                        short_name,
+                       security_id,
                        weight,
                        trading_session
                   FROM w_raw

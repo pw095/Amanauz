@@ -1,0 +1,1 @@
+DELETE FROM tech$index_security_weight

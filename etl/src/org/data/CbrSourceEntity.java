@@ -9,7 +9,7 @@ import java.net.URL;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public interface CbrSourceEntity extends ExternalSourceEntity {
+public interface CbrSourceEntity extends StageEntity {
     public abstract List<? extends ExternalData> accumulateData(Document document);
     public DateTimeFormatter cbrPutDateFormat = DateTimeFormatter.ofPattern("dd/MM/yyyy");
     public DateTimeFormatter cbrGetDateFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy");

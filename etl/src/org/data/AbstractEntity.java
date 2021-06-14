@@ -4,6 +4,7 @@ import org.flow.Flow;
 import org.meta.LoadMode;
 import org.meta.Meta;
 import org.meta.MetaLayer;
+import org.sqlite.SQLiteConfig;
 
 import java.sql.*;
 import java.time.LocalDateTime;
@@ -14,10 +15,9 @@ import static org.util.AuxUtil.getQuery;
 
 public abstract class AbstractEntity implements Callable<AbstractEntity> {
 
-    static private final String dataAuxDir = "auxiliary/";
-    static private final String dataTruncScript = "$$entity_name_truncate.sql";
-    static private final String dataInsertScript = "$$entity_name_insert.sql";
-    private String sqlDirectory;
+    private static final String dataAuxDir = "auxiliary/";
+    static final String dataInsertScript = "$$entity_name_insert.sql";
+    String sqlDirectory;
 
     MetaLayer entityLayer;
     String entityCode;
@@ -107,17 +107,31 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
 
     private Connection connTarget;
 
-    protected abstract void detailLoad(PreparedStatement stmtUpdate);
+//    protected abstract void detailLoad(PreparedStatement stmtUpdate);
+    protected abstract void callLoad(Connection conn);
 
-    private String getTruncateSQL() {
-        String lReturn = (sqlDirectory + dataAuxDir) + dataTruncScript.replace("$$entity_name", this.entityCode);
+//    protected void preLoad(Connection conn) {}
+/*
+
+    private String getTechTruncateSQL() {
+        String lReturn = (sqlDirectory + dataAuxDir) + dataTruncScript.replace("$$entity_name", "tech$" + this.entityCode);
         return lReturn;
     }
+*/
+/*
 
-    private String getInsertSQL() {
-        String lReturn = (sqlDirectory + dataAuxDir) + dataInsertScript.replace("$$entity_name", this.entityCode);
+    private String getTechSingleSQL() {
+        String lReturn = (sqlDirectory + this.getEntityLoadMode().getDbMode() + '/') + dataInsertScript.replace("$$entity_name", "tech$" + this.entityCode);
         return lReturn;
     }
+*/
+/*
+
+    private String getSingleSQL() {
+        String lReturn = (sqlDirectory + this.getEntityLoadMode().getDbMode() + '/') + dataSingleScript.replace("$$entity_name", this.entityCode);
+        return lReturn;
+    }
+*/
 
     public LoadMode getEntityLoadMode() {
         return this.entityLoadMode;
@@ -129,9 +143,15 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
     public MetaLayer getEntityLayer() {
         return this.entityLayer;
     }
+    public void setEntityLayer(MetaLayer entityLayer) {
+        this.entityLayer = entityLayer;
+    }
     public String getEntityCode() {
         return this.entityCode;
     }
+
+    public String getSqlDirectory() { return this.sqlDirectory; }
+    public String getDataAuxDir() { return this.dataAuxDir; }
 
     AbstractEntity(Flow flow, MetaLayer entityLayer, String entityCode) {
         setFlowLoadId(flow.getFlowLoadId());
@@ -148,7 +168,9 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
         }
 
         try {
-            connTarget = DriverManager.getConnection(getInstance().getProperty(this.entityLayer.toString().concat("_targetURL")));
+            SQLiteConfig config = new SQLiteConfig();
+            config.enableLoadExtension(true);
+            connTarget = DriverManager.getConnection(getInstance().getProperty(this.entityLayer.toString().concat("_targetURL")), config.toProperties());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -157,15 +179,43 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
     public AbstractEntity call() {
 
         this.setEntityStartLoadTimestamp(LocalDateTime.now());
-        String insertSQL = getQuery(getInsertSQL());
+        callLoad(connTarget);
+//        preLoad(connTarget);
+/*
         try {
-            try(PreparedStatement stmtUpdate = connTarget.prepareStatement(insertSQL)) {
-                detailLoad(stmtUpdate);
+
+//            String techTruncateSQL = getQuery(getTechTruncateSQL());
+
+            if (techTruncateSQL != null) {
+                try (PreparedStatement stmt = connTarget.prepareStatement(techTruncateSQL)) {
+                    detailLoad(stmt);
+                }
+            }
+            String techSingleSQL = getQuery(getTechSingleSQL());
+            if (techSingleSQL != null) {
+                try (PreparedStatement stmt = connTarget.prepareStatement(techSingleSQL)) {
+                    detailLoad(stmt);
+                }
+            }
+            String singleSQL = getQuery(getSingleSQL());
+            if (singleSQL != null) {
+                try (PreparedStatement stmt = connTarget.prepareStatement(singleSQL)) {
+                    detailLoad(stmt);
+                }
+            }
+//            concreteLoad(connTarget);
+            String insertSQL = getQuery(getInsertSQL());
+            if (insertSQL != null) {
+                try (PreparedStatement stmt = connTarget.prepareStatement(insertSQL)) {
+                    detailLoad(stmt);
+                }
             }
         } catch (Exception e) {
-            e.printStackTrace();
-            throw new RuntimeException(e);
-        }
+                e.printStackTrace();
+                throw new RuntimeException(e);
+            }
+
+ */
         this.setEntityFinishLoadTimestamp(LocalDateTime.now());
         Meta.setEntityInfo(this);
         return this;

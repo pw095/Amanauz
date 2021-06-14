@@ -2,6 +2,7 @@ package org.meta;
 
 import org.data.AbstractEntity;
 import org.data.PeriodEntity;
+import org.data.ReplicationEntity;
 import org.flow.Flow;
 
 import java.sql.*;
@@ -81,12 +82,41 @@ public final class Meta {
                     }
                 }
             }
-            entity.setEffectiveFromDt(LocalDate.parse(rllEffectiveToDt, dateFormat).minusDays(7).format(dateFormat));
+
+            if (entity.getEntityLayer() == MetaLayer.STAGE) {
+                entity.setEffectiveFromDt(LocalDate.parse(rllEffectiveToDt, dateFormat).minusDays(7).format(dateFormat));
+            } else {
+                entity.setEffectiveFromDt(LocalDate.parse(rllEffectiveToDt, dateFormat).plusDays(1).format(dateFormat));
+            }
+
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
     }
+
+    public static synchronized void getCurrentEffectiveToDt(PeriodEntity entity) {
+        try {
+            String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_current_eff_to_dt.sql"));
+            String rllEffectiveToDt = null;
+
+            try (PreparedStatement stmtSelect = conn.prepareStatement(stmtString)) {
+                stmtSelect.setLong(1, entity.getEntityLayerMapId());
+                try (ResultSet rs = stmtSelect.executeQuery()) {
+                    if (rs.next()) {
+                        rllEffectiveToDt = rs.getString("rll_effective_to_dt");
+                    }
+                }
+            }
+
+            entity.setEffectiveToDt(rllEffectiveToDt);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
+
     public static synchronized void getEntityLayerMapInfo(AbstractEntity entity) {
         try {
             String stmtString;

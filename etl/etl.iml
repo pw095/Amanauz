@@ -19,10 +19,11 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MAVEN_REPOSITORY$/org/xerial/sqlite-jdbc/3.34.0/sqlite-jdbc-3.34.0.jar!/" />
+          <root url="file://$USER_HOME$/AppData/Roaming/JetBrains/DataGrip2020.1/jdbc-drivers/Xerial SQLiteJDBC/3.31.1" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />
+        <jarDirectory url="file://$USER_HOME$/AppData/Roaming/JetBrains/DataGrip2020.1/jdbc-drivers/Xerial SQLiteJDBC/3.31.1" recursive="false" />
       </library>
     </orderEntry>
   </component>

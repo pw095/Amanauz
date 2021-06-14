@@ -2,7 +2,9 @@ package org.data;
 
 import org.flow.Flow;
 import org.json.JSONArray;
+import org.meta.MetaLayer;
 
+import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
@@ -67,7 +69,12 @@ public class StageSecurityEmitentMap extends SnapshotEntity implements ImoexSour
     }
 
     public StageSecurityEmitentMap(Flow flow) {
-        super(flow, "security_emitent_map");
+        super(flow, MetaLayer.STAGE, "security_emitent_map");
+    }
+
+    @Override
+    public void callLoad(Connection conn) {
+        concreteLoad(conn);
     }
 
     @Override
