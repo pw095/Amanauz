@@ -42,7 +42,7 @@ CREATE TABLE security_daily_marketdata_bonds
     duration                        REAL,
     num_bids                        TEXT,
     num_offers                      TEXT,
-    chage                           REAL,
+    change                          REAL,
     time                            TEXT,
     high_bid                        TEXT,
     low_offer                       TEXT,
