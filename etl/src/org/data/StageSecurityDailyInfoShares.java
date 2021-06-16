@@ -25,8 +25,8 @@ public class StageSecurityDailyInfoShares extends SnapshotEntity implements Imoe
         String remarks;
         String marketCode;
         String instrId;
-        double minStep;
         String sectorId;
+        double minStep;
         double prevWaPrice;
         String faceUnit;
         String previousDate;
@@ -55,8 +55,8 @@ public class StageSecurityDailyInfoShares extends SnapshotEntity implements Imoe
                                                 String remarks,
                                                 String marketCode,
                                                 String instrId,
-                                                double minStep,
                                                 String sectorId,
+                                                double minStep,
                                                 double prevWaPrice,
                                                 String faceUnit,
                                                 String previousDate,
@@ -83,8 +83,8 @@ public class StageSecurityDailyInfoShares extends SnapshotEntity implements Imoe
             this.remarks = remarks;
             this.marketCode = marketCode;
             this.instrId = instrId;
-            this.minStep = minStep;
             this.sectorId = sectorId;
+            this.minStep = minStep;
             this.prevWaPrice = prevWaPrice;
             this.faceUnit = faceUnit;
             this.previousDate = previousDate;
@@ -112,9 +112,9 @@ public class StageSecurityDailyInfoShares extends SnapshotEntity implements Imoe
         String urlStringRaw = "http://iss.moex.com/iss/engines/stock/markets/shares/securities.json" +
                               "?iss.meta=off&iss.only=securities&securities.columns=";
         String urlColumnList = "SECID,BOARDID,SHORTNAME,PREVPRICE,LOTSIZE,FACEVALUE,STATUS,BOARDNAME,DECIMALS," +
-                               "SECNAME,REMARKS,MARKETCODE,INSTRID,MINSTEP,PREVWAPRICE,FACEUNIT,PREVDATE,ISSUESIZE," +
-                               "ISIN,LATNAME,REGNUMBER,PREVLEGALCLOSEPRICE,PREVADMITTEDQUOTE,CURRENCYID,SECTYPE," +
-                               "LISTLEVEL,SETTLEDATE";
+                               "SECNAME,REMARKS,MARKETCODE,INSTRID,SECTORID,MINSTEP,PREVWAPRICE,FACEUNIT,PREVDATE," +
+                               "ISSUESIZE,ISIN,LATNAME,REGNUMBER,PREVLEGALCLOSEPRICE,PREVADMITTEDQUOTE,CURRENCYID," +
+                               "SECTYPE,LISTLEVEL,SETTLEDATE";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
         load(stmtUpdate, urlStringData, objectJSON);
@@ -136,8 +136,8 @@ public class StageSecurityDailyInfoShares extends SnapshotEntity implements Imoe
                                                     jsonArray.optString(10), // REMARKS
                                                     jsonArray.optString(11), // MARKETCODE
                                                     jsonArray.optString(12), // INSTRID
-                                                    jsonArray.optDouble(13), // MINSTEP
-                                                    jsonArray.optString(14), // SECTORID
+                                                    jsonArray.optString(13), // SECTORID
+                                                    jsonArray.optDouble(14), // MINSTEP
                                                     jsonArray.optDouble(15), // PREVWAPRICE
                                                     jsonArray.optString(16), // FACEUNIT
                                                     jsonArray.optString(17), // PREVDATE
@@ -168,14 +168,14 @@ public class StageSecurityDailyInfoShares extends SnapshotEntity implements Imoe
                 stmtUpdate.setInt(7, jter.lotSize);
                 stmtUpdate.setDouble(8, jter.faceValue);
                 stmtUpdate.setString(9, jter.status);
-                stmtUpdate.setInt(10, jter.decimals);
-                stmtUpdate.setString(11, jter.boardName);
+                stmtUpdate.setString(10, jter.boardName);
+                stmtUpdate.setInt(11, jter.decimals);
                 stmtUpdate.setString(12, jter.securityName);
                 stmtUpdate.setString(13, jter.remarks);
                 stmtUpdate.setString(14, jter.marketCode);
                 stmtUpdate.setString(15, jter.instrId);
-                stmtUpdate.setDouble(16, jter.minStep);
-                stmtUpdate.setString(17, jter.sectorId);
+                stmtUpdate.setString(16, jter.sectorId);
+                stmtUpdate.setDouble(17, jter.minStep);
                 stmtUpdate.setDouble(18, jter.prevWaPrice);
                 stmtUpdate.setString(19, jter.faceUnit);
                 stmtUpdate.setString(20, jter.previousDate);
