@@ -1,0 +1,1 @@
+DELETE FROM tech$security_daily_info_shares
