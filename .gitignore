@@ -3,3 +3,4 @@
 ~$*.docx
 etl/out/*
 db/file/*
+query_builder/out/*
