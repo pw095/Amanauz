@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="Amanauz:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/Amanauz_jar</output-path>
+    <root id="archive" name="Amanauz.jar">
+      <element id="module-output" name="Amanauz" />
+    </root>
+  </artifact>
+</component>

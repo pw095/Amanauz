@@ -1,21 +1,38 @@
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Struct;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class Program {
     public static void main(String[] args) {
         // взять отсюда:
         // 
-        String ddlQueryFileName = "";
-        ddlQueryFileName = "D:\\0021  GitHub\\Amanauz\\query_builder\\src\\SourceQuery.sql";
+//        String ddlQueryFileName = "";
+        if (args.length != 3) {
+            throw new RuntimeException("Неверное количество аргументов командной строки!");
+        }
+        String ddlQueryFileName = args[0];
+        String queryPattern = args[1];
+        String destQuery = args[2];
+//        ddlQueryFileName = "D:\\0021  GitHub\\Amanauz\\query_builder\\src\\SourceQuery.sql";
 //        String queryPattern = "D:\\0019  Курсы\\006  Java\\Amanauz\\src\\simple_pattern.sql";
-        String queryPattern = "D:\\0021  GitHub\\Amanauz\\query_builder\\src\\Pattern.sql";
+//        String queryPattern = "D:\\0021  GitHub\\Amanauz\\query_builder\\src\\Pattern.sql";
         QueryParser qp = new QueryParser(ddlQueryFileName);
         qp.parseQuery();
+//        System.out.println("0" + args[0]);
+//        System.out.println("1" + args[1]);
 
         QueryComposer qc = new QueryComposer(queryPattern);
         qc.parsePatternFile();
-
+//        System.out.println(qc.queryString);
         String[] FieldsType = new String[3];
         FieldsType[0] = "businessFields";
         FieldsType[1] = "businessKeyFields";
@@ -34,6 +51,13 @@ public class Program {
             }
         }
 
+        Path path = Paths.get(destQuery);
+        try (BufferedWriter writer = Files.newBufferedWriter(path, Charset.forName("UTF-8"))) {
+            writer.write(qc.queryString);
+        } catch (IOException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
         System.out.println(qc.queryString);
 
     }
@@ -100,8 +124,9 @@ public class Program {
     private static String calcOffset(QueryComposer qc, int endInd) {
 
         int startInd = endInd - 1;
-
-        for (; (qc.queryString.charAt(startInd) !='\n') && startInd > 0; startInd--);
-        return (" ").repeat(endInd - startInd - 1);
+        StringBuilder sb = new StringBuilder();
+        for (; (qc.queryString.charAt(startInd) !='\n') && startInd > 0; startInd--)
+            sb.append(" ");
+        return sb.toString();
     }
 }
