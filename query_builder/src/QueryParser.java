@@ -61,20 +61,22 @@ public class QueryParser {
             if (allLinesRead)
                 break;
         }
-        for (String field: this.businessFields) {
-            if (!this.businessKeyFields.contains(field)){
-                this.businessNonKeyFields.add(field);
-            }
-        }
+        businessFields.stream()
+            .filter(x->!businessKeyFields.contains(x))
+            .forEach(businessNonKeyFields::add);
+//        for (String _field : this.businessFields) {
+//            if (!this.businessKeyFields.contains(_field)){
+//                this.businessNonKeyFields.add(_field);
+//            }
+//        }
     }
 
     private boolean parseLine(String line){
         String firstWord = line.trim().split("\\p{Space}")[0];
         if (firstWord.equalsIgnoreCase("primary")) {
-            Iterator<String> si =  Arrays.stream(line.substring(line.indexOf('(') + 1, line.indexOf(')'))
-                    .split(", ")).filter(s->(!s.startsWith("tech$"))).iterator();
-            while (si.hasNext())
-                businessKeyFields.add(si.next());
+            Arrays.stream(line.substring(line.indexOf('(') + 1, line.indexOf(')'))
+                    .split(", ")).filter(s->(!s.startsWith("tech$")))
+                    .forEach(x->businessKeyFields.add(x));
             return true;
         }
         if (firstWord.startsWith("tech$"))

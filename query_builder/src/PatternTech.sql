@@ -25,11 +25,11 @@ WITH
                            FROM (SELECT
                                         DATE(tech$load_dttm) AS tech$load_dt,
                                         tech$load_dttm       AS tech$load_dttm,
-                                        %businessFields%
+                                        %businessFields_multiLine%
                                    FROM %entity_name%
                                   WHERE tech$load_id >= :tech$load_id)
                          WINDOW wnd AS (PARTITION BY
-                                                     %businessFieldsInKey_multiLine%,
+                                                     %businessKeyFields_multiLine%,
                                                      tech$load_dt
                                             ORDER BY tech$load_dttm DESC))
                   WHERE rn = 1)
@@ -53,5 +53,5 @@ SELECT
                                    ORDER BY tech$load_dt))
          WHERE hash_value != lag_hash_value
             OR lag_hash_value IS NULL)
-WINDOW wnd AS (PARTITION BY businessKeyFields_singleLine
+WINDOW wnd AS (PARTITION BY %businessKeyFields_singleLine%
                    ORDER BY tech$load_dt)
