@@ -4,3 +4,5 @@
 etl/out/*
 db/file/*
 query_builder/out/*
+query_builder/.idea/misc.xml
+.gitignore

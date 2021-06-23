@@ -1,5 +1,5 @@
 INSERT
-  INTO index_security_weight
+  INTO %entity_name%
   (
     tech$load_id,
     tech$effective_dt,
@@ -18,10 +18,10 @@ SELECT
                tech$expiration_dt,
                tech$hash_value,
                %businessFields_multiLine%
-          FROM tech$index_security_weight src
+          FROM tech$%entity_name% src
          WHERE NOT EXISTS(SELECT
                                  NULL
-                            FROM index_security_weight sat
+                            FROM %entity_name% sat
                            WHERE
                                  %businessKeyFields_condition_src_sat%
                              AND sat.tech$expiration_dt = '2999-12-31')
@@ -69,9 +69,9 @@ SELECT
                                                     'EQUAL'
                                            END) OVER (wnd) AS fv_equal_flag,
                                ROW_NUMBER() OVER (wnd)     AS rn
-                          FROM tech$index_security_weight src
+                          FROM tech$%entity_name% src
                                JOIN
-                               index_security_weight sat
+                               %entity_name% sat
                                    ON
                                       %businessKeyFields_condition_src_sat%
                                   AND sat.tech$effective_dt < src.tech$effective_dt

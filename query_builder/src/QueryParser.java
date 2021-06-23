@@ -30,10 +30,11 @@ public class QueryParser {
         List<String> lines = null;
         try {
             lines = Files.readAllLines(sourceFile);
+            fillFields(lines);
         } catch (IOException e) {
             e.getMessage();
         }
-        fillFields(lines);
+
     }
     public ArrayList<String> getFields(String nameOfFieldsCollection) {
         ArrayList<String> result = new ArrayList<>();

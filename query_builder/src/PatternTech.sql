@@ -1,5 +1,5 @@
 INSERT
-  INTO repl.tech$index_security_weight
+  INTO repl.tech$%entity_name%
   (
     tech$load_id,
     tech$effective_dt,
@@ -26,7 +26,7 @@ WITH
                                         DATE(tech$load_dttm) AS tech$load_dt,
                                         tech$load_dttm       AS tech$load_dttm,
                                         %businessFields%
-                                   FROM index_security_weight
+                                   FROM %entity_name%
                                   WHERE tech$load_id >= :tech$load_id)
                          WINDOW wnd AS (PARTITION BY
                                                      %businessFieldsInKey_multiLine%,
