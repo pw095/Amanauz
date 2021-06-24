@@ -23,7 +23,7 @@ SELECT
                                  NULL
                             FROM %entity_name% sat
                            WHERE
-                                 %businessKeyFields_condition_src_sat%
+                                 %businessKeyFields_condition_sat_src%
                              AND sat.tech$expiration_dt = '2999-12-31')
          UNION ALL
         SELECT
@@ -61,7 +61,7 @@ SELECT
                                sat.tech$effective_dt                 AS tech$sat$effective_dt,
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
-                               %businessFields_multiLine%,
+                               %businessFields_multiLine_src%,
                                FIRST_VALUE(CASE
                                                 WHEN src.tech$hash_value != sat.tech$hash_value THEN
                                                     'NON_EQUAL'
@@ -73,7 +73,7 @@ SELECT
                                JOIN
                                %entity_name% sat
                                    ON
-                                      %businessKeyFields_condition_src_sat%
+                                      %businessKeyFields_condition_sat_src%
                                   AND sat.tech$effective_dt < src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
                         WINDOW wnd AS (PARTITION BY %businessKeyFields_MultiLine_src%

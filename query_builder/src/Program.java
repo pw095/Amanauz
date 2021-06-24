@@ -63,6 +63,8 @@ public class Program {
                 }
             }
 
+            qc.queryString = qc.queryString + System.getProperty("line.separator");
+
             try (BufferedWriter writer = Files.newBufferedWriter(
                     Paths.get(element.getValue()), StandardCharsets.UTF_8)) { // Charset.forName("UTF-8")
                 writer.write(qc.queryString);
@@ -103,7 +105,7 @@ public class Program {
                 sb.append(String.format("%s.%s", anc.firstRel, field));
             if (numOfCurrentField < qp.getFields(anc.shortName).size()) {
                 if (anc.multiLine)
-                    sb.append(",\n");
+                    sb.append(anc.secondRel.isEmpty() ? ",": "").append(System.getProperty("line.separator"));
                 else
                     sb.append(", ");
             }
@@ -122,13 +124,13 @@ public class Program {
             if (numOfCurrentField > 1) {
                 sb.append(offSet);
             }
-            sb.append(String.format("'_' || IFNULL(CAST(%-"+stdLength+"s AS TEXT), '%s') ||", field, "!@#%^&*\\$"));
+            sb.append(String.format("'_' || IFNULL(CAST(%-"+stdLength+"s AS TEXT), '%s') ||", field, "!@#\\$%^&*"));
             if (numOfCurrentField < fields.size()) {
-                sb.append('\n');
+                sb.append(System.getProperty("line.separator"));
             }
             numOfCurrentField++;
         }
-        sb.append('_');
+        sb.append(" '_'");
         return sb.toString();
     }
 

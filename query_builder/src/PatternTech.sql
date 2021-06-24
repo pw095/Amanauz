@@ -1,5 +1,5 @@
 INSERT
-  INTO repl.tech$%entity_name%
+  INTO tech$%entity_name%
   (
     tech$load_id,
     tech$effective_dt,
@@ -26,8 +26,8 @@ WITH
                                         DATE(tech$load_dttm) AS tech$load_dt,
                                         tech$load_dttm       AS tech$load_dttm,
                                         %businessFields_multiLine%
-                                   FROM %entity_name%
-                                  WHERE tech$load_id >= :tech$load_id)
+                                   FROM src.%entity_name%
+                                  WHERE tech$load_dttm > :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      %businessKeyFields_multiLine%,
                                                      tech$load_dt
@@ -35,7 +35,7 @@ WITH
                   WHERE rn = 1)
      )
 SELECT
-       1                                                              AS tech$load_id,
+       :tech$load_id                                                  AS tech$load_id,
        tech$load_dt                                                   AS tech$effective_dt,
        LEAD(DATE(tech$load_dt, '-1 DAY'), 1, '2999-12-31') OVER (wnd) AS tech$expiration_dt,
        hash_value                                                     AS tech$hash_value,
@@ -43,6 +43,7 @@ SELECT
   FROM (SELECT
                tech$load_dt,
                hash_value,
+               %businessFields_multiLine%
           FROM (SELECT
                        tech$load_dt,
                        hash_value,
@@ -50,8 +51,10 @@ SELECT
                        %businessFields_multiLine%
                   FROM w_raw
                 WINDOW wnd AS (PARTITION BY
+                                            %businessKeyFields_multiLine%
                                    ORDER BY tech$load_dt))
          WHERE hash_value != lag_hash_value
             OR lag_hash_value IS NULL)
-WINDOW wnd AS (PARTITION BY %businessKeyFields_singleLine%
+WINDOW wnd AS (PARTITION BY
+                            %businessKeyFields_multiLine%
                    ORDER BY tech$load_dt)
