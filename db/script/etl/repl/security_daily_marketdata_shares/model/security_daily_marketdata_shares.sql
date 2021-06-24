@@ -62,4 +62,5 @@ CREATE TABLE security_daily_marketdata_shares
     val_to_day_rur                   INTEGER NOT NULL,
     trading_session                  TEXT    NOT NULL,
     PRIMARY KEY(security_id, board_id, tech$effective_dt)
-  );
+  )
+WITHOUT ROWID;

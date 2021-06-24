@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS tech$security_boards;
-CREATE TABLE tech$security_boards
+DROP TABLE IF EXISTS tech$security_collections;
+CREATE TABLE tech$security_collections
   (
     tech$load_id       INTEGER NOT NULL,
     tech$effective_dt  TEXT    NOT NULL,

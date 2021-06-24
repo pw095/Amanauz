@@ -34,4 +34,5 @@ CREATE TABLE tech$security_daily_info_shares
     list_level                 INTEGER NOT NULL,
     settle_date                TEXT    NOT NULL,
     PRIMARY KEY(security_id, board_id, tech$effective_dt)
-  );
+  )
+WITHOUT ROWID;

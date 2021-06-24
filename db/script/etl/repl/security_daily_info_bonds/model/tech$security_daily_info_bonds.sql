@@ -44,6 +44,7 @@ CREATE TABLE tech$security_daily_info_bonds
     coupon_percent             REAL,
     offer_date                 TEXT    NOT NULL,
     settle_date                TEXT    NOT NULL,
-    lot_value                  REAL
+    lot_value                  REAL,
     PRIMARY KEY(security_id, board_id, tech$effective_dt)
-  );
+  )
+WITHOUT ROWID;

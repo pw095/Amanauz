@@ -66,4 +66,5 @@ CREATE TABLE security_daily_marketdata_bonds
     yield_last_coupon               REAL,
     trading_session                 TEXT    NOT NULL,
     PRIMARY KEY(security_id, board_id, tech$effective_dt)
-  );
+  )
+WITHOUT ROWID;
