@@ -10,5 +10,5 @@ CREATE TABLE security_markets
     market_name        TEXT,
     market_title       TEXT,
     market_id          INTEGER,
-    marketplace        TEXT
+    market_place       TEXT
   );

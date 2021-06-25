@@ -10,7 +10,7 @@ INSERT
     market_name,
     market_title,
     market_id,
-    marketplace
+    market_place
   )
 VALUES
   (
@@ -23,5 +23,5 @@ VALUES
     :market_name,
     :market_title,
     :market_id,
-    :marketplace
+    :market_place
   )
