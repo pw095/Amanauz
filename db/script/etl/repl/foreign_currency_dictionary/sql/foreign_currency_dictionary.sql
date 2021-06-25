@@ -1,19 +1,17 @@
 INSERT
-  INTO security_boards
+  INTO foreign_currency_dictionary
   (
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
     tech$hash_value,
     id,
-    board_group_id,
-    engine_id,
-    market_id,
-    board_id,
-    board_title,
-    is_traded,
-    has_candles,
-    is_primary
+    name,
+    eng_name,
+    nominal,
+    parent_code,
+    iso_num_code,
+    iso_char_code
   )
 SELECT
        :tech$load_id       AS tech$load_id,
@@ -21,33 +19,29 @@ SELECT
        tech$expiration_dt,
        tech$hash_value,
        id,
-       board_group_id,
-       engine_id,
-       market_id,
-       board_id,
-       board_title,
-       is_traded,
-       has_candles,
-       is_primary
+       name,
+       eng_name,
+       nominal,
+       parent_code,
+       iso_num_code,
+       iso_char_code
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
                tech$hash_value,
                id,
-               board_group_id,
-               engine_id,
-               market_id,
-               board_id,
-               board_title,
-               is_traded,
-               has_candles,
-               is_primary
-          FROM tech$security_boards src
+               name,
+               eng_name,
+               nominal,
+               parent_code,
+               iso_num_code,
+               iso_char_code
+          FROM tech$foreign_currency_dictionary src
          WHERE NOT EXISTS(SELECT
                                  NULL
-                            FROM security_boards sat
+                            FROM foreign_currency_dictionary sat
                            WHERE
-                                 sat.board_id = src.board_id
+                                 sat.id = src.id
                              AND sat.tech$expiration_dt = '2999-12-31')
          UNION ALL
         SELECT
@@ -65,14 +59,12 @@ SELECT
                END AS tech$expiration_dt,
                tech$hash_value,
                id,
-               board_group_id,
-               engine_id,
-               market_id,
-               board_id,
-               board_title,
-               is_traded,
-               has_candles,
-               is_primary
+               name,
+               eng_name,
+               nominal,
+               parent_code,
+               iso_num_code,
+               iso_char_code
           FROM (SELECT
                        tech$effective_dt,
                        tech$expiration_dt,
@@ -80,14 +72,12 @@ SELECT
                        tech$sat$expiration_dt,
                        tech$hash_value,
                        id,
-                       board_group_id,
-                       engine_id,
-                       market_id,
-                       board_id,
-                       board_title,
-                       is_traded,
-                       has_candles,
-                       is_primary,
+                       name,
+                       eng_name,
+                       nominal,
+                       parent_code,
+                       iso_num_code,
+                       iso_char_code,
                        CASE
                             WHEN rn = 1
                               OR rn = 2 AND fv_equal_flag = 'EQUAL' THEN
@@ -102,14 +92,12 @@ SELECT
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
                                src.id,
-                               src.board_group_id,
-                               src.engine_id,
-                               src.market_id,
-                               src.board_id,
-                               src.board_title,
-                               src.is_traded,
-                               src.has_candles,
-                               src.is_primary,
+                               src.name,
+                               src.eng_name,
+                               src.nominal,
+                               src.parent_code,
+                               src.iso_num_code,
+                               src.iso_char_code,
                                FIRST_VALUE(CASE
                                                 WHEN src.tech$hash_value != sat.tech$hash_value THEN
                                                     'NON_EQUAL'
@@ -117,14 +105,14 @@ SELECT
                                                     'EQUAL'
                                            END) OVER (wnd) AS fv_equal_flag,
                                ROW_NUMBER() OVER (wnd)     AS rn
-                          FROM tech$security_boards src
+                          FROM tech$foreign_currency_dictionary src
                                JOIN
-                               security_boards sat
+                               foreign_currency_dictionary sat
                                    ON
-                                      sat.board_id = src.board_id
+                                      sat.id = src.id
                                   AND sat.tech$effective_dt < src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
-                        WINDOW wnd AS (PARTITION BY src.board_id
+                        WINDOW wnd AS (PARTITION BY src.id
                                            ORDER BY src.tech$effective_dt))
                  WHERE rn = 1 AND fv_equal_flag = 'NON_EQUAL'
                     OR rn > 1) src
@@ -135,6 +123,6 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = 'INSERT' AND mrg.flg = 'INSERT')
  WHERE 1 = 1
- ON CONFLICT(board_id, tech$effective_dt)
+ ON CONFLICT(id, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt

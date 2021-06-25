@@ -1,16 +1,30 @@
 INSERT
-  INTO index_security_weight
+  INTO security_rate_shares
   (
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
     tech$hash_value,
-    index_id,
+    board_id,
     trade_date,
-    ticker,
     short_name,
     security_id,
-    weight,
+    num_trades,
+    value,
+    open,
+    low,
+    high,
+    legal_close_price,
+    wa_price,
+    close,
+    volume,
+    market_price_2,
+    market_price_3,
+    admitted_quote,
+    mp2_val_trd,
+    market_price_3_trades_value,
+    admitted_value,
+    wa_val,
     trading_session
   )
 SELECT
@@ -18,30 +32,58 @@ SELECT
        tech$effective_dt,
        tech$expiration_dt,
        tech$hash_value,
-       index_id,
+       board_id,
        trade_date,
-       ticker,
        short_name,
        security_id,
-       weight,
+       num_trades,
+       value,
+       open,
+       low,
+       high,
+       legal_close_price,
+       wa_price,
+       close,
+       volume,
+       market_price_2,
+       market_price_3,
+       admitted_quote,
+       mp2_val_trd,
+       market_price_3_trades_value,
+       admitted_value,
+       wa_val,
        trading_session
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
                tech$hash_value,
-               index_id,
+               board_id,
                trade_date,
-               ticker,
                short_name,
                security_id,
-               weight,
+               num_trades,
+               value,
+               open,
+               low,
+               high,
+               legal_close_price,
+               wa_price,
+               close,
+               volume,
+               market_price_2,
+               market_price_3,
+               admitted_quote,
+               mp2_val_trd,
+               market_price_3_trades_value,
+               admitted_value,
+               wa_val,
                trading_session
-          FROM tech$index_security_weight src
+          FROM tech$security_rate_shares src
          WHERE NOT EXISTS(SELECT
                                  NULL
-                            FROM index_security_weight sat
+                            FROM security_rate_shares sat
                            WHERE
-                                 sat.index_id = src.index_id
+                                 sat.board_id = src.board_id
                              AND sat.trade_date = src.trade_date
                              AND sat.security_id = src.security_id
                              AND sat.tech$expiration_dt = '2999-12-31')
@@ -60,12 +102,26 @@ SELECT
                         tech$sat$expiration_dt
                END AS tech$expiration_dt,
                tech$hash_value,
-               index_id,
+               board_id,
                trade_date,
-               ticker,
                short_name,
                security_id,
-               weight,
+               num_trades,
+               value,
+               open,
+               low,
+               high,
+               legal_close_price,
+               wa_price,
+               close,
+               volume,
+               market_price_2,
+               market_price_3,
+               admitted_quote,
+               mp2_val_trd,
+               market_price_3_trades_value,
+               admitted_value,
+               wa_val,
                trading_session
           FROM (SELECT
                        tech$effective_dt,
@@ -73,12 +129,26 @@ SELECT
                        tech$sat$effective_dt,
                        tech$sat$expiration_dt,
                        tech$hash_value,
-                       index_id,
+                       board_id,
                        trade_date,
-                       ticker,
                        short_name,
                        security_id,
-                       weight,
+                       num_trades,
+                       value,
+                       open,
+                       low,
+                       high,
+                       legal_close_price,
+                       wa_price,
+                       close,
+                       volume,
+                       market_price_2,
+                       market_price_3,
+                       admitted_quote,
+                       mp2_val_trd,
+                       market_price_3_trades_value,
+                       admitted_value,
+                       wa_val,
                        trading_session,
                        CASE
                             WHEN rn = 1
@@ -93,12 +163,26 @@ SELECT
                                sat.tech$effective_dt                 AS tech$sat$effective_dt,
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
-                               src.index_id,
+                               src.board_id,
                                src.trade_date,
-                               src.ticker,
                                src.short_name,
                                src.security_id,
-                               src.weight,
+                               src.num_trades,
+                               src.value,
+                               src.open,
+                               src.low,
+                               src.high,
+                               src.legal_close_price,
+                               src.wa_price,
+                               src.close,
+                               src.volume,
+                               src.market_price_2,
+                               src.market_price_3,
+                               src.admitted_quote,
+                               src.mp2_val_trd,
+                               src.market_price_3_trades_value,
+                               src.admitted_value,
+                               src.wa_val,
                                src.trading_session,
                                FIRST_VALUE(CASE
                                                 WHEN src.tech$hash_value != sat.tech$hash_value THEN
@@ -107,16 +191,16 @@ SELECT
                                                     'EQUAL'
                                            END) OVER (wnd) AS fv_equal_flag,
                                ROW_NUMBER() OVER (wnd)     AS rn
-                          FROM tech$index_security_weight src
+                          FROM tech$security_rate_shares src
                                JOIN
-                               index_security_weight sat
+                               security_rate_shares sat
                                    ON
-                                      sat.index_id = src.index_id
+                                      sat.board_id = src.board_id
                                   AND sat.trade_date = src.trade_date
                                   AND sat.security_id = src.security_id
                                   AND sat.tech$effective_dt < src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
-                        WINDOW wnd AS (PARTITION BY src.index_id,
+                        WINDOW wnd AS (PARTITION BY src.board_id,
                                                     src.trade_date,
                                                     src.security_id
                                            ORDER BY src.tech$effective_dt))
@@ -129,6 +213,6 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = 'INSERT' AND mrg.flg = 'INSERT')
  WHERE 1 = 1
- ON CONFLICT(index_id, trade_date, security_id, tech$effective_dt)
+ ON CONFLICT(board_id, trade_date, security_id, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt

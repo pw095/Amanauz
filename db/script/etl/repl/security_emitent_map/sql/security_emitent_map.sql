@@ -1,49 +1,74 @@
 INSERT
-  INTO index_security_weight
+  INTO security_emitent_map
   (
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
     tech$hash_value,
-    index_id,
-    trade_date,
-    ticker,
-    short_name,
+    id,
     security_id,
-    weight,
-    trading_session
+    short_name,
+    reg_number,
+    security_name,
+    isin,
+    security_is_traded,
+    emitent_id,
+    emitent_title,
+    emitent_inn,
+    emitent_okpo,
+    emitent_gos_reg,
+    security_type,
+    security_group,
+    primary_board_id,
+    market_price_board_id
   )
 SELECT
        :tech$load_id       AS tech$load_id,
        tech$effective_dt,
        tech$expiration_dt,
        tech$hash_value,
-       index_id,
-       trade_date,
-       ticker,
-       short_name,
+       id,
        security_id,
-       weight,
-       trading_session
+       short_name,
+       reg_number,
+       security_name,
+       isin,
+       security_is_traded,
+       emitent_id,
+       emitent_title,
+       emitent_inn,
+       emitent_okpo,
+       emitent_gos_reg,
+       security_type,
+       security_group,
+       primary_board_id,
+       market_price_board_id
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
                tech$hash_value,
-               index_id,
-               trade_date,
-               ticker,
-               short_name,
+               id,
                security_id,
-               weight,
-               trading_session
-          FROM tech$index_security_weight src
+               short_name,
+               reg_number,
+               security_name,
+               isin,
+               security_is_traded,
+               emitent_id,
+               emitent_title,
+               emitent_inn,
+               emitent_okpo,
+               emitent_gos_reg,
+               security_type,
+               security_group,
+               primary_board_id,
+               market_price_board_id
+          FROM tech$security_emitent_map src
          WHERE NOT EXISTS(SELECT
                                  NULL
-                            FROM index_security_weight sat
+                            FROM security_emitent_map sat
                            WHERE
-                                 sat.index_id = src.index_id
-                             AND sat.trade_date = src.trade_date
-                             AND sat.security_id = src.security_id
+                                 sat.security_id = src.security_id
                              AND sat.tech$expiration_dt = '2999-12-31')
          UNION ALL
         SELECT
@@ -60,26 +85,44 @@ SELECT
                         tech$sat$expiration_dt
                END AS tech$expiration_dt,
                tech$hash_value,
-               index_id,
-               trade_date,
-               ticker,
-               short_name,
+               id,
                security_id,
-               weight,
-               trading_session
+               short_name,
+               reg_number,
+               security_name,
+               isin,
+               security_is_traded,
+               emitent_id,
+               emitent_title,
+               emitent_inn,
+               emitent_okpo,
+               emitent_gos_reg,
+               security_type,
+               security_group,
+               primary_board_id,
+               market_price_board_id
           FROM (SELECT
                        tech$effective_dt,
                        tech$expiration_dt,
                        tech$sat$effective_dt,
                        tech$sat$expiration_dt,
                        tech$hash_value,
-                       index_id,
-                       trade_date,
-                       ticker,
-                       short_name,
+                       id,
                        security_id,
-                       weight,
-                       trading_session,
+                       short_name,
+                       reg_number,
+                       security_name,
+                       isin,
+                       security_is_traded,
+                       emitent_id,
+                       emitent_title,
+                       emitent_inn,
+                       emitent_okpo,
+                       emitent_gos_reg,
+                       security_type,
+                       security_group,
+                       primary_board_id,
+                       market_price_board_id,
                        CASE
                             WHEN rn = 1
                               OR rn = 2 AND fv_equal_flag = 'EQUAL' THEN
@@ -93,13 +136,22 @@ SELECT
                                sat.tech$effective_dt                 AS tech$sat$effective_dt,
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
-                               src.index_id,
-                               src.trade_date,
-                               src.ticker,
-                               src.short_name,
+                               src.id,
                                src.security_id,
-                               src.weight,
-                               src.trading_session,
+                               src.short_name,
+                               src.reg_number,
+                               src.security_name,
+                               src.isin,
+                               src.security_is_traded,
+                               src.emitent_id,
+                               src.emitent_title,
+                               src.emitent_inn,
+                               src.emitent_okpo,
+                               src.emitent_gos_reg,
+                               src.security_type,
+                               src.security_group,
+                               src.primary_board_id,
+                               src.market_price_board_id,
                                FIRST_VALUE(CASE
                                                 WHEN src.tech$hash_value != sat.tech$hash_value THEN
                                                     'NON_EQUAL'
@@ -107,18 +159,14 @@ SELECT
                                                     'EQUAL'
                                            END) OVER (wnd) AS fv_equal_flag,
                                ROW_NUMBER() OVER (wnd)     AS rn
-                          FROM tech$index_security_weight src
+                          FROM tech$security_emitent_map src
                                JOIN
-                               index_security_weight sat
+                               security_emitent_map sat
                                    ON
-                                      sat.index_id = src.index_id
-                                  AND sat.trade_date = src.trade_date
-                                  AND sat.security_id = src.security_id
+                                      sat.security_id = src.security_id
                                   AND sat.tech$effective_dt < src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
-                        WINDOW wnd AS (PARTITION BY src.index_id,
-                                                    src.trade_date,
-                                                    src.security_id
+                        WINDOW wnd AS (PARTITION BY src.security_id
                                            ORDER BY src.tech$effective_dt))
                  WHERE rn = 1 AND fv_equal_flag = 'NON_EQUAL'
                     OR rn > 1) src
@@ -129,6 +177,6 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = 'INSERT' AND mrg.flg = 'INSERT')
  WHERE 1 = 1
- ON CONFLICT(index_id, trade_date, security_id, tech$effective_dt)
+ ON CONFLICT(security_id, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt

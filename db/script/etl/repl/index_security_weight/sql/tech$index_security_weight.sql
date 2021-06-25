@@ -61,7 +61,8 @@ WITH
                                         trading_session
                                    FROM src.index_security_weight
                                   WHERE tech$load_dttm > :tech$load_dttm)
-                         WINDOW wnd AS (PARTITION BY index_id,
+                         WINDOW wnd AS (PARTITION BY
+                                                     index_id,
                                                      trade_date,
                                                      security_id,
                                                      tech$load_dt
@@ -102,13 +103,15 @@ SELECT
                        weight,
                        trading_session
                   FROM w_raw
-                WINDOW wnd AS (PARTITION BY index_id,
+                WINDOW wnd AS (PARTITION BY
+                                            index_id,
                                             trade_date,
                                             security_id
                                    ORDER BY tech$load_dt))
          WHERE hash_value != lag_hash_value
             OR lag_hash_value IS NULL)
-WINDOW wnd AS (PARTITION BY index_id,
+WINDOW wnd AS (PARTITION BY
+                            index_id,
                             trade_date,
                             security_id
                    ORDER BY tech$load_dt)
