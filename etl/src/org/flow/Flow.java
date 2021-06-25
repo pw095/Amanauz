@@ -84,7 +84,24 @@ public class Flow {
 
 
 
+        entityList.add(new ReplicationEntity(flow, "foreign_currency_dictionary"));
+        entityList.add(new ReplicationEntity(flow, "foreign_currency_rate"));
         entityList.add(new ReplicationEntity(flow, "index_security_weight"));
+        entityList.add(new ReplicationEntity(flow, "security_board_groups"));
+        entityList.add(new ReplicationEntity(flow, "security_boards"));
+        entityList.add(new ReplicationEntity(flow, "security_collections"));
+        entityList.add(new ReplicationEntity(flow, "security_daily_info_bonds"));
+        entityList.add(new ReplicationEntity(flow, "security_daily_info_shares"));
+        entityList.add(new ReplicationEntity(flow, "security_daily_marketdata_bonds"));
+        entityList.add(new ReplicationEntity(flow, "security_daily_marketdata_shares"));
+        entityList.add(new ReplicationEntity(flow, "security_emitent_map"));
+        entityList.add(new ReplicationEntity(flow, "security_engines"));
+        entityList.add(new ReplicationEntity(flow, "security_groups"));
+        entityList.add(new ReplicationEntity(flow, "security_markets"));
+        entityList.add(new ReplicationEntity(flow, "security_rate_bonds"));
+        entityList.add(new ReplicationEntity(flow, "security_rate_shares"));
+        entityList.add(new ReplicationEntity(flow, "security_types"));
+
         for (AbstractEntity entity : entityList) {
             entity.call();
         }

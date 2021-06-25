@@ -38,6 +38,7 @@ public abstract class PeriodEntity extends AbstractEntity {
         } else {
             Meta.getCurrentEffectiveToDt(this);
         }
+//        setEffectiveToDt(flow.getFlowLogStartTimestamp().format(dateFormat));
     }
 
 }
