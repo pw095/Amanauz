@@ -1,5 +1,5 @@
 SELECT
-       IFNULL(rll.rll_effective_to_dt, flow_start_dttm) AS rll_effective_to_dt
+       date(IFNULL(rll.rll_effective_to_dt, flow_start_dttm)) AS rll_effective_to_dt
   FROM (SELECT
                flow_id,
                elm_id,
