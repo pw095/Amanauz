@@ -19,7 +19,7 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'sat_emitent')) elm
+                         AND ent.ent_code = 'sat_emitent_moex')) elm
        CROSS JOIN
        (SELECT
                elm_id
@@ -28,12 +28,13 @@ SELECT
                              NULL
                         FROM tbl_layer layer
                        WHERE layer.layer_id = elm.elm_layer_id
-                         AND layer.layer_code = 'dds')
+                         AND layer.layer_code = 'repl')
            AND EXISTS(SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'hub_emitent')
+                         AND ent.ent_code = 'security_emitent_map')
+        UNION ALL
         SELECT
                elm_id
           FROM tbl_entity_layer_map elm
@@ -46,32 +47,4 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'sat_emitent_imoex')
-         UNION ALL
-        SELECT
-               elm_id
-          FROM tbl_entity_layer_map elm
-         WHERE EXISTS(SELECT
-                             NULL
-                        FROM tbl_layer layer
-                       WHERE layer.layer_id = elm.elm_layer_id
-                         AND layer.layer_code = 'dds')
-           AND EXISTS(SELECT
-                             NULL
-                        FROM tbl_entity ent
-                       WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'sat_emitent_master_data')
-         UNION ALL
-        SELECT
-               elm_id
-          FROM tbl_entity_layer_map elm
-         WHERE EXISTS(SELECT
-                             NULL
-                        FROM tbl_layer layer
-                       WHERE layer.layer_id = elm.elm_layer_id
-                         AND layer.layer_code = 'dds')
-           AND EXISTS(SELECT
-                             NULL
-                        FROM tbl_entity ent
-                       WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'sal_emitent')) parent;
+                         AND ent.ent_code = 'hub_emitent')) parent;
