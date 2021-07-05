@@ -89,4 +89,5 @@ SELECT
  WHERE 1 = 1
  ON CONFLICT(%businessKeyFields_singleLine%, tech$effective_dt)
  DO UPDATE
-       SET tech$expiration_dt = excluded.tech$expiration_dt
+       SET tech$expiration_dt = excluded.tech$expiration_dt,
+           tech$load_id = excluded.tech$load_id
