@@ -15,7 +15,7 @@ SELECT
        CROSS JOIN
        tbl_entity ent
  WHERE layer.layer_code = 'dds'
-   AND ent.ent_code = 'security_hub'
+   AND ent.ent_code = 'hub_board'
 ON CONFLICT(elm_ent_id, elm_layer_id) DO UPDATE
    SET elm_mode = excluded.elm_mode,
        elm_enabled = excluded.elm_enabled
