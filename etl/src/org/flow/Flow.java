@@ -1,6 +1,7 @@
 package org.flow;
 
 import org.data.*;
+import org.data.file.StageRefCalendar;
 import org.meta.LoadStatus;
 import org.meta.Meta;
 import org.meta.Properties;
@@ -51,7 +52,7 @@ public class Flow {
 
         Flow flow = new Flow();
         List<AbstractEntity> entityList = new ArrayList<>();
-
+/*
 //        Данные за 1 день, но лист 1
         entityList.add(new StageSecurityDailyInfoShares(flow)); // OK
         entityList.add(new StageSecurityDailyInfoBonds(flow)); // OK
@@ -99,7 +100,8 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "security_rate_bonds"));
         entityList.add(new ReplicationEntity(flow, "security_rate_shares"));
         entityList.add(new ReplicationEntity(flow, "security_types"));
-
+*/
+        entityList.add(new StageRefCalendar(flow));
         for (AbstractEntity entity : entityList) {
             entity.call();
         }

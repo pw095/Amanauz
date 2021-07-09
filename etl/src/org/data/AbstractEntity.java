@@ -153,7 +153,7 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
     public String getSqlDirectory() { return this.sqlDirectory; }
     public String getDataAuxDir() { return this.dataAuxDir; }
 
-    AbstractEntity(Flow flow, MetaLayer entityLayer, String entityCode) {
+    protected AbstractEntity(Flow flow, MetaLayer entityLayer, String entityCode) {
         setFlowLoadId(flow.getFlowLoadId());
         setFlowLogStartTimestamp(flow.getFlowLogStartTimestamp());
         this.entityLayer = entityLayer;

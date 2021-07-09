@@ -3,6 +3,7 @@ package org.meta;
 import org.data.AbstractEntity;
 import org.data.PeriodEntity;
 import org.data.ReplicationEntity;
+import org.data.file.StageRefCalendar;
 import org.flow.Flow;
 
 import java.sql.*;
@@ -199,10 +200,39 @@ public final class Meta {
 
                         stmt.executeUpdate();
                     }
+                } else if (entity instanceof StageRefCalendar) {
+                    stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_entity_file_load_log.sql"));
+                    try (PreparedStatement stmt = conn.prepareStatement(stmtString)) {
+                        stmt.setLong(1, entity.getEntityLoadLogId());
+                        stmt.setString(2, ((StageRefCalendar) entity).getFileName());
+                        stmt.setLong(3, ((StageRefCalendar) entity).getFileSize());
+                        stmt.setString(4, ((StageRefCalendar) entity).getFileHash());
+
+                        stmt.executeUpdate();
+                    }
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    public static synchronized String getPreviousFileHash(StageRefCalendar entity) {
+        String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_previous_file_hash.sql"));
+        String previousFileHash = "";
+
+        try (PreparedStatement stmtSelect = conn.prepareStatement(stmtString)) {
+            stmtSelect.setString(1, entity.getEntityLayer().getDbLayer());
+            stmtSelect.setString(2, entity.getEntityCode());
+            try (ResultSet rs = stmtSelect.executeQuery()) {
+                if (rs.next()) {
+                    previousFileHash = rs.getString("fll_hash_sum");
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+        return previousFileHash;
     }
 }

@@ -26,5 +26,26 @@
         <jarDirectory url="file://$USER_HOME$/AppData/Roaming/JetBrains/DataGrip2020.1/jdbc-drivers/Xerial SQLiteJDBC/3.31.1" recursive="false" />
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library>
+        <CLASSES>
+          <root url="jar://$MODULE_DIR$/commons-codec-1.15.jar!/" />
+          <root url="jar://$MODULE_DIR$/commons-collections4-4.4.jar!/" />
+          <root url="jar://$MODULE_DIR$/commons-compress-1.20.jar!/" />
+          <root url="jar://$MODULE_DIR$/commons-lang3-3.12.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/commons-math3-3.6.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/log4j-api-2.14.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/log4j-core-2.14.1.jar!/" />
+          <root url="jar://$MODULE_DIR$/poi-5.0.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/poi-ooxml-5.0.0.jar!/" />
+          <root url="jar://$MODULE_DIR$/poi-ooxml-schemas-4.1.2.jar!/" />
+          <root url="jar://$MODULE_DIR$/xmlbeans-5.0.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$MODULE_DIR$/poi-ooxml-5.0.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
