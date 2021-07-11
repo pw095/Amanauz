@@ -1,0 +1,21 @@
+INSERT
+  INTO master_data_emitent
+  (
+    tech$load_id,
+    tech$load_dttm,
+    full_name,
+    short_name,
+    reg_date,
+    ogrn,
+    inn
+  )
+VALUES
+  (
+    :tech$load_id,
+    :tech$load_dttm,
+    :full_name,
+    :short_name,
+    :reg_date,
+    :ogrn,
+    :inn
+  )
