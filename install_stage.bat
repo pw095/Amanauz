@@ -1,1 +1,1 @@
-.\sqlite3.exe < sqlite.txt
+.\sqlite3.exe < stage.txt

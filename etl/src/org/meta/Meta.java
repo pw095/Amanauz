@@ -1,6 +1,7 @@
 package org.meta;
 
 import org.data.AbstractEntity;
+import org.data.FileEntity;
 import org.data.PeriodEntity;
 import org.data.ReplicationEntity;
 import org.data.file.StageRefCalendar;
@@ -200,13 +201,13 @@ public final class Meta {
 
                         stmt.executeUpdate();
                     }
-                } else if (entity instanceof StageRefCalendar) {
+                } else if (entity instanceof FileEntity) {
                     stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_entity_file_load_log.sql"));
                     try (PreparedStatement stmt = conn.prepareStatement(stmtString)) {
                         stmt.setLong(1, entity.getEntityLoadLogId());
-                        stmt.setString(2, ((StageRefCalendar) entity).getFileName());
-                        stmt.setLong(3, ((StageRefCalendar) entity).getFileSize());
-                        stmt.setString(4, ((StageRefCalendar) entity).getFileHash());
+                        stmt.setString(2, ((FileEntity) entity).getFileName());
+                        stmt.setLong(3, ((FileEntity) entity).getFileSize());
+                        stmt.setString(4, ((FileEntity) entity).getFileHash());
 
                         stmt.executeUpdate();
                     }
@@ -217,7 +218,7 @@ public final class Meta {
         }
     }
 
-    public static synchronized String getPreviousFileHash(StageRefCalendar entity) {
+    public static synchronized String getPreviousFileHash(FileEntity entity) {
         String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_previous_file_hash.sql"));
         String previousFileHash = "";
 
