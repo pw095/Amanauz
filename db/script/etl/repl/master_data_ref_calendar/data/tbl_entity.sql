@@ -5,7 +5,7 @@ INSERT
   )
 VALUES
   (
-    'ref_calendar'
+    'master_data_ref_calendar'
   )
 ON CONFLICT(ent_code) DO UPDATE
    SET ent_desc = excluded.ent_desc

@@ -14,8 +14,8 @@ SELECT
   FROM tbl_layer layer
        CROSS JOIN
        tbl_entity ent
- WHERE layer.layer_code = 'stage'
-   AND ent.ent_code = 'ref_calendar'
+ WHERE layer.layer_code = 'repl'
+   AND ent.ent_code = 'master_data_ref_calendar'
 ON CONFLICT(elm_ent_id, elm_layer_id) DO UPDATE
    SET elm_mode = excluded.elm_mode,
        elm_enabled = excluded.elm_enabled

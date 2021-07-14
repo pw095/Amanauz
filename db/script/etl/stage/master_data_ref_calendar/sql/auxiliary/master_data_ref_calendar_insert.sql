@@ -1,15 +1,15 @@
 INSERT
-  INTO ref_calendar
+  INTO master_data_ref_calendar
   (
     tech$load_id,
     tech$load_dttm,
     full_date,
-    week_day_flag
+    holiday_flag
   )
 VALUES
   (
     :tech$load_id,
     :tech$load_dttm,
     :full_date,
-    :week_day_flag
+    :holiday_flag
   )
