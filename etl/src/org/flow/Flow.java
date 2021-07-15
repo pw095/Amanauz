@@ -2,7 +2,8 @@ package org.flow;
 
 import org.data.*;
 import org.data.file.StageMasterDataEmitent;
-import org.data.file.StageRefCalendar;
+import org.data.file.StageMasterDataEmitentMap;
+import org.data.file.StageMasterDataRefCalendar;
 import org.meta.LoadStatus;
 import org.meta.Meta;
 import org.meta.Properties;
@@ -102,8 +103,9 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "security_rate_shares"));
         entityList.add(new ReplicationEntity(flow, "security_types"));
 */
-//        entityList.add(new StageRefCalendar(flow));
+        entityList.add(new StageMasterDataRefCalendar(flow));
         entityList.add(new StageMasterDataEmitent(flow));
+        entityList.add(new StageMasterDataEmitentMap(flow));
         for (AbstractEntity entity : entityList) {
             entity.call();
         }

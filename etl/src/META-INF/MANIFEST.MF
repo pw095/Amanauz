@@ -1,0 +1,8 @@
+Manifest-Version: 1.0
+Main-Class: org.flow.Flow
+Class-Path: sqlite-jdbc-3.34.0.jar commons-codec-1.15.jar commons-collec
+ tions4-4.4.jar commons-compress-1.20.jar commons-lang3-3.12.0.jar commo
+ ns-math3-3.6.1.jar log4j-api-2.14.1.jar log4j-core-2.14.1.jar poi-5.0.0
+ .jar poi-ooxml-5.0.0.jar poi-ooxml-schemas-4.1.2.jar xmlbeans-5.0.0.jar
+  json-20180130.jar
+
