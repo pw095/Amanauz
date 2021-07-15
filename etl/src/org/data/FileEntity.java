@@ -16,6 +16,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.PreparedStatement;
+import java.util.Map;
 
 import static org.meta.Properties.getInstance;
 
@@ -38,7 +39,7 @@ public abstract class FileEntity extends AbstractEntity implements ExcelEntity {
 
     @Override
     public boolean ifCancelLoad() {
-        return getFileHash().equals(Meta.getPreviousFileHash(this));
+        return getFileHash().equals(Meta.getPreviousFileHash(this).get(getFileName()));
     }
 
     protected FileEntity(Flow flow, String entityCode, String fileName) {

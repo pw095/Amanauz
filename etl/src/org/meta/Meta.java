@@ -8,6 +8,8 @@ import org.flow.Flow;
 import java.sql.*;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.meta.Properties.getInstance;
 import static org.util.AuxUtil.*;
@@ -216,22 +218,21 @@ public final class Meta {
         }
     }
 
-    public static synchronized String getPreviousFileHash(FileEntity entity) {
+    public static synchronized Map<String, String> getPreviousFileHash(FileEntity entity) {
         String stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("get_previous_file_hash.sql"));
-        String previousFileHash = "";
+        Map<String, String> previousFileInfo = new HashMap<>();
 
         try (PreparedStatement stmtSelect = conn.prepareStatement(stmtString)) {
-            stmtSelect.setString(1, entity.getEntityLayer().getDbLayer());
-            stmtSelect.setString(2, entity.getEntityCode());
+            stmtSelect.setLong(1, entity.getEntityLayerMapId());
             try (ResultSet rs = stmtSelect.executeQuery()) {
-                if (rs.next()) {
-                    previousFileHash = rs.getString("fll_hash_sum");
+                while (rs.next()) {
+                    previousFileInfo.put(rs.getString("fll_name"), rs.getString("fll_hash_sum"));
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
             throw new RuntimeException(e);
         }
-        return previousFileHash;
+        return previousFileInfo;
     }
 }
