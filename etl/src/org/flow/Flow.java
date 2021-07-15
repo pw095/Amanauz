@@ -4,6 +4,7 @@ import org.data.*;
 import org.data.file.StageMasterDataEmitent;
 import org.data.file.StageMasterDataEmitentMap;
 import org.data.file.StageMasterDataRefCalendar;
+import org.data.file.StageMasterDataRefFinStatement;
 import org.meta.LoadStatus;
 import org.meta.Meta;
 import org.meta.Properties;
@@ -106,6 +107,7 @@ public class Flow {
         entityList.add(new StageMasterDataRefCalendar(flow));
         entityList.add(new StageMasterDataEmitent(flow));
         entityList.add(new StageMasterDataEmitentMap(flow));
+        entityList.add(new StageMasterDataRefFinStatement(flow));
         for (AbstractEntity entity : entityList) {
             entity.call();
         }

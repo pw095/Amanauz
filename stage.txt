@@ -49,6 +49,8 @@
 .read security_types/data/tbl_entity_layer_map.sql
 .read master_data_ref_calendar/data/tbl_entity.sql
 .read master_data_ref_calendar/data/tbl_entity_layer_map.sql
+.read master_data_ref_fin_statement/data/tbl_entity.sql
+.read master_data_ref_fin_statement/data/tbl_entity_layer_map.sql
 .read master_data_emitent/data/tbl_entity.sql
 .read master_data_emitent/data/tbl_entity_layer_map.sql
 .read master_data_emitent_map/data/tbl_entity.sql
@@ -77,6 +79,7 @@
 .read security_rate_shares/model/security_rate_shares.sql
 .read security_types/model/security_types.sql
 .read master_data_ref_calendar/model/master_data_ref_calendar.sql
+.read master_data_ref_fin_statement/model/master_data_ref_fin_statement.sql
 .read master_data_emitent/model/master_data_emitent.sql
 .read master_data_emitent_map/model/master_data_emitent_map.sql
 .quit

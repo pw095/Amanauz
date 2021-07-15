@@ -1,0 +1,23 @@
+INSERT
+  INTO master_data_ref_fin_statement
+  (
+    tech$load_id,
+    tech$load_dttm,
+    hier_level,
+    leaf_code,
+    code,
+    parent_leaf_code,
+    parent_code,
+    full_name
+  )
+VALUES
+  (
+    :tech$load_id,
+    :tech$load_dttm,
+    :hier_level,
+    :leaf_code,
+    :code,
+    :parent_leaf_code,
+    :parent_code,
+    :full_name
+  )
