@@ -52,6 +52,15 @@
 .read security_types/data/tbl_entity.sql
 .read security_types/data/tbl_entity_layer_map.sql
 .read security_types/data/tbl_elm_dependency.sql
+.read master_data_emitent/data/tbl_entity.sql
+.read master_data_emitent/data/tbl_entity_layer_map.sql
+.read master_data_emitent/data/tbl_elm_dependency.sql
+.read master_data_emitent_map/data/tbl_entity.sql
+.read master_data_emitent_map/data/tbl_entity_layer_map.sql
+.read master_data_emitent_map/data/tbl_elm_dependency.sql
+.read master_data_ref_calendar/data/tbl_entity.sql
+.read master_data_ref_calendar/data/tbl_entity_layer_map.sql
+.read master_data_ref_calendar/data/tbl_elm_dependency.sql
 .cd ../../../file
 
 .open repl.db
@@ -90,5 +99,10 @@
 .read security_rate_shares/model/tech$security_rate_shares.sql
 .read security_types/model/security_types.sql
 .read security_types/model/tech$security_types.sql
-
+.read master_data_emitent/model/master_data_emitent.sql
+.read master_data_emitent/model/tech$master_data_emitent.sql
+.read master_data_emitent_map/model/master_data_emitent_map.sql
+.read master_data_emitent_map/model/tech$master_data_emitent_map.sql
+.read master_data_ref_calendar/model/master_data_ref_calendar.sql
+.read master_data_ref_calendar/model/tech$master_data_ref_calendar.sql
 .quit
