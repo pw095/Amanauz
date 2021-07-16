@@ -88,7 +88,11 @@ public final class Meta {
             if (entity.getEntityLayer() == MetaLayer.STAGE) {
                 entity.setEffectiveFromDt(LocalDate.parse(rllEffectiveToDt, dateFormat).minusDays(7).format(dateFormat));
             } else {
-                entity.setEffectiveFromDt(LocalDate.parse(rllEffectiveToDt, dateFormat).plusDays(1).format(dateFormat));
+                if (rllEffectiveToDt == null) {
+                    entity.setEffectiveFromDt("2001-01-01");
+                } else {
+                    entity.setEffectiveFromDt(LocalDate.parse(rllEffectiveToDt, dateFormat).format(dateFormat));
+                }
             }
 
         } catch (SQLException e) {
