@@ -1,12 +1,15 @@
-DROP TABLE IF EXISTS tech$master_data_ref_calendar;
-CREATE TABLE tech$master_data_ref_calendar
+DROP TABLE IF EXISTS tech$master_data_emitent;
+CREATE TABLE tech$master_data_emitent
   (
     tech$load_id       INTEGER NOT NULL,
     tech$effective_dt  TEXT    NOT NULL,
     tech$expiration_dt TEXT    NOT NULL,
     tech$hash_value    TEXT    NOT NULL,
-    full_date          TEXT    NOT NULL,
-    holiday_flag       TEXT    NOT NULL,
-    PRIMARY KEY(full_date, tech$effective_dt)
+    full_name          TEXT    NOT NULL,
+    short_name         TEXT    NOT NULL,
+    reg_date           TEXT,
+    ogrn               TEXT,
+    inn                TEXT,
+    PRIMARY KEY(short_name, tech$effective_dt)
   )
 WITHOUT ROWID;
