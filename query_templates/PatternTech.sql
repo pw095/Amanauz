@@ -27,7 +27,7 @@ WITH
                                         tech$load_dttm       AS tech$load_dttm,
                                         %businessFields_multiLine%
                                    FROM src.%entity_name%
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      %businessKeyFields_multiLine%,
                                                      tech$load_dt
