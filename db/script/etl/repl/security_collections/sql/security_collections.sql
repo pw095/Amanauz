@@ -64,7 +64,7 @@ SELECT
                     WHEN 'INSERT' THEN
                         tech$expiration_dt
                     WHEN 'UPDATE' THEN
-                        tech$sat$expiration_dt
+                        MAX(tech$sat$expiration_dt, tech$expiration_dt)
                END AS tech$expiration_dt,
                tech$hash_value,
                =======,
@@ -94,6 +94,10 @@ SELECT
                        title,
                        security_group_id,
                        CASE
+                            WHEN rn = 1
+                             AND fv_equal_flag = 'NON_EQUAL'
+                             AND tech$effective_dt = tech$sat$effective_dt THEN
+                                'UPDATE'
                             WHEN rn = 1
                               OR rn = 2 AND fv_equal_flag = 'EQUAL' THEN
                                 'UPSERT'
@@ -128,7 +132,7 @@ SELECT
                                security_collections sat
                                    ON
                                       sat.id = src.id
-                                  AND sat.tech$effective_dt < src.tech$effective_dt
+                                  AND sat.tech$effective_dt <= src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
                         WINDOW wnd AS (PARTITION BY src.id
                                            ORDER BY src.tech$effective_dt))
@@ -139,7 +143,7 @@ SELECT
                  UNION ALL
                 SELECT 'UPDATE' AS flg) mrg
     WHERE src.upsert_flg = 'UPSERT'
-       OR src.upsert_flg = 'INSERT' AND mrg.flg = 'INSERT')
+       OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
  ON CONFLICT(id, tech$effective_dt)
  DO UPDATE

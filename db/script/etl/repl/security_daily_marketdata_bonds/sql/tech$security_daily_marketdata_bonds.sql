@@ -379,7 +379,7 @@ WITH
                                         yield_last_coupon,
                                         trading_session
                                    FROM src.security_daily_marketdata_bonds
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      security_id,
                                                      board_id,

@@ -43,7 +43,7 @@ WITH
                                         nominal,
                                         value
                                    FROM src.foreign_currency_rate
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      trade_date,
                                                      id,

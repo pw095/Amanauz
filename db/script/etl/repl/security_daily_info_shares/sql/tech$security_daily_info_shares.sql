@@ -187,7 +187,7 @@ WITH
                                         list_level,
                                         settle_date
                                    FROM src.security_daily_info_shares
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      security_id,
                                                      board_id,

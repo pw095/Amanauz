@@ -60,7 +60,7 @@ WITH
                                         weight,
                                         trading_session
                                    FROM src.index_security_weight
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      index_id,
                                                      trade_date,

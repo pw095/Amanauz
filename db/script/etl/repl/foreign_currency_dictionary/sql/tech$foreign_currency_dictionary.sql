@@ -62,7 +62,7 @@ WITH
                                         iso_num_code,
                                         iso_char_code
                                    FROM src.foreign_currency_dictionary
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      id,
                                                      tech$load_dt

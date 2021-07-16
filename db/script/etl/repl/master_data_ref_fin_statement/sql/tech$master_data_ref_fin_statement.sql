@@ -56,7 +56,7 @@ WITH
                                         parent_code,
                                         full_name
                                    FROM src.master_data_ref_fin_statement
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      code,
                                                      tech$load_dt

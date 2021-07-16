@@ -355,7 +355,7 @@ WITH
                                         val_to_day_rur,
                                         trading_session
                                    FROM src.security_daily_marketdata_shares
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      security_id,
                                                      board_id,

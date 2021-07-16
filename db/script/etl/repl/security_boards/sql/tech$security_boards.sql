@@ -74,7 +74,7 @@ WITH
                                         has_candles,
                                         is_primary
                                    FROM src.security_boards
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      board_id,
                                                      tech$load_dt

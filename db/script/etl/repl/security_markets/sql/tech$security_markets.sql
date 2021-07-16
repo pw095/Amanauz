@@ -68,7 +68,7 @@ WITH
                                         market_id,
                                         market_place
                                    FROM src.security_markets
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      market_name,
                                                      tech$load_dt

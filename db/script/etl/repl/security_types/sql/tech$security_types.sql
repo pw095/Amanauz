@@ -62,7 +62,7 @@ WITH
                                         security_type_title,
                                         security_group_name
                                    FROM src.security_types
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      security_type_name,
                                                      tech$load_dt

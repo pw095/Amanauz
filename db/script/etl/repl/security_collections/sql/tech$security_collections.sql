@@ -80,7 +80,7 @@ WITH
                                         title,
                                         security_group_id
                                    FROM src.security_collections
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      id,
                                                      tech$load_dt

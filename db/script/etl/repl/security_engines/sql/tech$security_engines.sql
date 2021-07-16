@@ -38,7 +38,7 @@ WITH
                                         name,
                                         title
                                    FROM src.security_engines
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      name,
                                                      tech$load_dt

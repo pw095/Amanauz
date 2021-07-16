@@ -37,7 +37,7 @@ WITH
                                         emitent_code,
                                         emitent_short_name
                                    FROM src.master_data_emitent_map
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      source_system_code,
                                                      emitent_code,

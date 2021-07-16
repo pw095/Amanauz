@@ -116,7 +116,7 @@ WITH
                                         primary_board_id,
                                         market_price_board_id
                                    FROM src.security_emitent_map
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      security_id,
                                                      tech$load_dt

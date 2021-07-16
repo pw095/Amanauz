@@ -44,7 +44,7 @@ WITH
                                         title,
                                         is_hidden
                                    FROM src.security_groups
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      name,
                                                      tech$load_dt

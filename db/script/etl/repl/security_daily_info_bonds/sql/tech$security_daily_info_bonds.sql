@@ -259,7 +259,7 @@ WITH
                                         settle_date,
                                         lot_value
                                    FROM src.security_daily_info_bonds
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      security_id,
                                                      board_id,

@@ -246,7 +246,7 @@ WITH
                                         face_unit,
                                         trading_session
                                    FROM src.security_rate_bonds
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      board_id,
                                                      trade_date,
