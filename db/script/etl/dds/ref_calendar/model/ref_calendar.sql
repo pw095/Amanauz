@@ -2,9 +2,9 @@ DROP TABLE IF EXISTS ref_calendar;
 CREATE TABLE ref_calendar
   (
     tech$load_id       INTEGER NOT NULL,
-    clndr_dt           TEXT    NOT NULL,
     tech$load_dt       TEXT    NOT NULL,
     tech$record_source TEXT    NOT NULL,
+    clndr_dt           TEXT    NOT NULL,
     day_num_in_week    INTEGER NOT NULL,
     day_num_in_month   INTEGER NOT NULL,
     day_num_in_year    INTEGER NOT NULL,

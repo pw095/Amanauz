@@ -2,9 +2,9 @@ INSERT
   INTO ref_calendar
   (
     tech$load_id,
-    clndr_dt,
     tech$load_dt,
     tech$record_source,
+    clndr_dt,
     day_num_in_week,
     day_num_in_month,
     day_num_in_year,
@@ -21,9 +21,9 @@ INSERT
   )
 SELECT
        :tech$load_id     AS tech$load_id,
-       full_date         AS clndr_dt,
        tech$effective_dt AS tech$load_dt,
        'master_data'     AS tech$record_source,
+       full_date         AS clndr_dt,
        CASE CAST(STRFTIME('%w', full_date) AS INTEGER)
             WHEN 0 THEN
                 7
