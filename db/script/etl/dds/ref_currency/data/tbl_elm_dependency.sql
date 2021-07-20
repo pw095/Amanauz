@@ -19,7 +19,7 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'hub_emitent')) elm
+                         AND ent.ent_code = 'ref_currency')) elm
        CROSS JOIN
        (SELECT
                elm_id
@@ -33,5 +33,4 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code IN ('security_emitent_map',
-                                              'master_data_emitent'))) parent;
+                         AND ent.ent_code = 'foreign_currency_dictionary')) parent;

@@ -122,7 +122,7 @@ SELECT
        END AS month_abbrev,
        CEIL((CAST(STRFTIME('%m', full_date) AS REAL) / 3)) AS quarter,
        CAST(STRFTIME('%Y', full_date) AS INTEGER)          AS year
-  FROM master_data_ref_calendar src
+  FROM src.master_data_ref_calendar src
  WHERE NOT EXISTS(SELECT
                          NULL
                     FROM ref_calendar sat

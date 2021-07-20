@@ -19,7 +19,7 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'hub_emitent')) elm
+                         AND ent.ent_code = 'hub_security_type')) elm
        CROSS JOIN
        (SELECT
                elm_id
@@ -33,5 +33,4 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code IN ('security_emitent_map',
-                                              'master_data_emitent'))) parent;
+                         AND ent.ent_code = 'security_types')) parent;

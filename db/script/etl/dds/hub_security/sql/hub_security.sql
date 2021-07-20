@@ -11,12 +11,11 @@ INSERT
 SELECT
        :tech$load_id      AS tech$load_id,
        sha1(security_id)  AS tech$hash_key,
-       tech$record_source,
+       'moex.com'         AS tech$record_source,
        tech$load_dt,
        tech$last_seen_dt,
        security_id
   FROM (SELECT
-               'moex.com'             AS tech$record_source,
                MIN(tech$effective_dt) AS tech$load_dt,
                MAX(tech$effective_dt) AS tech$last_seen_dt,
                security_id
@@ -44,11 +43,12 @@ SELECT
                        tech$effective_dt,
                        security_id
                   FROM src.security_daily_info_shares)
-         WHERE tech$effective_dt > :tech$effective_dt
+         WHERE tech$effective_dt >= :tech$effective_dt
            AND security_id IS NOT NULL
            AND security_id != ""
          GROUP BY
                   security_id)
-ON CONFLICT(emit_hkey) DO UPDATE
+ WHERE 1 = 1
+ON CONFLICT(tech$hash_key) DO UPDATE
    SET last_seen_date = excluded.last_seen_date,
        tech$load_id = excluded.tech$load_id
