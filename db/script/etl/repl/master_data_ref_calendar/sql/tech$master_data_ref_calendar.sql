@@ -18,7 +18,7 @@ WITH
                 holiday_flag
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(holiday_flag AS TEXT)) || '_' AS concat_value,
+                        '_' || IFNULL(CAST(holiday_flag AS TEXT), '!@#$%^&*') || '_' AS concat_value,
                         full_date,
                         holiday_flag
                    FROM (SELECT
@@ -32,7 +32,7 @@ WITH
                                         full_date,
                                         holiday_flag
                                    FROM src.master_data_ref_calendar
-                                  WHERE tech$load_dttm > :tech$load_dttm)
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      full_date,
                                                      tech$load_dt
@@ -59,10 +59,10 @@ SELECT
                        holiday_flag
                   FROM w_raw
                 WINDOW wnd AS (PARTITION BY
-                                            board_id
+                                            full_date
                                    ORDER BY tech$load_dt))
          WHERE hash_value != lag_hash_value
             OR lag_hash_value IS NULL)
 WINDOW wnd AS (PARTITION BY
-                            board_id
+                            full_date
                    ORDER BY tech$load_dt)

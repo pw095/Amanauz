@@ -1,44 +1,32 @@
 INSERT
-  INTO master_data_ref_fin_statement
+  INTO default_data_emitent
   (
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
     tech$hash_value,
-    hier_level,
-    leaf_code,
-    code,
-    parent_leaf_code,
-    parent_code,
-    full_name
+    emitent_code,
+    emitent_name
   )
 SELECT
        :tech$load_id       AS tech$load_id,
        tech$effective_dt,
        tech$expiration_dt,
        tech$hash_value,
-       hier_level,
-       leaf_code,
-       code,
-       parent_leaf_code,
-       parent_code,
-       full_name
+       emitent_code,
+       emitent_name
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
                tech$hash_value,
-               hier_level,
-               leaf_code,
-               code,
-               parent_leaf_code,
-               parent_code,
-               full_name
-          FROM tech$master_data_ref_fin_statement src
+               emitent_code,
+               emitent_name
+          FROM tech$default_data_emitent src
          WHERE NOT EXISTS(SELECT
                                  NULL
-                            FROM master_data_ref_fin_statement sat
+                            FROM default_data_emitent sat
                            WHERE
-                                 sat.code = src.code
+                                 sat.emitent_code = src.emitent_code
                              AND sat.tech$expiration_dt = '2999-12-31')
          UNION ALL
         SELECT
@@ -55,24 +43,16 @@ SELECT
                         MAX(tech$sat$expiration_dt, tech$expiration_dt)
                END AS tech$expiration_dt,
                tech$hash_value,
-               hier_level,
-               leaf_code,
-               code,
-               parent_leaf_code,
-               parent_code,
-               full_name
+               emitent_code,
+               emitent_name
           FROM (SELECT
                        tech$effective_dt,
                        tech$expiration_dt,
                        tech$sat$effective_dt,
                        tech$sat$expiration_dt,
                        tech$hash_value,
-                       hier_level,
-                       leaf_code,
-                       code,
-                       parent_leaf_code,
-                       parent_code,
-                       full_name,
+                       emitent_code,
+                       emitent_name,
                        CASE
                             WHEN rn = 1
                              AND fv_equal_flag = 'NON_EQUAL'
@@ -90,12 +70,8 @@ SELECT
                                sat.tech$effective_dt                 AS tech$sat$effective_dt,
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
-                               src.hier_level,
-                               src.leaf_code,
-                               src.code,
-                               src.parent_leaf_code,
-                               src.parent_code,
-                               src.full_name,
+                               src.emitent_code,
+                               src.emitent_name,
                                FIRST_VALUE(CASE
                                                 WHEN src.tech$hash_value != sat.tech$hash_value THEN
                                                     'NON_EQUAL'
@@ -103,14 +79,14 @@ SELECT
                                                     'EQUAL'
                                            END) OVER (wnd) AS fv_equal_flag,
                                ROW_NUMBER() OVER (wnd)     AS rn
-                          FROM tech$master_data_ref_fin_statement src
+                          FROM tech$default_data_emitent src
                                JOIN
-                               master_data_ref_fin_statement sat
+                               default_data_emitent sat
                                    ON
-                                      sat.code = src.code
+                                      sat.emitent_code = src.emitent_code
                                   AND sat.tech$effective_dt <= src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
-                        WINDOW wnd AS (PARTITION BY src.code
+                        WINDOW wnd AS (PARTITION BY src.emitent_code
                                            ORDER BY src.tech$effective_dt))
                  WHERE rn = 1 AND fv_equal_flag = 'NON_EQUAL'
                     OR rn > 1) src
@@ -121,7 +97,7 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
- ON CONFLICT(code, tech$effective_dt)
+ ON CONFLICT(emitent_code, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
            tech$load_id = excluded.tech$load_id

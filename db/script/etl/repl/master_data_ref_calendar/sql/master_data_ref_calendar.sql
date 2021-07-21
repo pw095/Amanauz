@@ -40,7 +40,7 @@ SELECT
                     WHEN 'INSERT' THEN
                         tech$expiration_dt
                     WHEN 'UPDATE' THEN
-                        tech$sat$expiration_dt
+                        MAX(tech$sat$expiration_dt, tech$expiration_dt)
                END AS tech$expiration_dt,
                tech$hash_value,
                full_date,
@@ -54,6 +54,10 @@ SELECT
                        full_date,
                        holiday_flag,
                        CASE
+                            WHEN rn = 1
+                             AND fv_equal_flag = 'NON_EQUAL'
+                             AND tech$effective_dt = tech$sat$effective_dt THEN
+                                'UPDATE'
                             WHEN rn = 1
                               OR rn = 2 AND fv_equal_flag = 'EQUAL' THEN
                                 'UPSERT'
@@ -80,7 +84,7 @@ SELECT
                                master_data_ref_calendar sat
                                    ON
                                       sat.full_date = src.full_date
-                                  AND sat.tech$effective_dt < src.tech$effective_dt
+                                  AND sat.tech$effective_dt <= src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
                         WINDOW wnd AS (PARTITION BY src.full_date
                                            ORDER BY src.tech$effective_dt))
@@ -91,8 +95,9 @@ SELECT
                  UNION ALL
                 SELECT 'UPDATE' AS flg) mrg
     WHERE src.upsert_flg = 'UPSERT'
-       OR src.upsert_flg = 'INSERT' AND mrg.flg = 'INSERT')
+       OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
  ON CONFLICT(full_date, tech$effective_dt)
  DO UPDATE
-       SET tech$expiration_dt = excluded.tech$expiration_dt
+       SET tech$expiration_dt = excluded.tech$expiration_dt,
+           tech$load_id = excluded.tech$load_id

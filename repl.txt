@@ -64,6 +64,18 @@
 .read master_data_ref_fin_statement/data/tbl_entity.sql
 .read master_data_ref_fin_statement/data/tbl_entity_layer_map.sql
 .read master_data_ref_fin_statement/data/tbl_elm_dependency.sql
+.read default_data_board/data/tbl_entity.sql
+.read default_data_board/data/tbl_entity_layer_map.sql
+.read default_data_board/data/tbl_elm_dependency.sql
+.read default_data_emitent/data/tbl_entity.sql
+.read default_data_emitent/data/tbl_entity_layer_map.sql
+.read default_data_emitent/data/tbl_elm_dependency.sql
+.read default_data_security/data/tbl_entity.sql
+.read default_data_security/data/tbl_entity_layer_map.sql
+.read default_data_security/data/tbl_elm_dependency.sql
+.read default_data_security_type/data/tbl_entity.sql
+.read default_data_security_type/data/tbl_entity_layer_map.sql
+.read default_data_security_type/data/tbl_elm_dependency.sql
 .cd ../../../file
 
 .open repl.db
@@ -110,4 +122,12 @@
 .read master_data_ref_calendar/model/tech$master_data_ref_calendar.sql
 .read master_data_ref_fin_statement/model/master_data_ref_fin_statement.sql
 .read master_data_ref_fin_statement/model/tech$master_data_ref_fin_statement.sql
+.read default_data_board/model/default_data_board.sql
+.read default_data_board/model/tech$default_data_board.sql
+.read default_data_emitent/model/default_data_emitent.sql
+.read default_data_emitent/model/tech$default_data_emitent.sql
+.read default_data_security/model/default_data_security.sql
+.read default_data_security/model/tech$default_data_security.sql
+.read default_data_security_type/model/default_data_security_type.sql
+.read default_data_security_type/model/tech$default_data_security_type.sql
 .quit

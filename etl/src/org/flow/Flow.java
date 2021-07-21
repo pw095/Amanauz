@@ -1,10 +1,7 @@
 package org.flow;
 
 import org.data.*;
-import org.data.file.StageMasterDataEmitent;
-import org.data.file.StageMasterDataEmitentMap;
-import org.data.file.StageMasterDataRefCalendar;
-import org.data.file.StageMasterDataRefFinStatement;
+import org.data.file.*;
 import org.meta.LoadStatus;
 import org.meta.Meta;
 import org.meta.Properties;
@@ -104,10 +101,23 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "security_rate_shares"));
         entityList.add(new ReplicationEntity(flow, "security_types"));
 */
+/*
         entityList.add(new StageMasterDataRefCalendar(flow));
         entityList.add(new StageMasterDataEmitent(flow));
         entityList.add(new StageMasterDataEmitentMap(flow));
         entityList.add(new StageMasterDataRefFinStatement(flow));
+ */
+
+        entityList.add(new StageDefaultDataBoard(flow));
+        entityList.add(new StageDefaultDataEmitent(flow));
+        entityList.add(new StageDefaultDataSecurity(flow));
+        entityList.add(new StageDefaultDataSecurityType(flow));
+
+
+        entityList.add(new ReplicationEntity(flow, "default_data_board"));
+        entityList.add(new ReplicationEntity(flow, "default_data_emitent"));
+        entityList.add(new ReplicationEntity(flow, "default_data_security"));
+        entityList.add(new ReplicationEntity(flow, "default_data_security_type"));
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
