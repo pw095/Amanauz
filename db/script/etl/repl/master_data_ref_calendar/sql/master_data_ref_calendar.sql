@@ -113,10 +113,4 @@ SELECT
                                   ELSE
                                       tech$hash_value
                              END,
-           holiday_flag = CASE
-                               WHEN tech$expiration_dt = '2999-12-31'
-                                AND excluded.tech$expiration_dt = '2999-12-31' THEN
-                                   excluded.holiday_flag
-                               ELSE
-                                   holiday_flag
-                          END
+           holiday_flag = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.holiday_flag ELSE holiday_flag END
