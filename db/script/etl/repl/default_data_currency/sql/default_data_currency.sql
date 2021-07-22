@@ -1,32 +1,41 @@
 INSERT
-  INTO master_data_ref_calendar
+  INTO default_data_currency
   (
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
     tech$hash_value,
-    full_date,
-    holiday_flag
+    iso_char_code,
+    iso_num_code,
+    rus_name,
+    eng_name,
+    nominal
   )
 SELECT
        :tech$load_id       AS tech$load_id,
        tech$effective_dt,
        tech$expiration_dt,
        tech$hash_value,
-       full_date,
-       holiday_flag
+       iso_char_code,
+       iso_num_code,
+       rus_name,
+       eng_name,
+       nominal
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
                tech$hash_value,
-               full_date,
-               holiday_flag
-          FROM tech$master_data_ref_calendar src
+               iso_char_code,
+               iso_num_code,
+               rus_name,
+               eng_name,
+               nominal
+          FROM tech$default_data_currency src
          WHERE NOT EXISTS(SELECT
                                  NULL
-                            FROM master_data_ref_calendar sat
+                            FROM default_data_currency sat
                            WHERE
-                                 sat.full_date = src.full_date
+                                 sat.iso_char_code = src.iso_char_code
                              AND sat.tech$expiration_dt = '2999-12-31')
          UNION ALL
         SELECT
@@ -40,24 +49,25 @@ SELECT
                     WHEN 'INSERT' THEN
                         tech$expiration_dt
                     WHEN 'UPDATE' THEN
-                        CASE upsert_flg
-                             WHEN 'UPSERT' THEN
-                                 tech$sat$expiration_dt
-                             ELSE
-                                 tech$expiration_dt
-                        END
+                        MAX(tech$sat$expiration_dt, tech$expiration_dt)
                END AS tech$expiration_dt,
                tech$hash_value,
-               full_date,
-               holiday_flag
+               iso_char_code,
+               iso_num_code,
+               rus_name,
+               eng_name,
+               nominal
           FROM (SELECT
                        tech$effective_dt,
                        tech$expiration_dt,
                        tech$sat$effective_dt,
                        tech$sat$expiration_dt,
                        tech$hash_value,
-                       full_date,
-                       holiday_flag,
+                       iso_char_code,
+                       iso_num_code,
+                       rus_name,
+                       eng_name,
+                       nominal,
                        CASE
                             WHEN rn = 1
                              AND fv_equal_flag = 'NON_EQUAL'
@@ -75,8 +85,11 @@ SELECT
                                sat.tech$effective_dt                 AS tech$sat$effective_dt,
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
-                               src.full_date,
-                               src.holiday_flag,
+                               src.iso_char_code,
+                               src.iso_num_code,
+                               src.rus_name,
+                               src.eng_name,
+                               src.nominal,
                                FIRST_VALUE(CASE
                                                 WHEN src.tech$hash_value != sat.tech$hash_value THEN
                                                     'NON_EQUAL'
@@ -84,14 +97,14 @@ SELECT
                                                     'EQUAL'
                                            END) OVER (wnd) AS fv_equal_flag,
                                ROW_NUMBER() OVER (wnd)     AS rn
-                          FROM tech$master_data_ref_calendar src
+                          FROM tech$default_data_currency src
                                JOIN
-                               master_data_ref_calendar sat
+                               default_data_currency sat
                                    ON
-                                      sat.full_date = src.full_date
+                                      sat.iso_char_code = src.iso_char_code
                                   AND sat.tech$effective_dt <= src.tech$effective_dt
-                                  AND sat.tech$expiration_dt = '2999-12-31' AND sat.full_date IN ('2013-03-08')
-                        WINDOW wnd AS (PARTITION BY src.full_date
+                                  AND sat.tech$expiration_dt = '2999-12-31'
+                        WINDOW wnd AS (PARTITION BY src.iso_char_code
                                            ORDER BY src.tech$effective_dt))
                  WHERE rn = 1 AND fv_equal_flag = 'NON_EQUAL'
                     OR rn > 1) src
@@ -102,21 +115,7 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
- ON CONFLICT(full_date, tech$effective_dt)
+ ON CONFLICT(iso_char_code, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id,
-           tech$hash_value = CASE
-                                  WHEN tech$expiration_dt = '2999-12-31'
-                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
-                                      excluded.tech$hash_value
-                                  ELSE
-                                      tech$hash_value
-                             END,
-           holiday_flag = CASE
-                               WHEN tech$expiration_dt = '2999-12-31'
-                                AND excluded.tech$expiration_dt = '2999-12-31' THEN
-                                   excluded.holiday_flag
-                               ELSE
-                                   holiday_flag
-                          END
+           tech$load_id = excluded.tech$load_id

@@ -34,4 +34,5 @@ SELECT
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
                          AND ent.ent_code IN ('security_emitent_map',
-                                              'master_data_emitent'))) parent;
+                                              'master_data_emitent',
+                                              'default_data_emitent'))) parent;

@@ -180,42 +180,6 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
 
         this.setEntityStartLoadTimestamp(LocalDateTime.now());
         callLoad(connTarget);
-//        preLoad(connTarget);
-/*
-        try {
-
-//            String techTruncateSQL = getQuery(getTechTruncateSQL());
-
-            if (techTruncateSQL != null) {
-                try (PreparedStatement stmt = connTarget.prepareStatement(techTruncateSQL)) {
-                    detailLoad(stmt);
-                }
-            }
-            String techSingleSQL = getQuery(getTechSingleSQL());
-            if (techSingleSQL != null) {
-                try (PreparedStatement stmt = connTarget.prepareStatement(techSingleSQL)) {
-                    detailLoad(stmt);
-                }
-            }
-            String singleSQL = getQuery(getSingleSQL());
-            if (singleSQL != null) {
-                try (PreparedStatement stmt = connTarget.prepareStatement(singleSQL)) {
-                    detailLoad(stmt);
-                }
-            }
-//            concreteLoad(connTarget);
-            String insertSQL = getQuery(getInsertSQL());
-            if (insertSQL != null) {
-                try (PreparedStatement stmt = connTarget.prepareStatement(insertSQL)) {
-                    detailLoad(stmt);
-                }
-            }
-        } catch (Exception e) {
-                e.printStackTrace();
-                throw new RuntimeException(e);
-            }
-
- */
         this.setEntityFinishLoadTimestamp(LocalDateTime.now());
         Meta.setEntityInfo(this);
         return this;

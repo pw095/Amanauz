@@ -37,4 +37,5 @@ SELECT
                                               'security_daily_info_shares',
                                               'security_rate_shares',
                                               'security_daily_info_bonds',
-                                              'security_rate_bonds'))) parent;
+                                              'security_rate_bonds',
+                                              'default_data_board'))) parent;

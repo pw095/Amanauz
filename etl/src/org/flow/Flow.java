@@ -101,27 +101,35 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "security_rate_shares"));
         entityList.add(new ReplicationEntity(flow, "security_types"));
 */
-/*
         entityList.add(new StageMasterDataRefCalendar(flow));
         entityList.add(new StageMasterDataEmitent(flow));
         entityList.add(new StageMasterDataEmitentMap(flow));
         entityList.add(new StageMasterDataRefFinStatement(flow));
- */
-
         entityList.add(new StageDefaultDataBoard(flow));
         entityList.add(new StageDefaultDataEmitent(flow));
         entityList.add(new StageDefaultDataSecurity(flow));
         entityList.add(new StageDefaultDataSecurityType(flow));
+        entityList.add(new StageDefaultDataCurrency(flow));
 
+        for (AbstractEntity entity : entityList) {
+            entity.call();
+        }
+        entityList.clear();
 
+        entityList.add(new ReplicationEntity(flow, "master_data_ref_calendar"));
+        entityList.add(new ReplicationEntity(flow, "master_data_emitent"));
+        entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
+        entityList.add(new ReplicationEntity(flow, "master_data_ref_fin_statement"));
         entityList.add(new ReplicationEntity(flow, "default_data_board"));
         entityList.add(new ReplicationEntity(flow, "default_data_emitent"));
         entityList.add(new ReplicationEntity(flow, "default_data_security"));
         entityList.add(new ReplicationEntity(flow, "default_data_security_type"));
+        entityList.add(new ReplicationEntity(flow, "default_data_currency"));
+
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
-//        new ReplIndexSecurityWeight(flow).call();
+
         System.out.println(flow.getFlowLoadId());
         Meta.setFlowLogFinish(flow.getFlowLoadId(), LoadStatus.SUCCEEDED);
 

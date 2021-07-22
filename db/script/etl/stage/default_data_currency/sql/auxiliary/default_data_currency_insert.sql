@@ -1,0 +1,21 @@
+INSERT
+  INTO default_data_currency
+  (
+    tech$load_id,
+    tech$load_dttm,
+    iso_char_code,
+    iso_num_code,
+    rus_name,
+    eng_name,
+    nominal
+  )
+VALUES
+  (
+    :tech$load_id,
+    :tech$load_dttm,
+    :iso_char_code,
+    :iso_num_code,
+    :rus_name,
+    :eng_name,
+    :nominal
+  )

@@ -76,6 +76,9 @@
 .read default_data_security_type/data/tbl_entity.sql
 .read default_data_security_type/data/tbl_entity_layer_map.sql
 .read default_data_security_type/data/tbl_elm_dependency.sql
+.read default_data_currency/data/tbl_entity.sql
+.read default_data_currency/data/tbl_entity_layer_map.sql
+.read default_data_currency/data/tbl_elm_dependency.sql
 .cd ../../../file
 
 .open repl.db
@@ -130,4 +133,6 @@
 .read default_data_security/model/tech$default_data_security.sql
 .read default_data_security_type/model/default_data_security_type.sql
 .read default_data_security_type/model/tech$default_data_security_type.sql
+.read default_data_currency/model/default_data_currency.sql
+.read default_data_currency/model/tech$default_data_currency.sql
 .quit

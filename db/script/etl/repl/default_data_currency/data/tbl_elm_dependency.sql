@@ -14,12 +14,12 @@ SELECT
                              NULL
                         FROM tbl_layer layer
                        WHERE layer.layer_id = elm.elm_layer_id
-                         AND layer.layer_code = 'dds')
+                         AND layer.layer_code = 'repl')
            AND EXISTS(SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'hub_security')) elm
+                         AND ent.ent_code = 'default_data_currency')) elm
        CROSS JOIN
        (SELECT
                elm_id
@@ -28,14 +28,9 @@ SELECT
                              NULL
                         FROM tbl_layer layer
                        WHERE layer.layer_id = elm.elm_layer_id
-                         AND layer.layer_code = 'repl')
+                         AND layer.layer_code = 'stage')
            AND EXISTS(SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code IN ('security_daily_info_shares',
-                                              'security_rate_shares',
-                                              'security_daily_info_bonds',
-                                              'security_rate_bonds',
-                                              'security_emitent_map',
-                                              'default_data_security'))) parent;
+                         AND ent.ent_code = 'default_data_currency')) parent;
