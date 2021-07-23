@@ -33,4 +33,5 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'foreign_currency_dictionary')) parent;
+                         AND ent.ent_code IN ('foreign_currency_dictionary',
+                                              'default_data_currency'))) parent;

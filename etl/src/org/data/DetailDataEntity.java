@@ -11,7 +11,7 @@ import java.sql.Statement;
 import static org.meta.Properties.getInstance;
 import static org.util.AuxUtil.getQuery;
 
-public class ReplicationEntity extends PeriodEntity {
+public class DetailDataEntity extends PeriodEntity {
 
     static private final String attachDatabaseScript = "attach_database.sql";
     static private final String loadExtensionScript = "load_extension.sql";
@@ -44,8 +44,8 @@ public class ReplicationEntity extends PeriodEntity {
         return lReturn;
     }
 
-    public ReplicationEntity(Flow flow, String entityCode) {
-        super(flow, MetaLayer.REPL, entityCode);
+    public DetailDataEntity(Flow flow, String entityCode) {
+        super(flow, MetaLayer.DDS, entityCode);
         try {
             etlSqlDirectory = getInstance().getProperty("dataSqlDirectory") + getDataAuxDir();
         } catch (Exception e) {
@@ -60,31 +60,43 @@ public class ReplicationEntity extends PeriodEntity {
             try (Statement stmt = conn.createStatement()) {
                 // truncate tech
                 sqlStmtToExecute = getQuery(getTechTruncateSQL());
-                stmt.execute(sqlStmtToExecute);
+                if ( sqlStmtToExecute != null ) {
+                    stmt.execute(sqlStmtToExecute);
+                }
 
                 // attach db
-                sqlStmtToExecute = getQuery(getAttachSQL()).replace("$$path", getInstance().getProperty("REPL_sourceFILE"));
-                stmt.execute(sqlStmtToExecute);
+                sqlStmtToExecute = getQuery(getAttachSQL()).replace("$$path", getInstance().getProperty("DDS_sourceFILE"));
+                if ( sqlStmtToExecute != null ) {
+                    stmt.execute(sqlStmtToExecute);
+                }
 
                 // load extension
                 sqlStmtToExecute = getQuery(getLoadExtensionSQL()).replace("$$path", getInstance().getProperty("hashFunctionPath"));
-                stmt.execute(sqlStmtToExecute);
+                if ( sqlStmtToExecute != null ) {
+                    stmt.execute(sqlStmtToExecute);
+                }
             }
 
             // insert tech
             sqlStmtToExecute = getQuery(getTechSingleSQL());
-            try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
-                stmt.setLong(1, getFlowLoadId());
-                stmt.setString(2, getEffectiveFromDt());
-                stmt.executeUpdate();
+            if ( sqlStmtToExecute != null ) {
+                try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
+                    stmt.setString(1, getEffectiveFromDt());
+                    stmt.setLong(2, getFlowLoadId());
+                    stmt.executeUpdate();
+                }
             }
 
-            // merge dest in repl
+            // merge dest in dds
             sqlStmtToExecute = getQuery(getSingleSQL());
-            try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
-                stmt.setLong(1, getFlowLoadId());
-                setInsertCount(getInsertCount() + stmt.executeUpdate());
+            //System.out.println()
+            if ( sqlStmtToExecute != null ) {
+                try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
+                    stmt.setLong(1, getFlowLoadId());
+                    setInsertCount(getInsertCount() + stmt.executeUpdate());
+                }
             }
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

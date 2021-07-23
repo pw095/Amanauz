@@ -33,4 +33,5 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'security_types')) parent;
+                         AND ent.ent_code IN ('security_types',
+                                              'default_data_security_type'))) parent;

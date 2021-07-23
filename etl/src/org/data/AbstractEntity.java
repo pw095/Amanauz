@@ -107,31 +107,7 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
 
     private Connection connTarget;
 
-//    protected abstract void detailLoad(PreparedStatement stmtUpdate);
     protected abstract void callLoad(Connection conn);
-
-//    protected void preLoad(Connection conn) {}
-/*
-
-    private String getTechTruncateSQL() {
-        String lReturn = (sqlDirectory + dataAuxDir) + dataTruncScript.replace("$$entity_name", "tech$" + this.entityCode);
-        return lReturn;
-    }
-*/
-/*
-
-    private String getTechSingleSQL() {
-        String lReturn = (sqlDirectory + this.getEntityLoadMode().getDbMode() + '/') + dataInsertScript.replace("$$entity_name", "tech$" + this.entityCode);
-        return lReturn;
-    }
-*/
-/*
-
-    private String getSingleSQL() {
-        String lReturn = (sqlDirectory + this.getEntityLoadMode().getDbMode() + '/') + dataSingleScript.replace("$$entity_name", this.entityCode);
-        return lReturn;
-    }
-*/
 
     public LoadMode getEntityLoadMode() {
         return this.entityLoadMode;

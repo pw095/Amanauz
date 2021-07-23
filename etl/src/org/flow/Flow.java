@@ -116,6 +116,7 @@ public class Flow {
         }
         entityList.clear();
 
+
         entityList.add(new ReplicationEntity(flow, "master_data_ref_calendar"));
         entityList.add(new ReplicationEntity(flow, "master_data_emitent"));
         entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
@@ -125,6 +126,14 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "default_data_security"));
         entityList.add(new ReplicationEntity(flow, "default_data_security_type"));
         entityList.add(new ReplicationEntity(flow, "default_data_currency"));
+
+        for (AbstractEntity entity : entityList) {
+            entity.call();
+        }
+        entityList.clear();
+
+
+        entityList.add(new DetailDataEntity(flow, "ref_calendar"));
 
         for (AbstractEntity entity : entityList) {
             entity.call();
