@@ -7,25 +7,33 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-public class QueryParser {
+public class EntityParser {
     public String fileName;
     private static final int START_LINE = 3;
-    public ArrayList<String> businessFields;
-    public ArrayList<String> businessKeyFields;
+    private ArrayList<String> businessFields;
+    private ArrayList<String> businessKeyFields;
     public ArrayList<String> businessNonKeyFields;
-    public ArrayList<String> techFields;
-    public QueryParser(String fileName){
+    private ArrayList<String> techFields;
+
+    public EntityParser(String fileName){
         this.fileName = fileName;
     }
-    public static void main(String[] args) {
-    }
+
     public void printFields() {
-        System.out.println("tech fields:");
-        techFields.stream().forEach(System.out::println);
-        System.out.println("business fields:");
-        businessFields.stream().forEach(System.out::println);
+        if (techFields != null) {
+            System.out.println("tech fields:");
+            techFields.stream().forEach(System.out::println);
+        }
+        if (businessFields != null) {
+            System.out.println("business fields:");
+            businessFields.stream().forEach(System.out::println);
+        }
+        if (businessNonKeyFields != null) {
+            System.out.println("business non key fields:");
+            businessNonKeyFields.stream().forEach(System.out::println);
+        }
     }
-    public void parseQuery(){
+    public void parseEntity(){
         Path sourceFile = Paths.get(fileName);
         List<String> lines = null;
         try {

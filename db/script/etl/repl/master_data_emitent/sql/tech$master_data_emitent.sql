@@ -25,10 +25,10 @@ WITH
                 inn
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(full_name AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(reg_date  AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(ogrn      AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(inn       AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(full_name AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(reg_date  AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(ogrn      AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(inn       AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         full_name,
                         short_name,
                         reg_date,

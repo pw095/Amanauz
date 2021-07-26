@@ -23,9 +23,9 @@ WITH
                 is_hidden
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(id        AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(title     AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(is_hidden AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(id        AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(title     AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(is_hidden AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         id,
                         name,
                         title,

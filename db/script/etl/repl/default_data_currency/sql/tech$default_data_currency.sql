@@ -25,10 +25,10 @@ WITH
                 nominal
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(iso_num_code AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(rus_name     AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(eng_name     AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(nominal      AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(iso_num_code AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(rus_name     AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(eng_name     AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(nominal      AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         iso_char_code,
                         iso_num_code,
                         rus_name,

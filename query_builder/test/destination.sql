@@ -1,36 +1,35 @@
 INSERT
-  INTO master_data_emitent_map
+  INTO default_data_board
   (
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
     tech$hash_value,
-    source_system_code,
-    emitent_code,
-    emitent_short_name
+    board_id,
+    board_title,
+    board_name
   )
 SELECT
        :tech$load_id       AS tech$load_id,
        tech$effective_dt,
        tech$expiration_dt,
        tech$hash_value,
-       source_system_code,
-       emitent_code,
-       emitent_short_name
+       board_id,
+       board_title,
+       board_name
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
                tech$hash_value,
-               source_system_code,
-               emitent_code,
-               emitent_short_name
-          FROM tech$master_data_emitent_map src
+               board_id,
+               board_title,
+               board_name
+          FROM tech$default_data_board src
          WHERE NOT EXISTS(SELECT
                                  NULL
-                            FROM master_data_emitent_map sat
+                            FROM default_data_board sat
                            WHERE
-                                 sat.source_system_code = src.source_system_code
-                             AND sat.emitent_code = src.emitent_code
+                                 sat.board_id = src.board_id
                              AND sat.tech$expiration_dt = '2999-12-31')
          UNION ALL
         SELECT
@@ -52,18 +51,18 @@ SELECT
                         END
                END AS tech$expiration_dt,
                tech$hash_value,
-               source_system_code,
-               emitent_code,
-               emitent_short_name
+               board_id,
+               board_title,
+               board_name
           FROM (SELECT
                        tech$effective_dt,
                        tech$expiration_dt,
                        tech$sat$effective_dt,
                        tech$sat$expiration_dt,
                        tech$hash_value,
-                       source_system_code,
-                       emitent_code,
-                       emitent_short_name,
+                       board_id,
+                       board_title,
+                       board_name,
                        CASE
                             WHEN rn = 1
                              AND fv_equal_flag = 'NON_EQUAL'
@@ -81,9 +80,9 @@ SELECT
                                sat.tech$effective_dt                 AS tech$sat$effective_dt,
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
-                               src.source_system_code,
-                               src.emitent_code,
-                               src.emitent_short_name,
+                               src.board_id,
+                               src.board_title,
+                               src.board_name,
                                FIRST_VALUE(CASE
                                                 WHEN src.tech$hash_value != sat.tech$hash_value THEN
                                                     'NON_EQUAL'
@@ -91,16 +90,14 @@ SELECT
                                                     'EQUAL'
                                            END) OVER (wnd) AS fv_equal_flag,
                                ROW_NUMBER() OVER (wnd)     AS rn
-                          FROM tech$master_data_emitent_map src
+                          FROM tech$default_data_board src
                                JOIN
-                               master_data_emitent_map sat
+                               default_data_board sat
                                    ON
-                                      sat.source_system_code = src.source_system_code
-                                  AND sat.emitent_code = src.emitent_code
+                                      sat.board_id = src.board_id
                                   AND sat.tech$effective_dt <= src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
-                        WINDOW wnd AS (PARTITION BY src.source_system_code,
-                                                    src.emitent_code
+                        WINDOW wnd AS (PARTITION BY src.board_id
                                            ORDER BY src.tech$effective_dt))
                  WHERE rn = 1 AND fv_equal_flag = 'NON_EQUAL'
                     OR rn > 1) src
@@ -111,9 +108,10 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
- ON CONFLICT(source_system_code, emitent_code, tech$effective_dt)
+ ON CONFLICT(board_id, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
            tech$load_id = excluded.tech$load_id,
-           emitent_short_name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.emitent_short_name ELSE emitent_short_name END
+           board_title = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.board_title ELSE board_title END,
+           board_name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.board_name ELSE board_name END
            

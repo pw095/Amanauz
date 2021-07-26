@@ -23,8 +23,8 @@ WITH
                 value
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(nominal AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(value   AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(nominal AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(value   AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         trade_date,
                         id,
                         nominal,

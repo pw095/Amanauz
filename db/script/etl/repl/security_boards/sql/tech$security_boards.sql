@@ -33,14 +33,14 @@ WITH
                 is_primary
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(id             AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(board_group_id AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(engine_id      AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(market_id      AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(board_title    AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(is_traded      AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(has_candles    AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(is_primary     AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(id             AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(board_group_id AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(engine_id      AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(market_id      AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(board_title    AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(is_traded      AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(has_candles    AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(is_primary     AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         id,
                         board_group_id,
                         engine_id,

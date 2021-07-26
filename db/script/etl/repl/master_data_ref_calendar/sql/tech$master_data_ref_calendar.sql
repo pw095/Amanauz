@@ -19,7 +19,7 @@ WITH
                 holiday_flag
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(holiday_flag AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(holiday_flag AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         full_date,
                         holiday_flag
                    FROM (SELECT

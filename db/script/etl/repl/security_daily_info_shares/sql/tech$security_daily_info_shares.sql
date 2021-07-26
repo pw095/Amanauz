@@ -71,32 +71,32 @@ WITH
                 settle_date
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(short_name                 AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(previous_price             AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(lot_size                   AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(face_value                 AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(status                     AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(board_name                 AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(decimals                   AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(security_name              AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(remarks                    AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(market_code                AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(instr_id                   AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(sector_id                  AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(min_step                   AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(prev_wa_price              AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(face_unit                  AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(previous_date              AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(issue_size                 AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(isin                       AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(lat_name                   AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(reg_number                 AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(previous_legal_close_price AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(previous_admitted_quote    AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(currency_id                AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(security_type              AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(list_level                 AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(settle_date                AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(short_name                 AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(previous_price             AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(lot_size                   AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(face_value                 AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(status                     AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(board_name                 AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(decimals                   AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(security_name              AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(remarks                    AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(market_code                AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(instr_id                   AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(sector_id                  AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(min_step                   AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(prev_wa_price              AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(face_unit                  AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(previous_date              AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(issue_size                 AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(isin                       AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(lat_name                   AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(reg_number                 AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(previous_legal_close_price AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(previous_admitted_quote    AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(currency_id                AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(security_type              AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(list_level                 AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(settle_date                AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         security_id,
                         board_id,
                         short_name,
