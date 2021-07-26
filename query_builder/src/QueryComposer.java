@@ -70,7 +70,8 @@ public class QueryComposer {
         if (anchor.equals("businessNonKeyFields"))
             fields = ComposeConcatValueField(offSet);
         else if (anchor.equals("updateCondition"))
-            fields = ComposeUpdateStatements(offSet);
+//            fields = ComposeUpdateStatements(offSet);
+            fields = ComposeUpdateStatements("");
         else
             fields = ComposeMultiFields(offSet, anchor);
 
@@ -84,7 +85,8 @@ public class QueryComposer {
 
         for (String field: entityParser.getFields("businessNonKeyFields")){
             UpdateConditionComposer upd = new UpdateConditionComposer();
-            sb.append(String.format(",%s\n", upd.getCondition(field, offSet)));
+//            sb.append(String.format(",%s\n", upd.getCondition(field, offSet)));
+            sb.append(upd.getCondition(field, offSet));
         }
         return sb.toString();
     }

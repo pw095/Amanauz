@@ -96,4 +96,4 @@ SELECT
  ON CONFLICT(board_id, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt
-       %update_condition_in_set_non_key_business_fields%
+       %updateCondition11%
