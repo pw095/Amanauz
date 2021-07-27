@@ -1,10 +1,11 @@
 DROP TABLE IF EXISTS tech$security_daily_marketdata_shares;
 CREATE TABLE tech$security_daily_marketdata_shares
   (
-    tech$load_id                    INTEGER NOT NULL,
-    tech$effective_dt               TEXT    NOT NULL,
-    tech$expiration_dt              TEXT    NOT NULL,
-    tech$hash_value                 TEXT    NOT NULL,
+    tech$load_id                     INTEGER NOT NULL,
+    tech$effective_dt                TEXT    NOT NULL,
+    tech$expiration_dt               TEXT    NOT NULL,
+    tech$last_seen_dt                TEXT    NOT NULL,
+    tech$hash_value                  TEXT    NOT NULL,
     security_id                      TEXT    NOT NULL,
     board_id                         TEXT    NOT NULL,
     bid                              REAL,
