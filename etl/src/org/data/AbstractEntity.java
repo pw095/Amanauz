@@ -147,6 +147,7 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
             SQLiteConfig config = new SQLiteConfig();
             config.enableLoadExtension(true);
             connTarget = DriverManager.getConnection(getInstance().getProperty(this.entityLayer.toString().concat("_targetURL")), config.toProperties());
+            connTarget.setAutoCommit(false);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -156,6 +157,11 @@ public abstract class AbstractEntity implements Callable<AbstractEntity> {
 
         this.setEntityStartLoadTimestamp(LocalDateTime.now());
         callLoad(connTarget);
+        try {
+            connTarget.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         this.setEntityFinishLoadTimestamp(LocalDateTime.now());
         Meta.setEntityInfo(this);
         return this;

@@ -41,7 +41,6 @@ public interface ExcelEntity extends StageEntity {
             if (row.getRowNum() > 0) {
                 externalDataList.add(readRow(row));
             }
-            System.out.println(row.getRowNum());
         }
         return externalDataList;
     }

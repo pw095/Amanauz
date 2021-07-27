@@ -16,7 +16,8 @@ SELECT
        tech$last_seen_dt,
        code
   FROM tech$hub_emitent
+ WHERE 1 = 1
 ON CONFLICT(tech$hash_key)
 DO UPDATE
-   SET last_seen_date = excluded.last_seen_date,
+   SET tech$last_seen_dt = excluded.tech$last_seen_dt,
        tech$load_id = excluded.tech$load_id

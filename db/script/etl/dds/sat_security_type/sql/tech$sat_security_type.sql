@@ -1,5 +1,5 @@
 INSERT
-  INTO tech$sat_board
+  INTO tech$sat_security_type
   (
     tech$load_id,
     tech$hash_key,
@@ -7,7 +7,8 @@ INSERT
     tech$expiration_dt,
     tech$record_source,
     tech$hash_value,
-    board_id,
+    id,
+    name,
     title
   )
 WITH
@@ -16,29 +17,34 @@ WITH
          SELECT
                 tech$effective_dt,
                 hash_value,
-                board_id,
-                board_title
+                id,
+                name,
+                title
            FROM (SELECT
                         tech$effective_dt,
                         hash_value,
                         LAG(hash_value) OVER (wnd) AS lag_hash_value,
-                        board_id,
-                        board_title
+                        id,
+                        name,
+                        title
                    FROM (SELECT
                                 tech$effective_dt,
                                 sha1(concat_value) AS hash_value,
-                                board_id,
-                                board_title
+                                id,
+                                name,
+                                title
                            FROM (SELECT
                                         tech$effective_dt,
-                                        '_' || IFNULL(CAST(board_title AS TEXT), '!@#$%^&*') || '_' AS concat_value,
-                                        board_id,
-                                        board_title
-                                   FROM src.security_boards
+                                        '_' || IFNULL(CAST(security_type_name  AS TEXT), '!@#$%^&*') ||
+                                        '_' || IFNULL(CAST(security_type_title AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                                        CAST(id AS TEXT)                                                    AS id,
+                                        security_type_name                                                  AS name,
+                                        security_type_title                                                 AS title
+                                   FROM src.security_types
                                   WHERE tech$effective_dt > :tech$effective_dt
-                                    AND NULLIF(board_id, "") IS NOT NULL
-                                    AND NULLIF(board_title, "") IS NOT NULL))
-                 WINDOW wnd AS (PARTITION BY board_id
+                                    AND NULLIF(security_type_name, "") IS NOT NULL
+                                    AND NULLIF(security_type_title, "") IS NOT NULL))
+                 WINDOW wnd AS (PARTITION BY id
                                     ORDER BY tech$effective_dt))
           WHERE hash_value != lag_hash_value
              OR lag_hash_value IS NULL
@@ -50,12 +56,13 @@ SELECT
        LEAD(DATE(pre.tech$effective_dt, '-1 DAY'), 1, '2999-12-31') OVER (wnd) AS tech$expiration_dt,
        hub.tech$record_source,
        pre.hash_value                                                          AS tech$hash_value,
-       pre.board_id,
-       pre.board_title                                                         AS title
+       pre.id,
+       pre.name,
+       pre.title
   FROM w_pre pre
        JOIN
-       hub_board hub
-           ON hub.board_id = pre.board_id
+       hub_security_type hub
+           ON hub.id = pre.id
           AND hub.tech$record_source = 'moex.com'
-WINDOW wnd AS (PARTITION BY pre.board_id
+WINDOW wnd AS (PARTITION BY pre.id
                    ORDER BY pre.tech$effective_dt)

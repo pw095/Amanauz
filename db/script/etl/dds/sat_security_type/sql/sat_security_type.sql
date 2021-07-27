@@ -1,5 +1,5 @@
 INSERT
-  INTO sat_board
+  INTO sat_security_type
   (
     tech$load_id,
     tech$hash_key,
@@ -7,7 +7,8 @@ INSERT
     tech$expiration_dt,
     tech$record_source,
     tech$hash_value,
-    board_id,
+    id,
+    name,
     title
   )
 SELECT
@@ -17,7 +18,8 @@ SELECT
        tech$expiration_dt,
        tech$record_source,
        tech$hash_value,
-       board_id,
+       id,
+       name,
        title
   FROM (SELECT
                tech$hash_key,
@@ -25,12 +27,13 @@ SELECT
                tech$expiration_dt,
                tech$record_source,
                tech$hash_value,
-               board_id,
+               id,
+               name,
                title
-          FROM tech$sat_board src
+          FROM tech$sat_security_type src
          WHERE NOT EXISTS(SELECT
                                  NULL
-                            FROM sat_board sat
+                            FROM sat_security_type sat
                            WHERE sat.tech$hash_key = src.tech$hash_key
                              AND sat.tech$expiration_dt = '2999-12-31')
          UNION ALL
@@ -55,7 +58,8 @@ SELECT
                END AS tech$expiration_dt,
                tech$record_source,
                tech$hash_value,
-               board_id,
+               id,
+               name,
                title
           FROM (SELECT
                        tech$hash_key,
@@ -65,7 +69,8 @@ SELECT
                        tech$sat$expiration_dt,
                        tech$record_source,
                        tech$hash_value,
-                       board_id,
+                       id,
+                       name,
                        title,
                        CASE
                             WHEN rn = 1
@@ -86,7 +91,8 @@ SELECT
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$record_source,
                                src.tech$hash_value,
-                               src.board_id,
+                               src.id,
+                               src.name,
                                src.title,
                                FIRST_VALUE(CASE
                                                 WHEN src.tech$hash_value != sat.tech$hash_value THEN
@@ -95,9 +101,9 @@ SELECT
                                                     'EQUAL'
                                            END) OVER (wnd) AS fv_equal_flag,
                                ROW_NUMBER() OVER (wnd)     AS rn
-                          FROM tech$sat_board src
+                          FROM tech$sat_security_type src
                                JOIN
-                               sat_board sat
+                               sat_security_type sat
                                    ON sat.tech$hash_key = src.tech$hash_key
                                   AND sat.tech$effective_dt <= src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
@@ -123,5 +129,6 @@ SELECT
                                   ELSE
                                       tech$hash_value
                              END,
-           board_id = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.board_id ELSE board_id END,
+           id    = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.id    ELSE id    END,
+           name  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.name  ELSE name  END,
            title = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.title ELSE title END

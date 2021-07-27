@@ -1,0 +1,40 @@
+.cd ../..
+.open db/file/meta.db
+.cd db/script/etl/dds
+
+.read data/tbl_layer.sql
+.read hub_board/data/tbl_entity.sql
+.read hub_board/data/tbl_entity_layer_map.sql
+.read hub_board/data/tbl_elm_dependency.sql
+.read hub_emitent/data/tbl_entity.sql
+.read hub_emitent/data/tbl_entity_layer_map.sql
+.read hub_emitent/data/tbl_elm_dependency.sql
+.read hub_security/data/tbl_entity.sql
+.read hub_security/data/tbl_entity_layer_map.sql
+.read hub_security/data/tbl_elm_dependency.sql
+.read hub_security_type/data/tbl_entity.sql
+.read hub_security_type/data/tbl_entity_layer_map.sql
+.read hub_security_type/data/tbl_elm_dependency.sql
+.read ref_calendar/data/tbl_entity.sql
+.read ref_calendar/data/tbl_entity_layer_map.sql
+.read ref_calendar/data/tbl_elm_dependency.sql
+.read ref_currency/data/tbl_entity.sql
+.read ref_currency/data/tbl_entity_layer_map.sql
+.read ref_currency/data/tbl_elm_dependency.sql
+.cd ../../../file
+
+.open dds.db
+.cd ../script/etl/dds
+.read hub_board/model/tech$hub_board.sql
+.read hub_board/model/hub_board.sql
+.read hub_emitent/model/tech$hub_emitent.sql
+.read hub_emitent/model/hub_emitent.sql
+.read hub_security/model/tech$hub_security.sql
+.read hub_security/model/hub_security.sql
+.read hub_security_type/model/tech$hub_security_type.sql
+.read hub_security_type/model/hub_security_type.sql
+.read ref_calendar/model/tech$ref_calendar.sql
+.read ref_calendar/model/ref_calendar.sql
+.read ref_currency/model/tech$ref_currency.sql
+.read ref_currency/model/ref_currency.sql
+.quit

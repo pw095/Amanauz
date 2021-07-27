@@ -36,9 +36,7 @@ public class StageMasterDataEmitentMap extends org.data.FileEntity implements Ex
     }
 
     @Override
-    public void callLoad(Connection conn) {
-        concreteLoad(conn);
-    }
+    public void callLoad(Connection conn) { concreteLoad(conn); }
 
     public StageMasterDataEmitentMapData readRow(Row row) {
         Iterator<Cell> cellIterator = row.iterator();

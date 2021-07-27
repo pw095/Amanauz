@@ -7,7 +7,6 @@ CREATE TABLE tech$sat_emitent_moex
     tech$expiration_dt TEXT    NOT NULL,
     tech$record_source TEXT    NOT NULL,
     tech$hash_value    TEXT    NOT NULL,
-    id                 INTEGER NOT NULL,
     title              TEXT    NOT NULL,
     inn                TEXT    NOT NULL,
     okpo               TEXT    NOT NULL,

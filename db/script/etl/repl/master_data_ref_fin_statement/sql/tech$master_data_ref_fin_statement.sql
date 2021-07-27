@@ -1,3 +1,8 @@
+/*
+attach database "C:\Users\pw095\Documents\Git\Amanauz\db\file\stage.db" as src;
+detach database repl;
+select load_extension("C:/Users/pw095/Documents/Git/Amanauz/db/file/sha1.dll");
+ */
 INSERT
   INTO tech$master_data_ref_fin_statement
   (

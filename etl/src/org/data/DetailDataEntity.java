@@ -78,11 +78,12 @@ public class DetailDataEntity extends PeriodEntity {
             }
 
             // insert tech
+
             sqlStmtToExecute = getQuery(getTechSingleSQL());
             if ( sqlStmtToExecute != null ) {
                 try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
-                    stmt.setString(1, getEffectiveFromDt());
-                    stmt.setLong(2, getFlowLoadId());
+                    stmt.setLong(1, getFlowLoadId());
+                    stmt.setString(2, getEffectiveFromDt());
                     stmt.executeUpdate();
                 }
             }

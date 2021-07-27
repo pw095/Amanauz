@@ -98,5 +98,4 @@
 .read default_data_security/model/default_data_security.sql
 .read default_data_security_type/model/default_data_security_type.sql
 .read default_data_currency/model/default_data_currency.sql
-.read default_data_currency/model/default_data_currency.sql
 .quit

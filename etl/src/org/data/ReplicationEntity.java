@@ -56,6 +56,7 @@ public class ReplicationEntity extends PeriodEntity {
     public void callLoad(Connection conn) {
 
         String sqlStmtToExecute;
+
         try {
             try (Statement stmt = conn.createStatement()) {
                 // truncate tech
@@ -74,8 +75,19 @@ public class ReplicationEntity extends PeriodEntity {
             // insert tech
             sqlStmtToExecute = getQuery(getTechSingleSQL());
             try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
-                stmt.setLong(1, getFlowLoadId());
-                stmt.setString(2, getEffectiveFromDt());
+                switch (this.getEntityLayer()) {
+                    case REPL:
+                        stmt.setString(1, getEffectiveFromDt());
+                        stmt.setLong(2, getFlowLoadId());
+                        break;
+                    case DDS:
+                        System.out.println("DDS: " + getEffectiveFromDt());
+                        stmt.setLong(1, getFlowLoadId());
+                        stmt.setString(2, getEffectiveFromDt());
+                        break;
+                    default:
+                        break;
+                }
                 stmt.executeUpdate();
             }
 

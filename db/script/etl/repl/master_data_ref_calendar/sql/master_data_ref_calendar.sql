@@ -90,7 +90,7 @@ SELECT
                                    ON
                                       sat.full_date = src.full_date
                                   AND sat.tech$effective_dt <= src.tech$effective_dt
-                                  AND sat.tech$expiration_dt = '2999-12-31' AND sat.full_date IN ('2013-03-08')
+                                  AND sat.tech$expiration_dt = '2999-12-31'
                         WINDOW wnd AS (PARTITION BY src.full_date
                                            ORDER BY src.tech$effective_dt))
                  WHERE rn = 1 AND fv_equal_flag = 'NON_EQUAL'
