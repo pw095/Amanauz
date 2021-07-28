@@ -99,8 +99,10 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "security_markets"));
         entityList.add(new ReplicationEntity(flow, "security_rate_bonds"));
         entityList.add(new ReplicationEntity(flow, "security_rate_shares"));
+        */
         entityList.add(new ReplicationEntity(flow, "security_types"));
-*/
+/*
+
         entityList.add(new StageMasterDataRefCalendar(flow));
         entityList.add(new StageMasterDataEmitent(flow));
 
@@ -111,6 +113,7 @@ public class Flow {
         entityList.add(new StageDefaultDataSecurity(flow));
         entityList.add(new StageDefaultDataSecurityType(flow));
         entityList.add(new StageDefaultDataCurrency(flow));
+*/
 
         for (AbstractEntity entity : entityList) {
             entity.call();
@@ -118,7 +121,7 @@ public class Flow {
         entityList.clear();
 
 
-
+/*
         entityList.add(new ReplicationEntity(flow, "master_data_ref_calendar"));
         entityList.add(new ReplicationEntity(flow, "master_data_emitent"));
         entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
@@ -128,17 +131,20 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "default_data_security"));
         entityList.add(new ReplicationEntity(flow, "default_data_security_type"));
         entityList.add(new ReplicationEntity(flow, "default_data_currency"));
+        */
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
         entityList.clear();
 
+/*
 
         entityList.add(new DetailDataEntity(flow, "ref_calendar"));
         entityList.add(new DetailDataEntity(flow, "hub_board"));
         entityList.add(new DetailDataEntity(flow, "hub_emitent"));
         entityList.add(new DetailDataEntity(flow, "hub_security"));
         entityList.add(new DetailDataEntity(flow, "hub_security_type"));
+*/
 
         for (AbstractEntity entity : entityList) {
             entity.call();

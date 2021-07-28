@@ -10,7 +10,7 @@ INSERT
     title,
     inn,
     okpo
-  );
+  )
 WITH
      w_raw AS
      (
@@ -85,15 +85,6 @@ WITH
           WHERE hash_value != lag_hash_value
              OR lag_hash_value IS NULL
      )
-SELECT
-       emitent_title,
-       tech$effective_dt,
-       count(*) as cnt
-  FROM w_pre pre
- GROUP BY
-          emitent_title,
-          tech$effective_dt
-HAVING COUNT(*) > 1;
 SELECT
        :tech$load_id                                                           AS tech$load_id,
        hub.tech$hash_key,

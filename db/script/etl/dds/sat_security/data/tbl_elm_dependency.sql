@@ -19,7 +19,7 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'security_sat')) elm
+                         AND ent.ent_code = 'sat_security')) elm
        CROSS JOIN
        (SELECT
                elm_id
@@ -33,7 +33,8 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'security_rate')
+                         AND ent.ent_code IN('security_daily_info_shares',
+                                             'security_daily_info_bonds'))
          UNION ALL
         SELECT
                elm_id
@@ -47,4 +48,4 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'security_hub')) parent;
+                         AND ent.ent_code = 'hub_security')) parent;

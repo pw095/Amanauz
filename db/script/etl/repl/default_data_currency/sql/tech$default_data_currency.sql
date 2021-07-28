@@ -4,6 +4,7 @@ INSERT
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
+    tech$last_seen_dt,
     tech$hash_value,
     iso_char_code,
     iso_num_code,
@@ -61,6 +62,7 @@ SELECT
        :tech$load_id                                                  AS tech$load_id,
        tech$load_dt                                                   AS tech$effective_dt,
        LEAD(DATE(tech$load_dt, '-1 DAY'), 1, '2999-12-31') OVER (wnd) AS tech$expiration_dt,
+       tech$last_seen_dt,
        hash_value                                                     AS tech$hash_value,
        iso_char_code,
        iso_num_code,
@@ -69,6 +71,7 @@ SELECT
        nominal
   FROM (SELECT
                tech$load_dt,
+               tech$last_seen_dt,
                hash_value,
                iso_char_code,
                iso_num_code,
@@ -77,15 +80,18 @@ SELECT
                nominal
           FROM (SELECT
                        tech$load_dt,
+                       MAX(tech$load_dt) OVER (win) AS tech$last_seen_dt,
                        hash_value,
-                       LAG(hash_value) OVER (wnd) AS lag_hash_value,
+                       LAG(hash_value) OVER (wnd)   AS lag_hash_value,
                        iso_char_code,
                        iso_num_code,
                        rus_name,
                        eng_name,
                        nominal
                   FROM w_raw
-                WINDOW wnd AS (PARTITION BY
+                WINDOW win AS (PARTITION BY
+                                            iso_char_code),
+                       wnd AS (PARTITION BY
                                             iso_char_code
                                    ORDER BY tech$load_dt))
          WHERE hash_value != lag_hash_value

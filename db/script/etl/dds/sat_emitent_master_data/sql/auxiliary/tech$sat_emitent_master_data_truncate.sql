@@ -1,0 +1,1 @@
+DELETE FROM tech$sat_emitent_master_data

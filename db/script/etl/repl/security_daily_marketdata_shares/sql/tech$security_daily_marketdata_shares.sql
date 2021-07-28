@@ -4,6 +4,7 @@ INSERT
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
+    tech$last_seen_dt,
     tech$hash_value,
     security_id,
     board_id,
@@ -367,6 +368,7 @@ SELECT
        :tech$load_id                                                  AS tech$load_id,
        tech$load_dt                                                   AS tech$effective_dt,
        LEAD(DATE(tech$load_dt, '-1 DAY'), 1, '2999-12-31') OVER (wnd) AS tech$expiration_dt,
+       tech$last_seen_dt,
        hash_value                                                     AS tech$hash_value,
        security_id,
        board_id,
@@ -426,6 +428,7 @@ SELECT
        trading_session
   FROM (SELECT
                tech$load_dt,
+               tech$last_seen_dt,
                hash_value,
                security_id,
                board_id,
@@ -485,8 +488,9 @@ SELECT
                trading_session
           FROM (SELECT
                        tech$load_dt,
+                       MAX(tech$load_dt) OVER (win) AS tech$last_seen_dt,
                        hash_value,
-                       LAG(hash_value) OVER (wnd) AS lag_hash_value,
+                       LAG(hash_value) OVER (wnd)   AS lag_hash_value,
                        security_id,
                        board_id,
                        bid,
@@ -544,7 +548,10 @@ SELECT
                        val_to_day_rur,
                        trading_session
                   FROM w_raw
-                WINDOW wnd AS (PARTITION BY
+                WINDOW win AS (PARTITION BY
+                                            security_id,
+                                            board_id),
+                       wnd AS (PARTITION BY
                                             security_id,
                                             board_id
                                    ORDER BY tech$load_dt))

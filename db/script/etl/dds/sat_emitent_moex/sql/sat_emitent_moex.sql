@@ -7,7 +7,6 @@ INSERT
     tech$expiration_dt,
     tech$record_source,
     tech$hash_value,
-    id,
     title,
     inn,
     okpo
@@ -19,7 +18,6 @@ SELECT
        tech$expiration_dt,
        tech$record_source,
        tech$hash_value,
-       id,
        title,
        inn,
        okpo
@@ -29,7 +27,6 @@ SELECT
                tech$expiration_dt,
                tech$record_source,
                tech$hash_value,
-               id,
                title,
                inn,
                okpo
@@ -52,11 +49,15 @@ SELECT
                     WHEN 'INSERT' THEN
                         tech$expiration_dt
                     WHEN 'UPDATE' THEN
-                        tech$sat$expiration_dt
+                        CASE upsert_flg
+                             WHEN 'UPSERT' THEN
+                                 tech$sat$expiration_dt
+                             ELSE
+                                 tech$expiration_dt
+                        END
                END AS tech$expiration_dt,
                tech$record_source,
                tech$hash_value,
-               id,
                title,
                inn,
                okpo
@@ -68,11 +69,14 @@ SELECT
                        tech$sat$expiration_dt,
                        tech$record_source,
                        tech$hash_value,
-                       id,
                        title,
                        okpo,
                        inn,
                        CASE
+                            WHEN rn = 1
+                             AND fv_equal_flag = 'NON_EQUAL'
+                             AND tech$effective_dt = tech$sat$effective_dt THEN
+                                'UPDATE'
                             WHEN rn = 1
                               OR rn = 2 AND fv_equal_flag = 'EQUAL' THEN
                                 'UPSERT'
@@ -87,7 +91,6 @@ SELECT
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$record_source,
                                src.tech$hash_value,
-                               src.id,
                                src.title,
                                src.inn,
                                src.okpo,
@@ -113,8 +116,19 @@ SELECT
                  UNION ALL
                 SELECT 'UPDATE' AS flg) mrg
     WHERE src.upsert_flg = 'UPSERT'
-       OR src.upsert_flg = 'INSERT' AND mrg.flg = 'INSERT')
+       OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
  ON CONFLICT(tech$hash_key, tech$effective_dt)
  DO UPDATE
-       SET tech$expiration_dt = excluded.tech$expiration_dt
+       SET tech$expiration_dt = excluded.tech$expiration_dt,
+           tech$load_id = excluded.tech$load_id,
+           tech$hash_value = CASE
+                                  WHEN tech$expiration_dt = '2999-12-31'
+                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
+                                      excluded.tech$hash_value
+                                  ELSE
+                                      tech$hash_value
+                             END,
+           title = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.title ELSE title END,
+           inn   = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.inn   ELSE inn   END,
+           okpo  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.okpo  ELSE okpo  END

@@ -1,14 +1,10 @@
-/*
-attach database "C:\Users\pw095\Documents\Git\Amanauz\db\file\stage.db" as src;
-detach database repl;
-select load_extension("C:/Users/pw095/Documents/Git/Amanauz/db/file/sha1.dll");
- */
 INSERT
   INTO tech$master_data_ref_fin_statement
   (
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
+    tech$last_seen_dt,
     tech$hash_value,
     hier_level,
     leaf_code,
@@ -72,6 +68,7 @@ SELECT
        :tech$load_id                                                  AS tech$load_id,
        tech$load_dt                                                   AS tech$effective_dt,
        LEAD(DATE(tech$load_dt, '-1 DAY'), 1, '2999-12-31') OVER (wnd) AS tech$expiration_dt,
+       tech$last_seen_dt,
        hash_value                                                     AS tech$hash_value,
        hier_level,
        leaf_code,
@@ -81,6 +78,7 @@ SELECT
        full_name
   FROM (SELECT
                tech$load_dt,
+               tech$last_seen_dt,
                hash_value,
                hier_level,
                leaf_code,
@@ -90,8 +88,9 @@ SELECT
                full_name
           FROM (SELECT
                        tech$load_dt,
+                       MAX(tech$load_dt) OVER (win) AS tech$last_seen_dt,
                        hash_value,
-                       LAG(hash_value) OVER (wnd) AS lag_hash_value,
+                       LAG(hash_value) OVER (wnd)   AS lag_hash_value,
                        hier_level,
                        leaf_code,
                        code,
@@ -99,7 +98,9 @@ SELECT
                        parent_code,
                        full_name
                   FROM w_raw
-                WINDOW wnd AS (PARTITION BY
+                WINDOW win AS (PARTITION BY
+                                            code),
+                       wnd AS (PARTITION BY
                                             code
                                    ORDER BY tech$load_dt))
          WHERE hash_value != lag_hash_value

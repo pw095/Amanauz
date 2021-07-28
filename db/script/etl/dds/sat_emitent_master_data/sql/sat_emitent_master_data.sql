@@ -1,25 +1,148 @@
 INSERT
-  INTO hub_emitent
+  INTO sat_emitent_master_data
   (
-    emit_hkey,
-    load_date,
-    last_seen_date,
-    emit_code
+    tech$load_id,
+    tech$hash_key,
+    tech$effective_dt,
+    tech$expiration_dt,
+    tech$record_source,
+    tech$hash_value,
+    full_name,
+    short_name,
+    reg_date,
+    ogrn,
+    inn
   )
 SELECT
-       sha1(emit_code || record_source) AS emit_hkey,
-       load_date,
-       last_seen_date,
-       record_source,
-       emit_code
+       :tech$load_id       AS tech$load_id,
+       tech$hash_key,
+       tech$effective_dt,
+       tech$expiration_dt,
+       tech$record_source,
+       tech$hash_value,
+       full_name,
+       short_name,
+       reg_date,
+       ogrn,
+       inn
   FROM (SELECT
-               MIN(tech$effective_dt) AS load_date,
-               MAX(tech$effective_dt) AS last_seen_date,
-               'moex.com'             AS record_source,
-               emitent_title          AS emit_code
-          FROM src.security_emitent_map
-         WHERE tech$effective_dt > :tech$effective_dt
-         GROUP BY
-                  emitent_title)
-ON CONFLICT(emit_hkey) DO UPDATE
-   SET last_seen_date = excluded.last_seen_date
+               tech$hash_key,
+               tech$effective_dt,
+               tech$expiration_dt,
+               tech$record_source,
+               tech$hash_value,
+               full_name,
+               short_name,
+               reg_date,
+               ogrn,
+               inn
+          FROM tech$sat_emitent_master_data src
+         WHERE NOT EXISTS(SELECT
+                                 NULL
+                            FROM sat_emitent_master_data sat
+                           WHERE sat.tech$hash_key = src.tech$hash_key
+                             AND sat.tech$expiration_dt = '2999-12-31')
+         UNION ALL
+        SELECT
+               tech$hash_key,
+               CASE mrg.flg
+                    WHEN 'INSERT' THEN
+                        tech$effective_dt
+                    WHEN 'UPDATE' THEN
+                        tech$sat$effective_dt
+               END AS tech$effective_dt,
+               CASE mrg.flg
+                    WHEN 'INSERT' THEN
+                        tech$expiration_dt
+                    WHEN 'UPDATE' THEN
+                        CASE upsert_flg
+                             WHEN 'UPSERT' THEN
+                                 tech$sat$expiration_dt
+                             ELSE
+                                 tech$expiration_dt
+                        END
+               END AS tech$expiration_dt,
+               tech$record_source,
+               tech$hash_value,
+               full_name,
+               short_name,
+               reg_date,
+               ogrn,
+               inn
+          FROM (SELECT
+                       tech$hash_key,
+                       tech$effective_dt,
+                       tech$expiration_dt,
+                       tech$sat$effective_dt,
+                       tech$sat$expiration_dt,
+                       tech$record_source,
+                       tech$hash_value,
+                       full_name,
+                       short_name,
+                       reg_date,
+                       ogrn,
+                       inn,
+                       CASE
+                            WHEN rn = 1
+                             AND fv_equal_flag = 'NON_EQUAL'
+                             AND tech$effective_dt = tech$sat$effective_dt THEN
+                                'UPDATE'
+                            WHEN rn = 1
+                              OR rn = 2 AND fv_equal_flag = 'EQUAL' THEN
+                                'UPSERT'
+                            ELSE
+                                'INSERT'
+                       END AS upsert_flg
+                  FROM (SELECT
+                               src.tech$hash_key,
+                               src.tech$effective_dt,
+                               src.tech$expiration_dt,
+                               sat.tech$effective_dt                 AS tech$sat$effective_dt,
+                               DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
+                               src.tech$record_source,
+                               src.tech$hash_value,
+                               src.full_name,
+                               src.short_name,
+                               src.reg_date,
+                               src.ogrn,
+                               src.inn,
+                               FIRST_VALUE(CASE
+                                                WHEN src.tech$hash_value != sat.tech$hash_value THEN
+                                                    'NON_EQUAL'
+                                                ELSE
+                                                    'EQUAL'
+                                           END) OVER (wnd) AS fv_equal_flag,
+                               ROW_NUMBER() OVER (wnd)     AS rn
+                          FROM tech$sat_emitent_master_data src
+                               JOIN
+                               sat_emitent_master_data sat
+                                   ON sat.tech$hash_key = src.tech$hash_key
+                                  AND sat.tech$effective_dt <= src.tech$effective_dt
+                                  AND sat.tech$expiration_dt = '2999-12-31'
+                        WINDOW wnd AS (PARTITION BY src.tech$hash_key
+                                           ORDER BY src.tech$effective_dt))
+                 WHERE rn = 1 AND fv_equal_flag = 'NON_EQUAL'
+                    OR rn > 1) src
+               CROSS JOIN
+               (SELECT 'INSERT' AS flg
+                 UNION ALL
+                SELECT 'UPDATE' AS flg) mrg
+    WHERE src.upsert_flg = 'UPSERT'
+       OR src.upsert_flg = mrg.flg)
+ WHERE 1 = 1
+ ON CONFLICT(tech$hash_key, tech$effective_dt)
+ DO UPDATE
+       SET tech$expiration_dt = excluded.tech$expiration_dt,
+           tech$load_id = excluded.tech$load_id,
+           tech$hash_value = CASE
+                                  WHEN tech$expiration_dt = '2999-12-31'
+                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
+                                      excluded.tech$hash_value
+                                  ELSE
+                                      tech$hash_value
+                             END,
+           full_name  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.full_name  ELSE full_name  END,
+           short_name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.short_name ELSE short_name END,
+           reg_date   = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.reg_date   ELSE reg_date   END,
+           ogrn       = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.ogrn       ELSE ogrn       END,
+           inn        = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.inn        ELSE inn        END

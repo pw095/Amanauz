@@ -4,6 +4,7 @@ INSERT
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
+    tech$last_seen_dt,
     tech$hash_value,
     id,
     board_group_id,
@@ -19,6 +20,7 @@ SELECT
        :tech$load_id       AS tech$load_id,
        tech$effective_dt,
        tech$expiration_dt,
+       tech$last_seen_dt,
        tech$hash_value,
        id,
        board_group_id,
@@ -32,6 +34,7 @@ SELECT
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
+               tech$last_seen_dt,
                tech$hash_value,
                id,
                board_group_id,
@@ -61,8 +64,14 @@ SELECT
                     WHEN 'INSERT' THEN
                         tech$expiration_dt
                     WHEN 'UPDATE' THEN
-                        MAX(tech$sat$expiration_dt, tech$expiration_dt)
+                        CASE upsert_flg
+                             WHEN 'UPSERT' THEN
+                                 tech$sat$expiration_dt
+                             ELSE
+                                 tech$expiration_dt
+                        END
                END AS tech$expiration_dt,
+               tech$last_seen_dt,
                tech$hash_value,
                id,
                board_group_id,
@@ -76,6 +85,7 @@ SELECT
           FROM (SELECT
                        tech$effective_dt,
                        tech$expiration_dt,
+                       tech$last_seen_dt,
                        tech$sat$effective_dt,
                        tech$sat$expiration_dt,
                        tech$hash_value,
@@ -102,6 +112,7 @@ SELECT
                   FROM (SELECT
                                src.tech$effective_dt,
                                src.tech$expiration_dt,
+                               src.tech$last_seen_dt,
                                sat.tech$effective_dt                 AS tech$sat$effective_dt,
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
@@ -142,4 +153,12 @@ SELECT
  ON CONFLICT(board_id, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id
+           tech$last_seen_dt = excluded.tech$last_seen_dt,
+           tech$load_id = excluded.tech$load_id,
+           tech$hash_value = CASE
+                                  WHEN tech$expiration_dt = '2999-12-31'
+                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
+                                      excluded.tech$hash_value
+                                  ELSE
+                                      tech$hash_value
+                             END

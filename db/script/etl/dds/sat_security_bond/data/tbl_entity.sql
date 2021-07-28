@@ -5,7 +5,7 @@ INSERT
   )
 VALUES
   (
-    'security_sat'
+    'sat_security_bond'
   )
 ON CONFLICT(ent_code) DO UPDATE
    SET ent_desc = excluded.ent_desc

@@ -9,9 +9,10 @@ CREATE TABLE sat_emitent_master_data
     tech$hash_value    TEXT    NOT NULL,
     full_name          TEXT    NOT NULL,
     short_name         TEXT    NOT NULL,
-    reg_dt             TEXT,
+    reg_date           TEXT,
     ogrn               TEXT,
     inn                TEXT,
-    PRIMARY KEY(tech$hash_key, tech$effective_dt)
+    PRIMARY KEY(tech$hash_key, tech$effective_dt),
+    FOREIGN KEY (tech$hash_key) REFERENCES hub_emitent(tech$hash_key) ON DELETE CASCADE
   )
 WITHOUT ROWID;

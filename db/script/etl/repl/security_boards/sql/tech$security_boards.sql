@@ -4,6 +4,7 @@ INSERT
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
+    tech$last_seen_dt,
     tech$hash_value,
     id,
     board_group_id,
@@ -14,7 +15,7 @@ INSERT
     is_traded,
     has_candles,
     is_primary
-  );
+  )
 WITH
      w_raw AS
      (
@@ -74,7 +75,7 @@ WITH
                                         has_candles,
                                         is_primary
                                    FROM src.security_boards
-                                  WHERE tech$load_dttm >= :tech$load_dttm and board_id = 'TQBR')
+                                  WHERE tech$load_dttm >= :tech$load_dttm)
                          WINDOW wnd AS (PARTITION BY
                                                      board_id,
                                                      tech$load_dt
@@ -111,9 +112,9 @@ SELECT
                is_primary
           FROM (SELECT
                        tech$load_dt,
-                       MAX(tech$load_dt) OVER (PARTITION BY board_id) AS tech$last_seen_dt,
+                       MAX(tech$load_dt) OVER (win) AS tech$last_seen_dt,
                        hash_value,
-                       LAG(hash_value) OVER (wnd)                     AS lag_hash_value,
+                       LAG(hash_value) OVER (wnd)   AS lag_hash_value,
                        id,
                        board_group_id,
                        engine_id,
@@ -124,7 +125,9 @@ SELECT
                        has_candles,
                        is_primary
                   FROM w_raw
-                WINDOW wnd AS (PARTITION BY
+                WINDOW win AS (PARTITION BY
+                                            board_id),
+                       wnd AS (PARTITION BY
                                             board_id
                                    ORDER BY tech$load_dt))
          WHERE hash_value != lag_hash_value
