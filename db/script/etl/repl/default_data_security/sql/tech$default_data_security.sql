@@ -18,7 +18,7 @@ WITH
                 security_name
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(security_name AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(security_name AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         security_id,
                         security_name
                    FROM (SELECT

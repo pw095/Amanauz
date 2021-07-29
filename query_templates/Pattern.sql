@@ -100,10 +100,5 @@ SELECT
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
            tech$load_id = excluded.tech$load_id,
-           tech$hash_value = CASE
-                                  WHEN tech$expiration_dt = '2999-12-31'
-                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
-                                      excluded.tech$hash_value
-                                  ELSE
-                                      tech$hash_value
-                             END,
+           %updateCondition%
+           

@@ -56,24 +56,24 @@ WITH
                 trading_session
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(short_name                  AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(num_trades                  AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(value                       AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(open                        AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(low                         AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(high                        AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(legal_close_price           AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(wa_price                    AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(close                       AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(volume                      AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(market_price_2              AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(market_price_3              AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(admitted_quote              AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(mp2_val_trd                 AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(market_price_3_trades_value AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(admitted_value              AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(wa_val                      AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(trading_session             AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(short_name                  AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(num_trades                  AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(value                       AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(open                        AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(low                         AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(high                        AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(legal_close_price           AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(wa_price                    AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(close                       AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(volume                      AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(market_price_2              AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(market_price_3              AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(admitted_quote              AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(mp2_val_trd                 AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(market_price_3_trades_value AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(admitted_value              AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(wa_val                      AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(trading_session             AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         board_id,
                         trade_date,
                         short_name,

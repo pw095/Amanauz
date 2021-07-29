@@ -55,7 +55,12 @@ SELECT
                     WHEN 'INSERT' THEN
                         tech$expiration_dt
                     WHEN 'UPDATE' THEN
-                        MAX(tech$sat$expiration_dt, tech$expiration_dt)
+                        CASE upsert_flg
+                             WHEN 'UPSERT' THEN
+                                 tech$sat$expiration_dt
+                             ELSE
+                                 tech$expiration_dt
+                        END
                END AS tech$expiration_dt,
                tech$hash_value,
                id,
@@ -130,4 +135,11 @@ SELECT
  ON CONFLICT(id, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id
+           tech$load_id = excluded.tech$load_id,
+           name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.name ELSE name END,
+           eng_name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.eng_name ELSE eng_name END,
+           nominal = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.nominal ELSE nominal END,
+           parent_code = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.parent_code ELSE parent_code END,
+           iso_num_code = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.iso_num_code ELSE iso_num_code END,
+           iso_char_code = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.iso_char_code ELSE iso_char_code END
+           

@@ -49,7 +49,12 @@ SELECT
                     WHEN 'INSERT' THEN
                         tech$expiration_dt
                     WHEN 'UPDATE' THEN
-                        MAX(tech$sat$expiration_dt, tech$expiration_dt)
+                        CASE upsert_flg
+                             WHEN 'UPSERT' THEN
+                                 tech$sat$expiration_dt
+                             ELSE
+                                 tech$expiration_dt
+                        END
                END AS tech$expiration_dt,
                tech$hash_value,
                full_name,
@@ -118,4 +123,9 @@ SELECT
  ON CONFLICT(short_name, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id
+           tech$load_id = excluded.tech$load_id,
+           full_name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.full_name ELSE full_name END,
+           reg_date = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.reg_date ELSE reg_date END,
+           ogrn = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.ogrn ELSE ogrn END,
+           inn = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.inn ELSE inn END
+           

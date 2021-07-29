@@ -28,12 +28,12 @@ WITH
                 security_group_name
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(id                  AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(trade_engine_id     AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(trade_engine_name   AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(trade_engine_title  AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(security_type_title AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(security_group_name AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(id                  AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(trade_engine_id     AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(trade_engine_name   AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(trade_engine_title  AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(security_type_title AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(security_group_name AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         id,
                         trade_engine_id,
                         trade_engine_name,

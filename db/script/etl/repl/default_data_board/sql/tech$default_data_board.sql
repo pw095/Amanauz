@@ -18,7 +18,7 @@ WITH
                 board_title
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(board_title AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(board_title AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         board_id,
                         board_title
                    FROM (SELECT

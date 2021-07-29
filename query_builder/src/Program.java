@@ -70,7 +70,7 @@ public class Program {
         entityParser.parseEntity();
 
         for (Map.Entry<String, String> element : patternVars.entrySet()) {
-
+            QueryComposer.setPathToPatterns(pathToPatterns);
             QueryComposer composer = new QueryComposer(entityParser, entityName);
             composer.setPattern(pathToPatterns, element.getKey());
             composer.processQuery();

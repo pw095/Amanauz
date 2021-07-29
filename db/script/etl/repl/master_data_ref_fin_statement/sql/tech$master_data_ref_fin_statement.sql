@@ -26,11 +26,11 @@ WITH
                 full_name
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(hier_level       AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(leaf_code        AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(parent_leaf_code AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(parent_code      AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(full_name        AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(hier_level       AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(leaf_code        AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(parent_leaf_code AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(parent_code      AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(full_name        AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         hier_level,
                         leaf_code,
                         code,

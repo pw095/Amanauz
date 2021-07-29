@@ -46,21 +46,21 @@ WITH
                 market_price_board_id
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(id                    AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(short_name            AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(reg_number            AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(security_name         AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(isin                  AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(security_is_traded    AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(emitent_id            AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(emitent_title         AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(emitent_inn           AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(emitent_okpo          AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(emitent_gos_reg       AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(security_type         AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(security_group        AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(primary_board_id      AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(market_price_board_id AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(id                    AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(short_name            AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(reg_number            AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(security_name         AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(isin                  AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(security_is_traded    AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(emitent_id            AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(emitent_title         AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(emitent_inn           AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(emitent_okpo          AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(emitent_gos_reg       AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(security_type         AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(security_group        AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(primary_board_id      AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(market_price_board_id AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         id,
                         security_id,
                         short_name,

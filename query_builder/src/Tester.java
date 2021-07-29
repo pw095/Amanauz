@@ -22,7 +22,7 @@ public class Tester {
         String entityName    = "default_data_board";
         String sourceFileName   = "test\\model.sql";
         String destFileName     = "test\\destination.sql";
-        Program.setPathToPatterns("src");
+        Program.setPathToPatterns("..\\query_templates");
 
         Program.InitialisePatternVars(destFileName, "");
         Program.processEntityInFile(sourceFileName, entityName);
@@ -37,7 +37,7 @@ public class Tester {
     private static void testUpdateConditionComposer(){
 
         String fileName = "src\\UpdateConditionPattern.sql";
-        UpdateConditionComposer test = new UpdateConditionComposer(fileName);
+        UpdateConditionComposer test = new UpdateConditionComposer();
         System.out.println(test.getCondition("holiday_flag", "\t"));
 
     }

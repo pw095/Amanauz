@@ -203,7 +203,12 @@ SELECT
                     WHEN 'INSERT' THEN
                         tech$expiration_dt
                     WHEN 'UPDATE' THEN
-                        MAX(tech$sat$expiration_dt, tech$expiration_dt)
+                        CASE upsert_flg
+                             WHEN 'UPSERT' THEN
+                                 tech$sat$expiration_dt
+                             ELSE
+                                 tech$expiration_dt
+                        END
                END AS tech$expiration_dt,
                tech$hash_value,
                security_id,
@@ -427,4 +432,59 @@ SELECT
  ON CONFLICT(security_id, board_id, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id
+           tech$load_id = excluded.tech$load_id,
+           bid = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.bid ELSE bid END,
+           bid_depth = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.bid_depth ELSE bid_depth END,
+           offer = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.offer ELSE offer END,
+           offer_depth = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.offer_depth ELSE offer_depth END,
+           spread = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.spread ELSE spread END,
+           bid_deptht = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.bid_deptht ELSE bid_deptht END,
+           offer_deptht = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.offer_deptht ELSE offer_deptht END,
+           open = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.open ELSE open END,
+           low = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.low ELSE low END,
+           high = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.high ELSE high END,
+           last = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.last ELSE last END,
+           last_change = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.last_change ELSE last_change END,
+           last_change_prcnt = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.last_change_prcnt ELSE last_change_prcnt END,
+           qty = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.qty ELSE qty END,
+           value = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.value ELSE value END,
+           value_usd = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.value_usd ELSE value_usd END,
+           wa_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.wa_price ELSE wa_price END,
+           last_cng_to_last_wa_price_prcnt = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.last_cng_to_last_wa_price_prcnt ELSE last_cng_to_last_wa_price_prcnt END,
+           wap_to_prev_wa_price_prcnt = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.wap_to_prev_wa_price_prcnt ELSE wap_to_prev_wa_price_prcnt END,
+           wap_to_prev_wa_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.wap_to_prev_wa_price ELSE wap_to_prev_wa_price END,
+           close_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.close_price ELSE close_price END,
+           market_price_to_day = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.market_price_to_day ELSE market_price_to_day END,
+           market_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.market_price ELSE market_price END,
+           last_to_prev_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.last_to_prev_price ELSE last_to_prev_price END,
+           num_trades = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.num_trades ELSE num_trades END,
+           vol_to_day = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.vol_to_day ELSE vol_to_day END,
+           val_to_day = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.val_to_day ELSE val_to_day END,
+           val_to_day_usd = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.val_to_day_usd ELSE val_to_day_usd END,
+           etf_settle_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.etf_settle_price ELSE etf_settle_price END,
+           trading_status = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.trading_status ELSE trading_status END,
+           update_time = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.update_time ELSE update_time END,
+           admitted_quote = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.admitted_quote ELSE admitted_quote END,
+           last_bid = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.last_bid ELSE last_bid END,
+           last_offer = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.last_offer ELSE last_offer END,
+           l_close_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.l_close_price ELSE l_close_price END,
+           l_current_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.l_current_price ELSE l_current_price END,
+           market_price_2 = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.market_price_2 ELSE market_price_2 END,
+           num_bids = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.num_bids ELSE num_bids END,
+           num_offers = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.num_offers ELSE num_offers END,
+           chage = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.chage ELSE chage END,
+           time = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.time ELSE time END,
+           high_bid = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.high_bid ELSE high_bid END,
+           low_offer = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.low_offer ELSE low_offer END,
+           price_minus_prev_wa_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.price_minus_prev_wa_price ELSE price_minus_prev_wa_price END,
+           open_period_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.open_period_price ELSE open_period_price END,
+           seq_num = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.seq_num ELSE seq_num END,
+           sys_time = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.sys_time ELSE sys_time END,
+           closing_auction_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.closing_auction_price ELSE closing_auction_price END,
+           closing_auction_volume = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.closing_auction_volume ELSE closing_auction_volume END,
+           issue_capitalization = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.issue_capitalization ELSE issue_capitalization END,
+           issue_capitalization_update_time = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.issue_capitalization_update_time ELSE issue_capitalization_update_time END,
+           etf_settle_currency = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.etf_settle_currency ELSE etf_settle_currency END,
+           val_to_day_rur = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.val_to_day_rur ELSE val_to_day_rur END,
+           trading_session = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.trading_session ELSE trading_session END
+           

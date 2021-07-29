@@ -90,7 +90,7 @@ SELECT
                                    ON
                                       sat.full_date = src.full_date
                                   AND sat.tech$effective_dt <= src.tech$effective_dt
-                                  AND sat.tech$expiration_dt = '2999-12-31' AND sat.full_date IN ('2013-03-08')
+                                  AND sat.tech$expiration_dt = '2999-12-31'
                         WINDOW wnd AS (PARTITION BY src.full_date
                                            ORDER BY src.tech$effective_dt))
                  WHERE rn = 1 AND fv_equal_flag = 'NON_EQUAL'
@@ -106,11 +106,5 @@ SELECT
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
            tech$load_id = excluded.tech$load_id,
-           tech$hash_value = CASE
-                                  WHEN tech$expiration_dt = '2999-12-31'
-                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
-                                      excluded.tech$hash_value
-                                  ELSE
-                                      tech$hash_value
-                             END,
            holiday_flag = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.holiday_flag ELSE holiday_flag END
+           

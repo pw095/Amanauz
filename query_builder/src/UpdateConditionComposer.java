@@ -5,15 +5,13 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class UpdateConditionComposer {
-    private ArrayList<String> TemplateLines;
+    private static String templateLine;
 
-    public UpdateConditionComposer(){
-       this("src\\UpdateConditionPattern.sql");
-    }
-    public UpdateConditionComposer(String fileName){
-        Path sourceFile = Paths.get(fileName);
+    public static void setPathToPatterns(String pathToPatterns){
+
+        Path sourceFile = Paths.get(pathToPatterns+"\\UpdateConditionPattern.sql");
         try {
-            TemplateLines = (ArrayList<String>) Files.readAllLines(sourceFile);
+            templateLine = Files.readAllLines(sourceFile).get(0);
         } catch (IOException e) {
             e.getMessage();
         }
@@ -26,9 +24,9 @@ public class UpdateConditionComposer {
     public String getCondition(String fieldName, String prefix) {
 
         StringBuilder sb = new StringBuilder();
-        for (String line : TemplateLines) {
-            sb.append(String.format("%s%s\n", prefix, line.replace("@field_name@", fieldName)));
-        }
+
+        sb.append(String.format("%s%s", prefix, templateLine.replace("@field_name@", fieldName)));
+
         return sb.toString();
 
     }

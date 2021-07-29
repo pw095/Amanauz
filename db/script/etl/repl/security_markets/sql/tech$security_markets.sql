@@ -30,13 +30,13 @@ WITH
                 market_place
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(id                 AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(trade_engine_id    AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(trade_engine_name  AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(trade_engine_title AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(market_title       AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(market_id          AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(market_place       AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(id                 AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(trade_engine_id    AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(trade_engine_name  AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(trade_engine_title AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(market_title       AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(market_id          AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(market_place       AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         id,
                         trade_engine_id,
                         trade_engine_name,

@@ -22,9 +22,9 @@ WITH
                 security_group_id
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(name              AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(title             AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(security_group_id AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(name              AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(title             AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(security_group_id AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         id,
                         name,
                         title,

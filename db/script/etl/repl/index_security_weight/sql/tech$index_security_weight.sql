@@ -28,10 +28,10 @@ WITH
                 trading_session
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(ticker          AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(short_name      AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(weight          AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(trading_session AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(ticker          AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(short_name      AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(weight          AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(trading_session AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         index_id,
                         trade_date,
                         ticker,

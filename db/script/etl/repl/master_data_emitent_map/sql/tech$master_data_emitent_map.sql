@@ -20,7 +20,7 @@ WITH
                 emitent_short_name
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(emitent_short_name AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(emitent_short_name AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         source_system_code,
                         emitent_code,
                         emitent_short_name

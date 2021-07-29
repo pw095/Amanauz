@@ -7,6 +7,7 @@ CREATE TABLE default_data_board
     tech$hash_value    TEXT    NOT NULL,
     board_id           TEXT    NOT NULL,
     board_title        TEXT    NOT NULL,
+    board_name        TEXT    NOT NULL,
     PRIMARY KEY(board_id, tech$effective_dt)
   )
 WITHOUT ROWID;

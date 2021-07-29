@@ -4,15 +4,18 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.regex.Matcher;
 import java.util.stream.Collectors;
 
 public class QueryComposer {
 
     private EntityParser entityParser;
+
     private String queryPattern;
     private String queryString;
     private String entityName;
     private static String[] FieldsType;
+    private static String pathToPatterns;
 
     static {
         FieldsType = new String[4];
@@ -20,6 +23,9 @@ public class QueryComposer {
         FieldsType[1] = "businessKeyFields";
         FieldsType[2] = "businessNonKeyFields";
         FieldsType[3] = "updateCondition";
+    }
+    public static void setPathToPatterns(String path){
+        pathToPatterns = path;
     }
 
     public QueryComposer(EntityParser entityParser, String entityName){
@@ -70,23 +76,27 @@ public class QueryComposer {
         if (anchor.equals("businessNonKeyFields"))
             fields = ComposeConcatValueField(offSet);
         else if (anchor.equals("updateCondition"))
-//            fields = ComposeUpdateStatements(offSet);
-            fields = ComposeUpdateStatements("");
+            fields = ComposeUpdateStatements(offSet);
         else
             fields = ComposeMultiFields(offSet, anchor);
 
-        queryString = queryString.replaceFirst(String.format("%%%s%%", anchor), fields);
+        queryString = queryString.replaceFirst(
+                String.format("%%%s%%", anchor), Matcher.quoteReplacement(fields));
     }
 
 
     private String ComposeUpdateStatements(String offSet) {
         StringBuilder sb = new StringBuilder();
-
-
+        UpdateConditionComposer.setPathToPatterns(pathToPatterns);
+        boolean firstField = true;
         for (String field: entityParser.getFields("businessNonKeyFields")){
+            if (!firstField){
+                sb.append(',');
+                sb.append(System.lineSeparator());
+            }
             UpdateConditionComposer upd = new UpdateConditionComposer();
-//            sb.append(String.format(",%s\n", upd.getCondition(field, offSet)));
-            sb.append(upd.getCondition(field, offSet));
+            sb.append(upd.getCondition(field, firstField ? "" : offSet));
+            firstField = false;
         }
         return sb.toString();
     }

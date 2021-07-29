@@ -28,12 +28,12 @@ WITH
                 iso_char_code
            FROM (SELECT
                         tech$load_dt,
-                        '_' || IFNULL(CAST(name          AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(eng_name      AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(nominal       AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(parent_code   AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(iso_num_code  AS TEXT), '!@#$%^&*') ||
-                        '_' || IFNULL(CAST(iso_char_code AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                        '_' || IFNULL(CAST(name          AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(eng_name      AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(nominal       AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(parent_code   AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(iso_num_code  AS TEXT), '!@#\$%^&*') ||
+                        '_' || IFNULL(CAST(iso_char_code AS TEXT), '!@#\$%^&*') || '_' AS concat_value,
                         id,
                         name,
                         eng_name,
