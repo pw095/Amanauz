@@ -4,6 +4,7 @@ INSERT
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
+    tech$last_seen_dt,
     tech$hash_value,
     id,
     trade_engine_id,
@@ -18,6 +19,7 @@ SELECT
        :tech$load_id       AS tech$load_id,
        tech$effective_dt,
        tech$expiration_dt,
+       tech$last_seen_dt,
        tech$hash_value,
        id,
        trade_engine_id,
@@ -30,6 +32,7 @@ SELECT
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
+               tech$last_seen_dt,
                tech$hash_value,
                id,
                trade_engine_id,
@@ -65,6 +68,7 @@ SELECT
                                  tech$expiration_dt
                         END
                END AS tech$expiration_dt,
+               tech$last_seen_dt,
                tech$hash_value,
                id,
                trade_engine_id,
@@ -77,6 +81,7 @@ SELECT
           FROM (SELECT
                        tech$effective_dt,
                        tech$expiration_dt,
+                       tech$last_seen_dt,
                        tech$sat$effective_dt,
                        tech$sat$expiration_dt,
                        tech$hash_value,
@@ -102,6 +107,7 @@ SELECT
                   FROM (SELECT
                                src.tech$effective_dt,
                                src.tech$expiration_dt,
+                               src.tech$last_seen_dt,
                                sat.tech$effective_dt                 AS tech$sat$effective_dt,
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
@@ -141,7 +147,15 @@ SELECT
  ON CONFLICT(market_name, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
+           tech$last_seen_dt = excluded.tech$last_seen_dt,
            tech$load_id = excluded.tech$load_id,
+           tech$hash_value = CASE
+                                  WHEN tech$expiration_dt = '2999-12-31'
+                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
+                                      excluded.tech$hash_value
+                                  ELSE
+                                      tech$hash_value
+                             END,
            id = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.id ELSE id END,
            trade_engine_id = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.trade_engine_id ELSE trade_engine_id END,
            trade_engine_name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.trade_engine_name ELSE trade_engine_name END,
@@ -149,4 +163,3 @@ SELECT
            market_title = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.market_title ELSE market_title END,
            market_id = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.market_id ELSE market_id END,
            market_place = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.market_place ELSE market_place END
-           
