@@ -158,7 +158,7 @@ public class StageSecurityDailyInfoBonds extends SnapshotEntity implements Imoex
                                "COUPONPERIOD,ISSUESIZE,PREVLEGALCLOSEPRICE,PREVADMITTEDQUOTE,PREVDATE,SECNAME," +
                                "REMARKS,MARKETCODE,INSTRID,SECTORID,MINSTEP,FACEUNIT,BUYBACKPRICE,BUYBACKDATE," +
                                "ISIN,LATNAME,REGNUMBER,CURRENCYID,ISSUESIZEPLACED,LISTLEVEL,SECTYPE,COUPONPERCENT," +
-                               "SETTLEDATE,LOTVALUE";
+                               "OFFERDATE,SETTLEDATE,LOTVALUE";
 
         String urlStringData = urlStringRaw.concat(urlColumnList);
         load(stmtUpdate, urlStringData, objectJSON);
