@@ -11,7 +11,8 @@ CREATE TABLE sat_security_bond
     coupon_percent     REAL,
     coupon_period      INTEGER NOT NULL,
     mature_date        TEXT    NOT NULL,
-    buy_back_date      TEXT    NOT NULL,
+    buy_back_date      TEXT,
+    buy_back_price     REAL,
     offer_date         TEXT    NOT NULL,
     PRIMARY KEY(tech$hash_key, tech$effective_dt),
     FOREIGN KEY (tech$hash_key) REFERENCES hub_security(tech$hash_key) ON DELETE CASCADE

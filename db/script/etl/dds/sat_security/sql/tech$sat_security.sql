@@ -149,6 +149,7 @@ SELECT
        hub_security hub
            ON hub.security_id = pre.security_id
           AND hub.tech$record_source = 'moex.com'
- WHERE pre.rn = 1 -- Исключить индексируемые облигации на этапе размещения
+ WHERE pre.rn = 1 -- Брать наибольший номинал, если у ЦБ он отличается в различных режимах торгов
+                  -- Пока это относится только к индексируемым облигациям на этапе размещения
 WINDOW wnd AS (PARTITION BY pre.security_id
                    ORDER BY pre.tech$effective_dt)
