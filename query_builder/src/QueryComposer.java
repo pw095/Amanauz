@@ -77,11 +77,11 @@ public class QueryComposer {
             fields = ComposeConcatValueField(offSet);
         else if (anchor.equals("updateCondition"))
             fields = ComposeUpdateStatements(offSet);
+            fields = Matcher.quoteReplacement(fields);
         else
             fields = ComposeMultiFields(offSet, anchor);
 
-        queryString = queryString.replaceFirst(
-                String.format("%%%s%%", anchor), Matcher.quoteReplacement(fields));
+        queryString = queryString.replaceFirst(String.format("%%%s%%", anchor), fields);
     }
 
 
