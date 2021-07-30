@@ -80,7 +80,10 @@ public class Flow {
         entityList.add(new StageSecurityRateShares(flow)); // OK
         entityList.add(new StageSecurityRateBonds(flow)); // OK
 
-
+        for (AbstractEntity entity : entityList) {
+            entity.call();
+        }
+        entityList.clear();
 
         entityList.add(new ReplicationEntity(flow, "foreign_currency_dictionary"));
         entityList.add(new ReplicationEntity(flow, "foreign_currency_rate"));
@@ -103,7 +106,8 @@ public class Flow {
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
-//        new ReplIndexSecurityWeight(flow).call();
+        entityList.clear();
+
         System.out.println(flow.getFlowLoadId());
         Meta.setFlowLogFinish(flow.getFlowLoadId(), LoadStatus.SUCCEEDED);
 

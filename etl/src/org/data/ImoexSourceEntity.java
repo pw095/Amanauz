@@ -8,6 +8,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +21,12 @@ public interface ImoexSourceEntity extends StageEntity {
     default public void postLoad(PreparedStatement stmtUpdate, List<? extends ExternalData> dataArray) {
         System.out.println("savePortion");
         saveData(stmtUpdate, dataArray);
+        try {
+            stmtUpdate.getConnection().commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
         dataArray.clear();
     }
     default public void load(PreparedStatement stmtUpdate, String urlString, String objectJSON) {
