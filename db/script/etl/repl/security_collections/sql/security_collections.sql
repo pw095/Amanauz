@@ -4,14 +4,9 @@ INSERT
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
+    tech$last_seen_dt,
     tech$hash_value,
-    =======,
-    DROP,
-    CREATE,
-    >>>>>>>,
-    (,
     id,
-    <<<<<<<,
     name,
     title,
     security_group_id
@@ -20,28 +15,18 @@ SELECT
        :tech$load_id       AS tech$load_id,
        tech$effective_dt,
        tech$expiration_dt,
+       tech$last_seen_dt,
        tech$hash_value,
-       =======,
-       DROP,
-       CREATE,
-       >>>>>>>,
-       (,
        id,
-       <<<<<<<,
        name,
        title,
        security_group_id
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
+               tech$last_seen_dt,
                tech$hash_value,
-               =======,
-               DROP,
-               CREATE,
-               >>>>>>>,
-               (,
                id,
-               <<<<<<<,
                name,
                title,
                security_group_id
@@ -64,36 +49,35 @@ SELECT
                     WHEN 'INSERT' THEN
                         tech$expiration_dt
                     WHEN 'UPDATE' THEN
-                        tech$sat$expiration_dt
+                        CASE upsert_flg
+                             WHEN 'UPSERT' THEN
+                                 tech$sat$expiration_dt
+                             ELSE
+                                 tech$expiration_dt
+                        END
                END AS tech$expiration_dt,
+               tech$last_seen_dt,
                tech$hash_value,
-               =======,
-               DROP,
-               CREATE,
-               >>>>>>>,
-               (,
                id,
-               <<<<<<<,
                name,
                title,
                security_group_id
           FROM (SELECT
                        tech$effective_dt,
                        tech$expiration_dt,
+                       tech$last_seen_dt,
                        tech$sat$effective_dt,
                        tech$sat$expiration_dt,
                        tech$hash_value,
-                       =======,
-                       DROP,
-                       CREATE,
-                       >>>>>>>,
-                       (,
                        id,
-                       <<<<<<<,
                        name,
                        title,
                        security_group_id,
                        CASE
+                            WHEN rn = 1
+                             AND fv_equal_flag = 'NON_EQUAL'
+                             AND tech$effective_dt = tech$sat$effective_dt THEN
+                                'UPDATE'
                             WHEN rn = 1
                               OR rn = 2 AND fv_equal_flag = 'EQUAL' THEN
                                 'UPSERT'
@@ -103,16 +87,11 @@ SELECT
                   FROM (SELECT
                                src.tech$effective_dt,
                                src.tech$expiration_dt,
+                               src.tech$last_seen_dt,
                                sat.tech$effective_dt                 AS tech$sat$effective_dt,
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
-                               src.=======,
-                               src.DROP,
-                               src.CREATE,
-                               src.>>>>>>>,
-                               src.(,
                                src.id,
-                               src.<<<<<<<,
                                src.name,
                                src.title,
                                src.security_group_id,
@@ -128,7 +107,7 @@ SELECT
                                security_collections sat
                                    ON
                                       sat.id = src.id
-                                  AND sat.tech$effective_dt < src.tech$effective_dt
+                                  AND sat.tech$effective_dt <= src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
                         WINDOW wnd AS (PARTITION BY src.id
                                            ORDER BY src.tech$effective_dt))
@@ -139,9 +118,20 @@ SELECT
                  UNION ALL
                 SELECT 'UPDATE' AS flg) mrg
     WHERE src.upsert_flg = 'UPSERT'
-       OR src.upsert_flg = 'INSERT' AND mrg.flg = 'INSERT')
+       OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
  ON CONFLICT(id, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id
+           tech$last_seen_dt = excluded.tech$last_seen_dt,
+           tech$load_id = excluded.tech$load_id,
+           tech$hash_value = CASE
+                                  WHEN tech$expiration_dt = '2999-12-31'
+                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
+                                      excluded.tech$hash_value
+                                  ELSE
+                                      tech$hash_value
+                             END,
+           name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.name ELSE name END,
+           title = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.title ELSE title END,
+           security_group_id = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.security_group_id ELSE security_group_id END

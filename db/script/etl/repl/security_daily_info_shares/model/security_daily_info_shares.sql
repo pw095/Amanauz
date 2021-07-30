@@ -22,7 +22,7 @@ CREATE TABLE security_daily_info_shares
     sector_id                  TEXT    NOT NULL,
     min_step                   REAL    NOT NULL,
     prev_wa_price              REAL,
-    face_unit                  TEXT    NOT NULL,
+    face_unit                  TEXT,
     previous_date              TEXT    NOT NULL,
     issue_size                 INTEGER NOT NULL,
     isin                       TEXT    NOT NULL,

@@ -22,7 +22,7 @@ CREATE TABLE security_daily_marketdata_shares
     last_change                      REAL    NOT NULL,
     last_change_prcnt                REAL    NOT NULL,
     qty                              INTEGER NOT NULL,
-    value                            REAL    NOT NULL,
+    value                            REAL,
     value_usd                        REAL    NOT NULL,
     wa_price                         REAL,
     last_cng_to_last_wa_price_prcnt  REAL    NOT NULL,

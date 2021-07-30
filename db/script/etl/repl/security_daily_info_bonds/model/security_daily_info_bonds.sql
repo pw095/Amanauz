@@ -43,7 +43,7 @@ CREATE TABLE security_daily_info_bonds
     list_level                 INTEGER NOT NULL,
     security_type              TEXT    NOT NULL,
     coupon_percent             REAL,
-    offer_date                 TEXT    NOT NULL,
+    offer_date                 TEXT,
     settle_date                TEXT    NOT NULL,
     lot_value                  REAL,
     PRIMARY KEY(security_id, board_id, tech$effective_dt)

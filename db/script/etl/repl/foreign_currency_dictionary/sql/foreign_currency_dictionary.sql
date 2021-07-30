@@ -4,6 +4,7 @@ INSERT
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
+    tech$last_seen_dt,
     tech$hash_value,
     id,
     name,
@@ -17,6 +18,7 @@ SELECT
        :tech$load_id       AS tech$load_id,
        tech$effective_dt,
        tech$expiration_dt,
+       tech$last_seen_dt,
        tech$hash_value,
        id,
        name,
@@ -28,6 +30,7 @@ SELECT
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
+               tech$last_seen_dt,
                tech$hash_value,
                id,
                name,
@@ -55,8 +58,14 @@ SELECT
                     WHEN 'INSERT' THEN
                         tech$expiration_dt
                     WHEN 'UPDATE' THEN
-                        tech$sat$expiration_dt
+                        CASE upsert_flg
+                             WHEN 'UPSERT' THEN
+                                 tech$sat$expiration_dt
+                             ELSE
+                                 tech$expiration_dt
+                        END
                END AS tech$expiration_dt,
+               tech$last_seen_dt,
                tech$hash_value,
                id,
                name,
@@ -68,6 +77,7 @@ SELECT
           FROM (SELECT
                        tech$effective_dt,
                        tech$expiration_dt,
+                       tech$last_seen_dt,
                        tech$sat$effective_dt,
                        tech$sat$expiration_dt,
                        tech$hash_value,
@@ -80,6 +90,10 @@ SELECT
                        iso_char_code,
                        CASE
                             WHEN rn = 1
+                             AND fv_equal_flag = 'NON_EQUAL'
+                             AND tech$effective_dt = tech$sat$effective_dt THEN
+                                'UPDATE'
+                            WHEN rn = 1
                               OR rn = 2 AND fv_equal_flag = 'EQUAL' THEN
                                 'UPSERT'
                             ELSE
@@ -88,6 +102,7 @@ SELECT
                   FROM (SELECT
                                src.tech$effective_dt,
                                src.tech$expiration_dt,
+                               src.tech$last_seen_dt,
                                sat.tech$effective_dt                 AS tech$sat$effective_dt,
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
@@ -110,7 +125,7 @@ SELECT
                                foreign_currency_dictionary sat
                                    ON
                                       sat.id = src.id
-                                  AND sat.tech$effective_dt < src.tech$effective_dt
+                                  AND sat.tech$effective_dt <= src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
                         WINDOW wnd AS (PARTITION BY src.id
                                            ORDER BY src.tech$effective_dt))
@@ -121,9 +136,23 @@ SELECT
                  UNION ALL
                 SELECT 'UPDATE' AS flg) mrg
     WHERE src.upsert_flg = 'UPSERT'
-       OR src.upsert_flg = 'INSERT' AND mrg.flg = 'INSERT')
+       OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
  ON CONFLICT(id, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id
+           tech$last_seen_dt = excluded.tech$last_seen_dt,
+           tech$load_id = excluded.tech$load_id,
+           tech$hash_value = CASE
+                                  WHEN tech$expiration_dt = '2999-12-31'
+                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
+                                      excluded.tech$hash_value
+                                  ELSE
+                                      tech$hash_value
+                             END,
+           name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.name ELSE name END,
+           eng_name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.eng_name ELSE eng_name END,
+           nominal = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.nominal ELSE nominal END,
+           parent_code = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.parent_code ELSE parent_code END,
+           iso_num_code = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.iso_num_code ELSE iso_num_code END,
+           iso_char_code = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.iso_char_code ELSE iso_char_code END

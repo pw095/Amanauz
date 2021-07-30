@@ -21,7 +21,7 @@ CREATE TABLE security_daily_marketdata_bonds
     last_change                     REAL    NOT NULL,
     last_change_prcnt               REAL    NOT NULL,
     qty                             INTEGER NOT NULL,
-    value                           REAL    NOT NULL,
+    value                           REAL,
     yield                           REAL    NOT NULL,
     value_usd                       REAL    NOT NULL,
     wa_price                        REAL,
