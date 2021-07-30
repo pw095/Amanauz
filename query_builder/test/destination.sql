@@ -1,32 +1,35 @@
 INSERT
-  INTO %entity_name%
+  INTO default_data_board
   (
     tech$load_id,
     tech$effective_dt,
     tech$expiration_dt,
-    tech$last_seen_dt,
     tech$hash_value,
-    %businessFields_multiLine%
+    board_id,
+    board_title,
+    board_name
   )
 SELECT
        :tech$load_id       AS tech$load_id,
        tech$effective_dt,
        tech$expiration_dt,
-       tech$last_seen_dt,
        tech$hash_value,
-       %businessFields_multiLine%
+       board_id,
+       board_title,
+       board_name
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
-               tech$last_seen_dt,
                tech$hash_value,
-               %businessFields_multiLine%
-          FROM tech$%entity_name% src
+               board_id,
+               board_title,
+               board_name
+          FROM tech$default_data_board src
          WHERE NOT EXISTS(SELECT
                                  NULL
-                            FROM %entity_name% sat
+                            FROM default_data_board sat
                            WHERE
-                                 %businessKeyFields_condition_sat_src%
+                                 sat.board_id = src.board_id
                              AND sat.tech$expiration_dt = '2999-12-31')
          UNION ALL
         SELECT
@@ -47,17 +50,19 @@ SELECT
                                  tech$expiration_dt
                         END
                END AS tech$expiration_dt,
-               tech$last_seen_dt,
                tech$hash_value,
-               %businessFields_multiLine%
+               board_id,
+               board_title,
+               board_name
           FROM (SELECT
                        tech$effective_dt,
                        tech$expiration_dt,
-                       tech$last_seen_dt,
                        tech$sat$effective_dt,
                        tech$sat$expiration_dt,
                        tech$hash_value,
-                       %businessFields_multiLine%,
+                       board_id,
+                       board_title,
+                       board_name,
                        CASE
                             WHEN rn = 1
                              AND fv_equal_flag = 'NON_EQUAL'
@@ -72,11 +77,12 @@ SELECT
                   FROM (SELECT
                                src.tech$effective_dt,
                                src.tech$expiration_dt,
-                               src.tech$last_seen_dt,
                                sat.tech$effective_dt                 AS tech$sat$effective_dt,
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
-                               %businessFields_multiLine_src%,
+                               src.board_id,
+                               src.board_title,
+                               src.board_name,
                                FIRST_VALUE(CASE
                                                 WHEN src.tech$hash_value != sat.tech$hash_value THEN
                                                     'NON_EQUAL'
@@ -84,14 +90,14 @@ SELECT
                                                     'EQUAL'
                                            END) OVER (wnd) AS fv_equal_flag,
                                ROW_NUMBER() OVER (wnd)     AS rn
-                          FROM tech$%entity_name% src
+                          FROM tech$default_data_board src
                                JOIN
-                               %entity_name% sat
+                               default_data_board sat
                                    ON
-                                      %businessKeyFields_condition_sat_src%
+                                      sat.board_id = src.board_id
                                   AND sat.tech$effective_dt <= src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
-                        WINDOW wnd AS (PARTITION BY %businessKeyFields_MultiLine_src%
+                        WINDOW wnd AS (PARTITION BY src.board_id
                                            ORDER BY src.tech$effective_dt))
                  WHERE rn = 1 AND fv_equal_flag = 'NON_EQUAL'
                     OR rn > 1) src
@@ -102,16 +108,10 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
- ON CONFLICT(%businessKeyFields_singleLine%, tech$effective_dt)
+ ON CONFLICT(board_id, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$last_seen_dt = excluded.tech$last_seen_dt,
            tech$load_id = excluded.tech$load_id,
-           tech$hash_value = CASE
-                                  WHEN tech$expiration_dt = '2999-12-31'
-                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
-                                      excluded.tech$hash_value
-                                  ELSE
-                                      tech$hash_value
-                             END,
-           %updateCondition%
+           board_title = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.board_title ELSE board_title END,
+           board_name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.board_name ELSE board_name END
+           
