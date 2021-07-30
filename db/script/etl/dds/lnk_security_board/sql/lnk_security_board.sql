@@ -1,12 +1,13 @@
 INSERT
-  INTO hub_board
+  INTO lnk_security_board
   (
     tech$load_id,
     tech$hash_key,
     tech$record_source,
     tech$load_dt,
     tech$last_seen_dt,
-    board_id
+    security_hash_key,
+    board_hash_key
   )
 SELECT
        :tech$load_id      AS tech$load_id,
@@ -14,8 +15,9 @@ SELECT
        tech$record_source,
        tech$load_dt,
        tech$last_seen_dt,
-       board_id
-  FROM tech$hub_board
+       security_hash_key,
+       board_hash_key
+  FROM tech$lnk_security_board
  WHERE 1 = 1
 ON CONFLICT(tech$hash_key)
 DO UPDATE
