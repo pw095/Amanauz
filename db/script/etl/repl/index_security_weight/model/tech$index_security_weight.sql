@@ -8,11 +8,11 @@ CREATE TABLE tech$index_security_weight
     tech$hash_value    TEXT    NOT NULL,
     index_id           TEXT    NOT NULL,
     trade_date         TEXT    NOT NULL,
-    ticker             TEXT    NOT NULL,
-    short_name         TEXT    NOT NULL,
+    ticker             TEXT,
+    short_name         TEXT,
     security_id        TEXT    NOT NULL,
-    weight             REAL    NOT NULL,
-    trading_session    INTEGER NOT NULL,
+    weight             REAL,
+    trading_session    INTEGER,
     PRIMARY KEY(index_id, trade_date, security_id, tech$effective_dt)
   )
 WITHOUT ROWID;

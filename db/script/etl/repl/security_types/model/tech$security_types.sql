@@ -6,13 +6,13 @@ CREATE TABLE tech$security_types
     tech$expiration_dt  TEXT    NOT NULL,
     tech$last_seen_dt   TEXT    NOT NULL,
     tech$hash_value     TEXT    NOT NULL,
-    id                  INTEGER NOT NULL,
-    trade_engine_id     INTEGER NOT NULL,
-    trade_engine_name   TEXT    NOT NULL,
-    trade_engine_title  TEXT    NOT NULL,
+    id                  INTEGER,
+    trade_engine_id     INTEGER,
+    trade_engine_name   TEXT,
+    trade_engine_title  TEXT,
     security_type_name  TEXT    NOT NULL,
-    security_type_title TEXT    NOT NULL,
-    security_group_name TEXT    NOT NULL,
+    security_type_title TEXT,
+    security_group_name TEXT,
     PRIMARY KEY(security_type_name, tech$effective_dt)
   )
 WITHOUT ROWID;

@@ -6,14 +6,14 @@ CREATE TABLE security_markets
     tech$expiration_dt TEXT    NOT NULL,
     tech$last_seen_dt  TEXT    NOT NULL,
     tech$hash_value    TEXT    NOT NULL,
-    id                 INTEGER NOT NULL,
-    trade_engine_id    INTEGER NOT NULL,
-    trade_engine_name  TEXT    NOT NULL,
-    trade_engine_title TEXT    NOT NULL,
+    id                 INTEGER,
+    trade_engine_id    INTEGER,
+    trade_engine_name  TEXT,
+    trade_engine_title TEXT,
     market_name        TEXT    NOT NULL,
-    market_title       TEXT    NOT NULL,
-    market_id          INTEGER NOT NULL,
-    market_place       INTEGER NOT NULL,
+    market_title       TEXT,
+    market_id          INTEGER,
+    market_place       INTEGER,
     PRIMARY KEY(market_name, tech$effective_dt)
   )
 WITHOUT ROWID;

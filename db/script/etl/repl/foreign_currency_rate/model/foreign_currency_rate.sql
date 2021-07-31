@@ -8,8 +8,8 @@ CREATE TABLE foreign_currency_rate
     tech$hash_value    TEXT    NOT NULL,
     trade_date         TEXT    NOT NULL,
     id                 TEXT    NOT NULL,
-    nominal            INTEGER NOT NULL,
-    value              REAL    NOT NULL,
+    nominal            INTEGER,
+    value              REAL,
     PRIMARY KEY(trade_date, id, tech$effective_dt)
   )
 WITHOUT ROWID;

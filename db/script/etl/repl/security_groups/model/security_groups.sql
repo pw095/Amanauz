@@ -6,10 +6,10 @@ CREATE TABLE security_groups
     tech$expiration_dt TEXT    NOT NULL,
     tech$last_seen_dt  TEXT    NOT NULL,
     tech$hash_value    TEXT    NOT NULL,
-    id                 INTEGER NOT NULL,
+    id                 INTEGER,
     name               TEXT    NOT NULL,
-    title              TEXT    NOT NULL,
-    is_hidden          INTEGER NOT NULL,
+    title              TEXT,
+    is_hidden          INTEGER,
     PRIMARY KEY(name, tech$effective_dt)
   )
 WITHOUT ROWID;

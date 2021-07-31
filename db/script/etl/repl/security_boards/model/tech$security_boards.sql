@@ -6,15 +6,15 @@ CREATE TABLE tech$security_boards
     tech$expiration_dt TEXT    NOT NULL,
     tech$last_seen_dt  TEXT    NOT NULL,
     tech$hash_value    TEXT    NOT NULL,
-    id                 INTEGER NOT NULL,
-    board_group_id     INTEGER NOT NULL,
-    engine_id          INTEGER NOT NULL,
-    market_id          INTEGER NOT NULL,
+    id                 INTEGER,
+    board_group_id     INTEGER,
+    engine_id          INTEGER,
+    market_id          INTEGER,
     board_id           TEXT    NOT NULL,
-    board_title        TEXT    NOT NULL,
-    is_traded          INTEGER NOT NULL,
-    has_candles        INTEGER NOT NULL,
-    is_primary         INTEGER NOT NULL,
+    board_title        TEXT,
+    is_traded          INTEGER,
+    has_candles        INTEGER,
+    is_primary         INTEGER,
     PRIMARY KEY(board_id, tech$effective_dt)
   )
 WITHOUT ROWID;

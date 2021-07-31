@@ -7,9 +7,9 @@ CREATE TABLE security_collections
     tech$last_seen_dt  TEXT    NOT NULL,
     tech$hash_value    TEXT    NOT NULL,
     id                 INTEGER NOT NULL,
-    name               TEXT    NOT NULL,
-    title              TEXT    NOT NULL,
-    security_group_id  INTEGER NOT NULL,
+    name               TEXT,
+    title              TEXT,
+    security_group_id  INTEGER,
     PRIMARY KEY(id, tech$effective_dt)
   )
 WITHOUT ROWID;
