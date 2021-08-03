@@ -1,0 +1,19 @@
+INSERT
+  INTO master_data_security_type_map
+  (
+    tech$load_id,
+    tech$load_dttm,
+    table_name,
+    type_id,
+    type_name,
+    security_type_id
+  )
+VALUES
+  (
+    :tech$load_id,
+    :tech$load_dttm,
+    :table_name,
+    :type_id,
+    :type_name,
+    :security_type_id
+  )
