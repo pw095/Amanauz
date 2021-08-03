@@ -1,0 +1,1 @@
+DELETE FROM tech$master_data_security_type_map
