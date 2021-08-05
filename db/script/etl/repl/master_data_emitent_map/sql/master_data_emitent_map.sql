@@ -120,7 +120,6 @@ SELECT
  ON CONFLICT(source_system_code, emitent_code, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$last_seen_dt = excluded.tech$last_seen_dt,
            tech$load_id = excluded.tech$load_id,
            tech$hash_value = CASE
                                   WHEN tech$expiration_dt = '2999-12-31'
