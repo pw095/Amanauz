@@ -38,25 +38,25 @@ WITH
                                         emitent_code,
                                         emitent_short_name
                                    FROM src.master_data_emitent_map
-                                  WHERE tech$effective_dt >= :tech$effective_dt
-                                    AND NULLIF(emitent_code, '') IS NOT NULL)))
+                                  WHERE (1 = 1
+                                         OR tech$effective_dt >= :tech$effective_dt)
+                                    AND NULLIF(emitent_code, '')       IS NOT NULL
+                                    AND NULLIF(emitent_short_name, '') IS NOT NULL)))
           GROUP BY
                    tech$hash_key
      )
 SELECT
-       :tech$load_id                                                           AS tech$load_id,
+       :tech$load_id               AS tech$load_id,
        pre.tech$hash_key,
-       hub_master.tech$record_source,
+       'master_data'               AS tech$record_source,
        pre.tech$load_dt,
        pre.tech$last_seen_dt,
-       hub_master.tech$hash_key      AS emitent_master_hash_key,
-       hub_duplicate.tech$hash_key   AS emitent_duplicate_hash_key
+       hub_master.tech$hash_key    AS emitent_master_hash_key,
+       hub_duplicate.tech$hash_key AS emitent_duplicate_hash_key
   FROM w_pre pre
        JOIN
        hub_emitent hub_master
            ON hub_master.code = pre.emitent_short_name
-          AND hub_master.tech$record_source = 'master_data'
        JOIN
        hub_emitent hub_duplicate
            ON hub_duplicate.code = pre.emitent_code
-          AND hub_duplicate.tech$record_source = 'moex.com'
