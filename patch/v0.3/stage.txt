@@ -9,6 +9,8 @@
 .read master_data_emitent/data/tbl_entity_layer_map.sql
 .read master_data_emitent_map/data/tbl_entity.sql
 .read master_data_emitent_map/data/tbl_entity_layer_map.sql
+.read master_data_security_type_map/data/tbl_entity.sql
+.read master_data_security_type_map/data/tbl_entity_layer_map.sql
 .read default_data_board/data/tbl_entity.sql
 .read default_data_board/data/tbl_entity_layer_map.sql
 .read default_data_emitent/data/tbl_entity.sql
@@ -29,6 +31,7 @@
 .read master_data_ref_fin_statement/model/master_data_ref_fin_statement.sql
 .read master_data_emitent/model/master_data_emitent.sql
 .read master_data_emitent_map/model/master_data_emitent_map.sql
+.read master_data_security_type_map/model/master_data_security_type_map.sql
 .read default_data_board/model/default_data_board.sql
 .read default_data_emitent/model/default_data_emitent.sql
 .read default_data_security/model/default_data_security.sql
