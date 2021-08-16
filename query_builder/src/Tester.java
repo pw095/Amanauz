@@ -24,7 +24,7 @@ public class Tester {
         String destFileName     = "test\\destination.sql";
         Program.setPathToPatterns("..\\query_templates");
 
-        Program.InitialisePatternVars(destFileName, "");
+        Program.InitialisePatternVars(destFileName, "", "");
         Program.processEntityInFile(sourceFileName, entityName);
 
 //        Program.

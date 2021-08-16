@@ -17,6 +17,7 @@ public class ReplicationEntity extends PeriodEntity {
     static private final String loadExtensionScript = "load_extension.sql";
     static private final String dataTruncScript = "$$entity_name_truncate.sql";
     static private final String dataSingleScript = "$$entity_name.sql";
+    static private final String dataUpdateScript = "$$entity_name_update.sql";
     static private String etlSqlDirectory;
 
     private String getTechTruncateSQL() {
@@ -41,6 +42,11 @@ public class ReplicationEntity extends PeriodEntity {
 
     private String getSingleSQL() {
         String lReturn = sqlDirectory + dataSingleScript.replace("$$entity_name", getEntityCode());
+        return lReturn;
+    }
+
+    private String getUpdateSQL() {
+        String lReturn = sqlDirectory + dataUpdateScript.replace("$$entity_name", getEntityCode());
         return lReturn;
     }
 
@@ -96,6 +102,12 @@ public class ReplicationEntity extends PeriodEntity {
             try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
                 stmt.setLong(1, getFlowLoadId());
                 setInsertCount(getInsertCount() + stmt.executeUpdate());
+            }
+
+            // update SQL
+            sqlStmtToExecute = getQuery(getUpdateSQL());
+            try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
+                stmt.executeUpdate();
             }
         } catch (SQLException e) {
             e.printStackTrace();
