@@ -29,13 +29,18 @@ public class Program {
 
     }
 
-    public static void InitialisePatternVars(String destFileName, String destFileNameTech) {
+    public static void InitialisePatternVars(String destFileName, String destFileNameTech, String destFileNameUpd) {
 
         patternVars = new HashMap<>();
         if (!destFileName.isEmpty())
             patternVars.put("Pattern", destFileName);
         if (!destFileNameTech.isEmpty())
             patternVars.put("PatternTech", destFileNameTech);
+        if (!destFileNameTech.isEmpty())
+            patternVars.put("PatternTech", destFileNameTech);
+        if (!destFileNameUpd.isEmpty()) {
+            patternVars.put("PatternUpdate", destFileNameUpd);
+        }
     }
 
     /*
@@ -60,8 +65,9 @@ public class Program {
         String sourceFileName   = String.format("%s\\model\\%s.sql", EntityCatalog, entityName);
         String destFileName     = String.format("%s\\sql\\%s.sql", EntityCatalog, entityName);
         String destFileNameTech = String.format("%s\\sql\\tech$%s.sql", EntityCatalog, entityName);
+        String destFileNameUpd = String.format("%s\\sql\\%s_update.sql", EntityCatalog, entityName);
 
-        InitialisePatternVars(destFileName, destFileNameTech);
+        InitialisePatternVars(destFileName, destFileNameTech, destFileNameUpd);
         processEntityInFile(sourceFileName, entityName);
     }
 
