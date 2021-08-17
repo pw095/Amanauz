@@ -19,15 +19,15 @@ public class StageMasterDataEmitentMap extends org.data.FileEntity implements Ex
         String fullName;
         String shortName;
         String sourceSystemCode;
-        String emitentCode;
-        String emitentShortName;
+        String emitentSourceName;
+        String emitentFullName;
 
         public StageMasterDataEmitentMapData(String sourceSystemCode,
-                                             String emitentCode,
-                                             String emitentShortName) {
+                                             String emitentSourceName,
+                                             String emitentFullName) {
             this.sourceSystemCode = sourceSystemCode;
-            this.emitentCode = emitentCode;
-            this.emitentShortName = emitentShortName;
+            this.emitentSourceName = emitentSourceName;
+            this.emitentFullName = emitentFullName;
         }
     }
 
@@ -69,8 +69,8 @@ public class StageMasterDataEmitentMap extends org.data.FileEntity implements Ex
                 stmtUpdate.setLong(1, this.getFlowLoadId());
                 stmtUpdate.setString(2, this.getFlowLogStartTimestamp().format(dateTimeFormat));
                 stmtUpdate.setString(3, jter.sourceSystemCode);
-                stmtUpdate.setString(4, jter.emitentCode);
-                stmtUpdate.setString(5, jter.emitentShortName);
+                stmtUpdate.setString(4, jter.emitentSourceName);
+                stmtUpdate.setString(5, jter.emitentFullName);
                 stmtUpdate.addBatch();
             }
             setInsertCount(getInsertCount() + stmtUpdate.executeBatch().length);

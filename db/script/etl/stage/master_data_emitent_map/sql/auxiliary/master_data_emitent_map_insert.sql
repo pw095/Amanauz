@@ -4,14 +4,14 @@ INSERT
     tech$load_id,
     tech$load_dttm,
     source_system_code,
-    emitent_code,
-    emitent_short_name
+    emitent_source_name,
+    emitent_full_name
   )
 VALUES
   (
     :tech$load_id,
     :tech$load_dttm,
     :source_system_code,
-    :emitent_code,
-    :emitent_short_name
+    :emitent_source_name,
+    :emitent_full_name
   )

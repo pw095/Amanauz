@@ -7,8 +7,8 @@ INSERT
     tech$last_seen_dt,
     tech$hash_value,
     source_system_code,
-    emitent_code,
-    emitent_short_name
+    emitent_source_name,
+    emitent_full_name
   )
 SELECT
        :tech$load_id       AS tech$load_id,
@@ -17,23 +17,23 @@ SELECT
        tech$last_seen_dt,
        tech$hash_value,
        source_system_code,
-       emitent_code,
-       emitent_short_name
+       emitent_source_name,
+       emitent_full_name
   FROM (SELECT
                tech$effective_dt,
                tech$expiration_dt,
                tech$last_seen_dt,
                tech$hash_value,
                source_system_code,
-               emitent_code,
-               emitent_short_name
+               emitent_source_name,
+               emitent_full_name
           FROM tech$master_data_emitent_map src
          WHERE NOT EXISTS(SELECT
                                  NULL
                             FROM master_data_emitent_map sat
                            WHERE
                                  sat.source_system_code = src.source_system_code
-                             AND sat.emitent_code = src.emitent_code
+                             AND sat.emitent_source_name = src.emitent_source_name
                              AND sat.tech$expiration_dt = '2999-12-31')
          UNION ALL
         SELECT
@@ -57,8 +57,8 @@ SELECT
                tech$last_seen_dt,
                tech$hash_value,
                source_system_code,
-               emitent_code,
-               emitent_short_name
+               emitent_source_name,
+               emitent_full_name
           FROM (SELECT
                        tech$effective_dt,
                        tech$expiration_dt,
@@ -67,8 +67,8 @@ SELECT
                        tech$sat$expiration_dt,
                        tech$hash_value,
                        source_system_code,
-                       emitent_code,
-                       emitent_short_name,
+                       emitent_source_name,
+                       emitent_full_name,
                        CASE
                             WHEN rn = 1
                              AND fv_equal_flag = 'NON_EQUAL'
@@ -88,8 +88,8 @@ SELECT
                                DATE(src.tech$effective_dt, '-1 DAY') AS tech$sat$expiration_dt,
                                src.tech$hash_value,
                                src.source_system_code,
-                               src.emitent_code,
-                               src.emitent_short_name,
+                               src.emitent_source_name,
+                               src.emitent_full_name,
                                FIRST_VALUE(CASE
                                                 WHEN src.tech$hash_value != sat.tech$hash_value THEN
                                                     'NON_EQUAL'
@@ -102,11 +102,11 @@ SELECT
                                master_data_emitent_map sat
                                    ON
                                       sat.source_system_code = src.source_system_code
-                                  AND sat.emitent_code = src.emitent_code
+                                  AND sat.emitent_source_name = src.emitent_source_name
                                   AND sat.tech$effective_dt <= src.tech$effective_dt
                                   AND sat.tech$expiration_dt = '2999-12-31'
                         WINDOW wnd AS (PARTITION BY src.source_system_code,
-                                                    src.emitent_code
+                                                    src.emitent_source_name
                                            ORDER BY src.tech$effective_dt))
                  WHERE rn = 1 AND fv_equal_flag = 'NON_EQUAL'
                     OR rn > 1) src
@@ -117,7 +117,7 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
- ON CONFLICT(source_system_code, emitent_code, tech$effective_dt)
+ ON CONFLICT(source_system_code, emitent_source_name, tech$effective_dt)
  DO UPDATE
        SET tech$expiration_dt = excluded.tech$expiration_dt,
            tech$last_seen_dt = excluded.tech$last_seen_dt,
@@ -129,4 +129,4 @@ SELECT
                                   ELSE
                                       tech$hash_value
                              END,
-           emitent_short_name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.emitent_short_name ELSE emitent_short_name END
+           emitent_full_name = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.emitent_full_name ELSE emitent_full_name END

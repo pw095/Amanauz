@@ -105,8 +105,8 @@ public class Flow {
 
         entityList.add(new StageMasterDataRefCalendar(flow));
         entityList.add(new StageMasterDataEmitent(flow));
-
         entityList.add(new StageMasterDataEmitentMap(flow));
+
         entityList.add(new StageMasterDataRefFinStatement(flow));
         entityList.add(new StageDefaultDataBoard(flow));
         entityList.add(new StageDefaultDataEmitent(flow));
