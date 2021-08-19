@@ -51,9 +51,9 @@ WITH
                    tech$hash_key
      )
 SELECT
-       :tech$load_id               AS tech$load_id,
+       :tech$load_id                   AS tech$load_id,
        pre.tech$hash_key,
-       'moex.com'                  AS tech$record_source,
+       'master_data'                   AS tech$record_source,
        pre.tech$load_dt,
        pre.tech$last_seen_dt,
        emitent_master.tech$hash_key    AS emitent_master_hash_key,
