@@ -18,22 +18,24 @@ WITH
      w_raw AS
      (
          SELECT
-                sal.tech$hash_key,
-                hub_master.tech$hash_key    AS master_hash_key,
-                hub_duplicate.tech$hash_key AS duplicate_hash_key
-           FROM src.master_data_emitent_map src
-                JOIN
-                hub_emitent hub_master
-                    ON hub_master.code = src.emitent_full_name -- hub_master.tech$hash_key = sal.emitent_master_hash_key
-                JOIN
-                hub_emitent hub_duplicate
-                    ON hub_duplicate.code = src.emitent_source_name -- hub_duplicate.tech$hash_key = sal.emitent_duplicate_hash_key
-                JOIN
-                sal_emitent sal
-                    ON sal.emitent_master_hash_key = hub_master.tech$hash_key
-                   AND sal.emitent_duplicate_hash_key = hub_duplicate.tech$hash_key
-          WHERE src.tech$effective_dt >= :tech$effective_dt
-            AND src.tech$expiration_dt = '2999-12-31'
+                tech$hash_key,
+                tech$last_seen_dt,
+                max_tech$last_seen_dt,
+                CASE tech$last_seen_dt
+                     WHEN max_tech$last_seen_dt THEN
+                         'ACTIVE'
+                     ELSE
+                         'OBSOLETE'
+                END AS tech$active_flag,
+                emitent_master_hash_key,
+                emitent_duplicate_hash_key
+           FROM (SELECT
+                        tech$hash_key,
+                        tech$last_seen_dt,
+                        MAX(tech$last_seen_dt) OVER () AS max_tech$last_seen_dt,
+                        emitent_master_hash_key,
+                        emitent_duplicate_hash_key
+                   FROM sal_emitent)
      ),
      w_pre AS
      (
@@ -74,11 +76,11 @@ WITH
                            FROM w_raw raw
                                 JOIN
                                 sat_emitent_master_data emitent_master
-                                    ON emitent_master.tech$hash_key = raw.master_hash_key
+                                    ON emitent_master.tech$hash_key = lnk.emitent_master_hash_key
                                    AND emitent_master.tech$effective_dt >= :tech$effective_dt
                                 JOIN
                                 sat_emitent_moex emitent_moex
-                                    ON emitent_moex.tech$hash_key = raw.duplicate_hash_key
+                                    ON emitent_moex.tech$hash_key = lnk.emitent_duplicate_hash_key
                                    AND emitent_master.tech$effective_dt BETWEEN emitent_moex.tech$effective_dt AND emitent_moex.tech$expiration_dt
                           UNION ALL
                          SELECT
@@ -93,12 +95,13 @@ WITH
                            FROM w_raw raw
                                 JOIN
                                 sat_emitent_moex emitent_moex
-                                    ON emitent_moex.tech$hash_key = raw.duplicate_hash_key
+                                    ON emitent_moex.tech$hash_key = raw.emitent_duplicate_hash_key
                                    AND emitent_moex.tech$effective_dt >= :tech$effective_dt
                                 JOIN
                                 sat_emitent_master_data emitent_master
-                                    ON emitent_master.tech$hash_key = raw.master_hash_key
-                                   AND emitent_moex.tech$effective_dt BETWEEN emitent_master.tech$effective_dt AND emitent_master.tech$expiration_dt))
+                                    ON emitent_master.tech$hash_key = raw.emitent_master_hash_key
+                                   AND emitent_moex.tech$effective_dt BETWEEN emitent_master.tech$effective_dt AND emitent_master.tech$expiration_dt
+                          WHERE raw.tech$active_flag = 'ACTIVE'))
      )
 SELECT
        :tech$load_id                                                       AS tech$load_id,
