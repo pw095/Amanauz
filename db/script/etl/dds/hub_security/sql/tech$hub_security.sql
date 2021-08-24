@@ -57,7 +57,21 @@ WITH
                                 tech$expiration_dt,
                                 tech$last_seen_dt,
                                 security_id
-                           FROM src.security_daily_info_shares)
+                           FROM src.security_daily_info_shares
+                          UNION ALL
+                         SELECT
+                                tech$effective_dt,
+                                tech$expiration_dt,
+                                tech$last_seen_dt,
+                                index_id
+                           FROM src.index_security_weight
+                          UNION ALL
+                         SELECT
+                                tech$effective_dt,
+                                tech$expiration_dt,
+                                tech$last_seen_dt,
+                                security_id
+                           FROM src.index_security_weight)
                   WHERE security_id IS NOT NULL
                     AND security_id != ""
                   UNION ALL
