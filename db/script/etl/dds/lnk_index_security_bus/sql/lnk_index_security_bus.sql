@@ -17,7 +17,7 @@ SELECT
        tech$last_seen_dt,
        index_hash_key,
        security_hash_key
-  FROM tech$lnk_index_security
+  FROM tech$lnk_index_security_bus
  WHERE 1 = 1
 ON CONFLICT(tech$hash_key)
 DO UPDATE
