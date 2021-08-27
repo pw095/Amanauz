@@ -62,4 +62,3 @@ SELECT
                      NULL
                 FROM ref_calendar clndr
                WHERE clndr.clndr_dt = pre.trade_dt)
- ORDER BY trade_dt DESC
