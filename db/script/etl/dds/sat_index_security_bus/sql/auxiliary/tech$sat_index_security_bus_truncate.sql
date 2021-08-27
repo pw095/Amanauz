@@ -1,0 +1,1 @@
+DELETE FROM tech$sat_index_security_bus

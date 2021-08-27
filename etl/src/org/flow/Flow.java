@@ -101,9 +101,10 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "security_rate_shares"));
         */
 //        entityList.add(new ReplicationEntity(flow, "security_types"));
-/*
-
         entityList.add(new StageMasterDataRefCalendar(flow));
+        /*
+
+
         entityList.add(new StageMasterDataEmitent(flow));
         entityList.add(new StageMasterDataEmitentMap(flow));
 
@@ -125,14 +126,17 @@ public class Flow {
         entityList.clear();
 
 
-        entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
+//        entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
+
+        entityList.add(new ReplicationEntity(flow, "master_data_ref_calendar"));
+        
         /*
         entityList.add(new ReplicationEntity(flow, "master_data_security_type_map"));
         entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
         entityList.add(new ReplicationEntity(flow, "master_data_emitent"));
         entityList.add(new ReplicationEntity(flow, "default_data_emitent"));
 
-        entityList.add(new ReplicationEntity(flow, "master_data_ref_calendar"));
+
         entityList.add(new ReplicationEntity(flow, "master_data_emitent"));
         entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
 
@@ -151,9 +155,12 @@ public class Flow {
 /*
 
         entityList.add(new DetailDataEntity(flow, "ref_calendar"));
-        entityList.add(new DetailDataEntity(flow, "hub_board"));
         entityList.add(new DetailDataEntity(flow, "hub_emitent"));
+        */
+        entityList.add(new DetailDataEntity(flow, "ref_calendar"));
+        entityList.add(new DetailDataEntity(flow, "hub_board"));
         entityList.add(new DetailDataEntity(flow, "hub_security"));
+        /*
         entityList.add(new DetailDataEntity(flow, "hub_security_type"));
 */
 
