@@ -17,6 +17,7 @@ public class DetailDataEntity extends PeriodEntity {
     static private final String loadExtensionScript = "load_extension.sql";
     static private final String dataTruncScript = "$$entity_name_truncate.sql";
     static private final String dataSingleScript = "$$entity_name.sql";
+    static private final String dataUpdateScript = "$$entity_name_update.sql";
     static private String etlSqlDirectory;
 
     private String getTechTruncateSQL() {
@@ -41,6 +42,11 @@ public class DetailDataEntity extends PeriodEntity {
 
     private String getSingleSQL() {
         String lReturn = sqlDirectory + dataSingleScript.replace("$$entity_name", getEntityCode());
+        return lReturn;
+    }
+
+    private String getUpdateSQL() {
+        String lReturn = sqlDirectory + dataUpdateScript.replace("$$entity_name", getEntityCode());
         return lReturn;
     }
 
@@ -80,13 +86,29 @@ public class DetailDataEntity extends PeriodEntity {
             // insert tech
 
             sqlStmtToExecute = getQuery(getTechSingleSQL());
-            if ( sqlStmtToExecute != null ) {
+            try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
+                switch (this.getEntityCode()) {
+                    case "sat_sal_emitent":
+                        stmt.setString(1, getEffectiveFromDt());
+                        stmt.setString(2, getEffectiveFromDt());/*
+                        stmt.setString(3, getEffectiveFromDt());
+                        stmt.setString(4, getEffectiveFromDt());*/
+                        stmt.setLong(3, getFlowLoadId());
+                        break;
+                    default:
+                        stmt.setLong(1, getFlowLoadId());
+                        stmt.setString(2, getEffectiveFromDt());
+                        break;
+                }
+                stmt.executeUpdate();
+            }
+/*            if ( sqlStmtToExecute != null ) {
                 try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
                     stmt.setLong(1, getFlowLoadId());
                     stmt.setString(2, getEffectiveFromDt());
                     stmt.executeUpdate();
                 }
-            }
+            }*/
 
             // merge dest in dds
             sqlStmtToExecute = getQuery(getSingleSQL());
@@ -98,6 +120,17 @@ public class DetailDataEntity extends PeriodEntity {
                 }
             }
 
+            // update SQL
+            switch (this.getEntityCode()) {
+                case "sat_sal_emitent":
+                    sqlStmtToExecute = getQuery(getUpdateSQL());
+                    try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
+                        stmt.executeUpdate();
+                    }
+                    break;
+                default:
+                    break;
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }

@@ -1,0 +1,57 @@
+.open db/file/dds.db
+.cd db/script/test/dds/sat_sal_emitent
+
+.read model/cmp$sat_sal_emitent.sql
+.read model/corr$sat_sal_emitent.sql
+
+.read pre/delete.sql
+.read common/load_extension.sql
+
+
+.cd scenario_1.1.1.1
+.read run.sql
+
+.cd ../scenario_1.1.1.2
+.read run.sql
+
+.cd ../scenario_1.1.2.1
+.read run.sql
+
+.cd ../scenario_1.1.2.2
+.read run.sql
+
+.cd ../scenario_1.2.1.1
+.read run.sql
+
+.cd ../scenario_1.2.1.2
+.read run.sql
+
+.cd ../scenario_1.2.2.1
+.read run.sql
+
+.cd ../scenario_1.2.2.2
+.read run.sql
+
+.cd ../scenario_2.1.1.1
+.read run.sql
+
+.cd ../scenario_2.1.1.2
+.read run.sql
+
+.cd ../scenario_2.1.2.1
+.read run.sql
+
+.cd ../scenario_2.1.2.2
+.read run.sql
+
+.cd ../scenario_2.1.3.1
+.read run.sql
+
+.cd ../scenario_2.1.3.2
+.read run.sql
+
+.cd ../scenario_2.1.4.1
+.read run.sql
+
+.cd ../scenario_2.1.4.2
+.read run.sql

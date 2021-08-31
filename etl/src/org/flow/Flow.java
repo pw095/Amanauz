@@ -119,7 +119,7 @@ public class Flow {
         entityList.add(new StageDefaultDataEmitent(flow));
         entityList.add(new StageMasterDataSecurityTypeMap(flow));
         */
-        entityList.add(new StageMasterDataEmitentMap(flow));
+//        entityList.add(new StageMasterDataEmitentMap(flow));
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
@@ -128,7 +128,7 @@ public class Flow {
 
 //        entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
 
-        entityList.add(new ReplicationEntity(flow, "master_data_ref_calendar"));
+//        entityList.add(new ReplicationEntity(flow, "master_data_ref_calendar"));
         
         /*
         entityList.add(new ReplicationEntity(flow, "master_data_security_type_map"));
@@ -147,6 +147,10 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "default_data_security_type"));
         entityList.add(new ReplicationEntity(flow, "default_data_currency"));
         */
+
+/*        entityList.add(new ReplicationEntity(flow, "master_data_emitent"));
+        entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));*/
+
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
@@ -155,15 +159,20 @@ public class Flow {
 /*
 
         entityList.add(new DetailDataEntity(flow, "ref_calendar"));
-        entityList.add(new DetailDataEntity(flow, "hub_emitent"));
+
         */
-        entityList.add(new DetailDataEntity(flow, "ref_calendar"));
-        entityList.add(new DetailDataEntity(flow, "hub_board"));
-        entityList.add(new DetailDataEntity(flow, "hub_security"));
+//        entityList.add(new DetailDataEntity(flow, "ref_calendar"));
+//        entityList.add(new DetailDataEntity(flow, "hub_board"));
+//        entityList.add(new DetailDataEntity(flow, "hub_security"));
         /*
         entityList.add(new DetailDataEntity(flow, "hub_security_type"));
 */
-
+//        entityList.add(new DetailDataEntity(flow, "sat_sal_emitent"));
+/*        entityList.add(new DetailDataEntity(flow, "hub_emitent"));
+        entityList.add(new DetailDataEntity(flow, "sat_emitent_moex"));
+        entityList.add(new DetailDataEntity(flow, "sat_emitent_master_data"));
+        entityList.add(new DetailDataEntity(flow, "sal_emitent"));*/
+        entityList.add(new DetailDataEntity(flow, "sat_sal_emitent"));
         for (AbstractEntity entity : entityList) {
             entity.call();
         }

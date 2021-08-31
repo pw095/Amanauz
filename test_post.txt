@@ -1,0 +1,6 @@
+.open db/file/dds.db
+.cd db/script/test/dds/sat_sal_emitent
+
+.read post/cmp$sat_sal_emitent.sql
+
+SELECT COUNT(*) FROM cmp$sat_sal_emitent;

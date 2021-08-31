@@ -87,10 +87,19 @@ public class ReplicationEntity extends PeriodEntity {
                         stmt.setLong(2, getFlowLoadId());
                         break;
                     case DDS:
-                        System.out.println("DDS: " + getEffectiveFromDt());
-                        stmt.setLong(1, getFlowLoadId());
-                        stmt.setString(2, getEffectiveFromDt());
-                        break;
+                        switch (this.getEntityCode()) {
+                            case "sat_sal_emitent":
+                                stmt.setString(1, getEffectiveFromDt());
+                                stmt.setString(2, getEffectiveFromDt());
+                                stmt.setString(3, getEffectiveFromDt());
+                                stmt.setString(4, getEffectiveFromDt());
+                                stmt.setLong(5, getFlowLoadId());
+                                break;
+                            default:
+                                stmt.setLong(1, getFlowLoadId());
+                                stmt.setString(2, getEffectiveFromDt());
+                                break;
+                        }
                     default:
                         break;
                 }

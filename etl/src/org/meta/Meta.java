@@ -116,6 +116,8 @@ public final class Meta {
             }
 
             entity.setEffectiveToDt(rllEffectiveToDt);
+/*            System.out.println("entity.getEntityLayerMapId = " + entity.getEntityLayerMapId());
+            System.out.println("rllEffectiveToDt = " + rllEffectiveToDt);*/
 
         } catch (SQLException e) {
             e.printStackTrace();

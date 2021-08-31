@@ -33,4 +33,6 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code = 'sal_emitent')) parent;
+                         AND ent.ent_code IN ('sal_emitent',
+                                              'sat_emitent_master_data',
+                                              'sat_emitent_moex'))) parent;

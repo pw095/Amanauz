@@ -65,6 +65,7 @@ WITH
                         inn,
                         okpo
                    FROM (SELECT
+                                raw.tech$active_flag,
                                 raw.tech$hash_key,
                                 emitent_master.tech$effective_dt,
                                 emitent_master.full_name,
@@ -76,14 +77,15 @@ WITH
                            FROM w_raw raw
                                 JOIN
                                 sat_emitent_master_data emitent_master
-                                    ON emitent_master.tech$hash_key = lnk.emitent_master_hash_key
+                                    ON emitent_master.tech$hash_key = raw.emitent_master_hash_key
                                    AND emitent_master.tech$effective_dt >= :tech$effective_dt
-                                JOIN
+                                LEFT JOIN
                                 sat_emitent_moex emitent_moex
-                                    ON emitent_moex.tech$hash_key = lnk.emitent_duplicate_hash_key
+                                    ON emitent_moex.tech$hash_key = raw.emitent_duplicate_hash_key
                                    AND emitent_master.tech$effective_dt BETWEEN emitent_moex.tech$effective_dt AND emitent_moex.tech$expiration_dt
                           UNION ALL
                          SELECT
+                                raw.tech$active_flag,
                                 raw.tech$hash_key,
                                 emitent_moex.tech$effective_dt,
                                 emitent_master.full_name,
@@ -100,8 +102,9 @@ WITH
                                 JOIN
                                 sat_emitent_master_data emitent_master
                                     ON emitent_master.tech$hash_key = raw.emitent_master_hash_key
-                                   AND emitent_moex.tech$effective_dt BETWEEN emitent_master.tech$effective_dt AND emitent_master.tech$expiration_dt
-                          WHERE raw.tech$active_flag = 'ACTIVE'))
+                                   AND emitent_moex.tech$effective_dt BETWEEN emitent_master.tech$effective_dt AND emitent_master.tech$expiration_dt)
+                          WHERE :tech$effective_dt = :min_tech$effective_dt
+                             OR tech$active_flag = 'ACTIVE')
      )
 SELECT
        :tech$load_id                                                       AS tech$load_id,
