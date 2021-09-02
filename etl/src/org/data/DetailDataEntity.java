@@ -18,6 +18,7 @@ public class DetailDataEntity extends PeriodEntity {
     static private final String dataTruncScript = "$$entity_name_truncate.sql";
     static private final String dataSingleScript = "$$entity_name.sql";
     static private final String dataUpdateScript = "$$entity_name_update.sql";
+    static private final String dataDeleteScript = "$$entity_name_delete.sql";
     static private String etlSqlDirectory;
 
     private String getTechTruncateSQL() {
@@ -42,6 +43,11 @@ public class DetailDataEntity extends PeriodEntity {
 
     private String getSingleSQL() {
         String lReturn = sqlDirectory + dataSingleScript.replace("$$entity_name", getEntityCode());
+        return lReturn;
+    }
+
+    private String getDeleteSQL() {
+        String lReturn = sqlDirectory + dataDeleteScript.replace("$$entity_name", getEntityCode());
         return lReturn;
     }
 
@@ -84,7 +90,6 @@ public class DetailDataEntity extends PeriodEntity {
             }
 
             // insert tech
-
             sqlStmtToExecute = getQuery(getTechSingleSQL());
             try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
                 switch (this.getEntityCode()) {
@@ -102,17 +107,21 @@ public class DetailDataEntity extends PeriodEntity {
                 }
                 stmt.executeUpdate();
             }
-/*            if ( sqlStmtToExecute != null ) {
-                try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
-                    stmt.setLong(1, getFlowLoadId());
-                    stmt.setString(2, getEffectiveFromDt());
-                    stmt.executeUpdate();
-                }
-            }*/
+
+            // delete SQL
+            switch (this.getEntityCode()) {
+                case "sat_sal_emitent":
+                    sqlStmtToExecute = getQuery(getDeleteSQL());
+                    try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
+                        stmt.executeUpdate();
+                    }
+                    break;
+                default:
+                    break;
+            }
 
             // merge dest in dds
             sqlStmtToExecute = getQuery(getSingleSQL());
-            //System.out.println()
             if ( sqlStmtToExecute != null ) {
                 try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
                     stmt.setLong(1, getFlowLoadId());
@@ -125,6 +134,7 @@ public class DetailDataEntity extends PeriodEntity {
                 case "sat_sal_emitent":
                     sqlStmtToExecute = getQuery(getUpdateSQL());
                     try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
+                        stmt.setLong(1, getFlowLoadId());
                         stmt.executeUpdate();
                     }
                     break;
