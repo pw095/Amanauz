@@ -6,21 +6,82 @@
 .read hub_board/data/tbl_entity.sql
 .read hub_board/data/tbl_entity_layer_map.sql
 .read hub_board/data/tbl_elm_dependency.sql
+
 .read hub_emitent/data/tbl_entity.sql
 .read hub_emitent/data/tbl_entity_layer_map.sql
 .read hub_emitent/data/tbl_elm_dependency.sql
+
+.read sat_emitent_moex/data/tbl_entity.sql
+.read sat_emitent_moex/data/tbl_entity_layer_map.sql
+.read sat_emitent_moex/data/tbl_elm_dependency.sql
+
+.read sat_emitent_master_data/data/tbl_entity.sql
+.read sat_emitent_master_data/data/tbl_entity_layer_map.sql
+.read sat_emitent_master_data/data/tbl_elm_dependency.sql
+
 .read hub_security/data/tbl_entity.sql
 .read hub_security/data/tbl_entity_layer_map.sql
 .read hub_security/data/tbl_elm_dependency.sql
+
 .read hub_security_type/data/tbl_entity.sql
 .read hub_security_type/data/tbl_entity_layer_map.sql
 .read hub_security_type/data/tbl_elm_dependency.sql
+
 .read ref_calendar/data/tbl_entity.sql
 .read ref_calendar/data/tbl_entity_layer_map.sql
 .read ref_calendar/data/tbl_elm_dependency.sql
+
 .read ref_currency/data/tbl_entity.sql
 .read ref_currency/data/tbl_entity_layer_map.sql
 .read ref_currency/data/tbl_elm_dependency.sql
+
+.read sat_security/data/tbl_entity.sql
+.read sat_security/data/tbl_entity_layer_map.sql
+.read sat_security/data/tbl_elm_dependency.sql
+
+.read sat_security_bond/data/tbl_entity.sql
+.read sat_security_bond/data/tbl_entity_layer_map.sql
+.read sat_security_bond/data/tbl_elm_dependency.sql
+
+.read lnk_security_board/data/tbl_entity.sql
+.read lnk_security_board/data/tbl_entity_layer_map.sql
+.read lnk_security_board/data/tbl_elm_dependency.sql
+
+.read sat_security_board/data/tbl_entity.sql
+.read sat_security_board/data/tbl_entity_layer_map.sql
+.read sat_security_board/data/tbl_elm_dependency.sql
+
+.read lnk_security_type/data/tbl_entity.sql
+.read lnk_security_type/data/tbl_entity_layer_map.sql
+.read lnk_security_type/data/tbl_elm_dependency.sql
+
+.read lnk_emitent_security/data/tbl_entity.sql
+.read lnk_emitent_security/data/tbl_entity_layer_map.sql
+.read lnk_emitent_security/data/tbl_elm_dependency.sql
+
+.read sal_emitent/data/tbl_entity.sql
+.read sal_emitent/data/tbl_entity_layer_map.sql
+.read sal_emitent/data/tbl_elm_dependency.sql
+
+.read sat_sal_emitent/data/tbl_entity.sql
+.read sat_sal_emitent/data/tbl_entity_layer_map.sql
+.read sat_sal_emitent/data/tbl_elm_dependency.sql
+
+.read lnk_index_security/data/tbl_entity.sql
+.read lnk_index_security/data/tbl_entity_layer_map.sql
+.read lnk_index_security/data/tbl_elm_dependency.sql
+
+.read sat_index_security/data/tbl_entity.sql
+.read sat_index_security/data/tbl_entity_layer_map.sql
+.read sat_index_security/data/tbl_elm_dependency.sql
+
+.read lnk_index_security_bus/data/tbl_entity.sql
+.read lnk_index_security_bus/data/tbl_entity_layer_map.sql
+.read lnk_index_security_bus/data/tbl_elm_dependency.sql
+
+.read sat_index_security_bus/data/tbl_entity.sql
+.read sat_index_security_bus/data/tbl_entity_layer_map.sql
+.read sat_index_security_bus/data/tbl_elm_dependency.sql
 .cd ../../../file
 
 .open dds.db
@@ -29,6 +90,13 @@
 .read hub_board/model/hub_board.sql
 .read hub_emitent/model/tech$hub_emitent.sql
 .read hub_emitent/model/hub_emitent.sql
+
+.read sat_emitent_moex/model/tech$sat_emitent_moex.sql
+.read sat_emitent_moex/model/sat_emitent_moex.sql
+
+.read sat_emitent_master_data/model/tech$sat_emitent_master_data.sql
+.read sat_emitent_master_data/model/sat_emitent_master_data.sql
+
 .read hub_security/model/tech$hub_security.sql
 .read hub_security/model/hub_security.sql
 .read hub_security_type/model/tech$hub_security_type.sql
@@ -37,4 +105,41 @@
 .read ref_calendar/model/ref_calendar.sql
 .read ref_currency/model/tech$ref_currency.sql
 .read ref_currency/model/ref_currency.sql
+
+.read sat_security/model/tech$sat_security.sql
+.read sat_security/model/sat_security.sql
+
+.read sat_security_bond/model/tech$sat_security_bond.sql
+.read sat_security_bond/model/sat_security_bond.sql
+
+.read lnk_security_board/model/tech$lnk_security_board.sql
+.read lnk_security_board/model/lnk_security_board.sql
+
+.read sat_security_board/model/tech$sat_security_board.sql
+.read sat_security_board/model/sat_security_board.sql
+
+.read lnk_security_type/model/tech$lnk_security_type.sql
+.read lnk_security_type/model/lnk_security_type.sql
+
+.read lnk_emitent_security/model/tech$lnk_emitent_security.sql
+.read lnk_emitent_security/model/lnk_emitent_security.sql
+
+.read sal_emitent/model/tech$sal_emitent.sql
+.read sal_emitent/model/sal_emitent.sql
+
+.read sat_sal_emitent/model/tech$sat_sal_emitent.sql
+.read sat_sal_emitent/model/sat_sal_emitent.sql
+
+.read lnk_index_security/model/tech$lnk_index_security.sql
+.read lnk_index_security/model/lnk_index_security.sql
+
+.read sat_index_security/model/tech$sat_index_security.sql
+.read sat_index_security/model/sat_index_security.sql
+
+.read lnk_index_security_bus/model/tech$lnk_index_security_bus.sql
+.read lnk_index_security_bus/model/lnk_index_security_bus.sql
+
+.read sat_index_security_bus/model/tech$sat_index_security_bus.sql
+.read sat_index_security_bus/model/sat_index_security_bus.sql
+
 .quit

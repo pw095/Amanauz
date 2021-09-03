@@ -8,7 +8,6 @@ CREATE TABLE tech$sat_security_board
     tech$record_source TEXT    NOT NULL,
     tech$hash_value    TEXT    NOT NULL,
     lot_size           INTEGER NOT NULL,
-    PRIMARY KEY(tech$hash_key),
-    UNIQUE(tech$hash_key, tech$effective_dt)
+    PRIMARY KEY(tech$hash_key, tech$effective_dt)
   )
 WITHOUT ROWID;

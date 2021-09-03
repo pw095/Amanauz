@@ -47,7 +47,7 @@ WITH
                         weight
                    FROM (SELECT
                                 raw.tech$hash_key,
-                                lnk_ind_sec.trade_dt          AS tech$effective_dt,
+                                lnk_ind_sec.trade_dt        AS tech$effective_dt,
                                 sat_ind_sec.tech$hash_value,
                                 sat_ind_sec.weight
                            FROM w_raw raw
@@ -62,12 +62,11 @@ WITH
                                    AND sat_ind_sec.tech$effective_dt >= :tech$effective_dt
                           WHERE :tech$effective_dt = :min_tech$effective_dt
                              OR raw.tech$active_flag = 'ACTIVE')
-                                  WINDOW wnd AS (PARTITION BY tech$hash_key
-                                                     ORDER BY tech$effective_dt))
-                           WHERE tech$hash_value != lag_hash_value
-                              OR lag_hash_value IS NULL
+                 WINDOW wnd AS (PARTITION BY tech$hash_key
+                                    ORDER BY tech$effective_dt))
+          WHERE tech$hash_value != lag_hash_value
+             OR lag_hash_value IS NULL
      )
-SELECT COUNT(distinct tech$hash_key) AS cnt from (
 SELECT
        :tech$load_id                                                       AS tech$load_id,
        tech$hash_key,
@@ -78,4 +77,4 @@ SELECT
        weight
   FROM w_pre
 WINDOW wnd AS (PARTITION BY tech$hash_key
-                   ORDER BY tech$effective_dt))
+                   ORDER BY tech$effective_dt)

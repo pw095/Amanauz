@@ -1,7 +1,7 @@
 UPDATE sat_sal_emitent AS sat
    SET tech$load_id       = :tech$load_id,
-       tech$expiration_dt = (SELECT DATE(MAX(tech$last_seen_dt) OVER ())
-                                    -- MAX(tech$last_seen_dt)
+       tech$expiration_dt = (SELECT
+                                    MAX(tech$last_seen_dt)
                                FROM sal_emitent src
                               WHERE src.tech$hash_key = sat.tech$hash_key)
  WHERE sat.tech$expiration_dt = '2999-12-31'

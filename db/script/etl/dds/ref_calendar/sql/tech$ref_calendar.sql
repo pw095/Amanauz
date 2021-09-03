@@ -7,12 +7,21 @@ INSERT
     clndr_dt,
     holiday_flag
   )
+WITH
+     w_pre AS
+     (
+         SELECT
+                tech$effective_dt AS tech$load_dt,
+                full_date         AS clndr_dt,
+                holiday_flag
+           FROM src.master_data_ref_calendar
+          WHERE tech$expiration_dt = '2999-12-31'
+            AND tech$effective_dt >= :tech$effective_dt
+     )
 SELECT
        :tech$load_id,
-       tech$effective_dt AS tech$load_dt,
+       tech$load_dt,
        'master_data'     AS tech$record_source,
-       full_date         AS clndr_dt,
+       clndr_dt,
        holiday_flag
-  FROM src.master_data_ref_calendar
- WHERE tech$expiration_dt = '2999-12-31'
-   AND tech$effective_dt >= :tech$effective_dt
+  FROM w_pre

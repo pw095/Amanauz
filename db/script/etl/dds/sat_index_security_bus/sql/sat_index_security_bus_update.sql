@@ -1,7 +1,7 @@
 UPDATE sat_index_security_bus AS sat
    SET tech$load_id       = :tech$load_id,
        tech$expiration_dt = (SELECT
-                                    DATE(MAX(tech$last_seen_dt) OVER (), '-1 day')
+                                    MAX(tech$last_seen_dt)
                                FROM lnk_index_security_bus src
                               WHERE src.tech$hash_key = sat.tech$hash_key)
  WHERE sat.tech$expiration_dt = '2999-12-31'

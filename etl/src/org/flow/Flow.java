@@ -101,78 +101,71 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "security_rate_shares"));
         */
 //        entityList.add(new ReplicationEntity(flow, "security_types"));
-        entityList.add(new StageMasterDataRefCalendar(flow));
-        /*
 
 
-        entityList.add(new StageMasterDataEmitent(flow));
-        entityList.add(new StageMasterDataEmitentMap(flow));
-
-        entityList.add(new StageMasterDataRefFinStatement(flow));
         entityList.add(new StageDefaultDataBoard(flow));
         entityList.add(new StageDefaultDataEmitent(flow));
+        entityList.add(new StageDefaultDataCurrency(flow));
         entityList.add(new StageDefaultDataSecurity(flow));
         entityList.add(new StageDefaultDataSecurityType(flow));
-        entityList.add(new StageDefaultDataCurrency(flow));
 
-        entityList.add(new StageMasterDataEmitent(flow));
-        entityList.add(new StageDefaultDataEmitent(flow));
         entityList.add(new StageMasterDataSecurityTypeMap(flow));
-        */
-//        entityList.add(new StageMasterDataEmitentMap(flow));
+        entityList.add(new StageMasterDataEmitentMap(flow));
+        entityList.add(new StageMasterDataEmitent(flow));
+        entityList.add(new StageMasterDataRefFinStatement(flow));
+        entityList.add(new StageMasterDataRefCalendar(flow));
+
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
         entityList.clear();
 
-
-//        entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
-
-//        entityList.add(new ReplicationEntity(flow, "master_data_ref_calendar"));
-        
-        /*
         entityList.add(new ReplicationEntity(flow, "master_data_security_type_map"));
         entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
         entityList.add(new ReplicationEntity(flow, "master_data_emitent"));
-        entityList.add(new ReplicationEntity(flow, "default_data_emitent"));
-
-
-        entityList.add(new ReplicationEntity(flow, "master_data_emitent"));
-        entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
-
         entityList.add(new ReplicationEntity(flow, "master_data_ref_fin_statement"));
+        entityList.add(new ReplicationEntity(flow, "master_data_ref_calendar"));
+
         entityList.add(new ReplicationEntity(flow, "default_data_board"));
         entityList.add(new ReplicationEntity(flow, "default_data_emitent"));
+        entityList.add(new ReplicationEntity(flow, "default_data_currency"));
         entityList.add(new ReplicationEntity(flow, "default_data_security"));
         entityList.add(new ReplicationEntity(flow, "default_data_security_type"));
-        entityList.add(new ReplicationEntity(flow, "default_data_currency"));
-        */
-
-/*        entityList.add(new ReplicationEntity(flow, "master_data_emitent"));
-        entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));*/
 
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
         entityList.clear();
 
-/*
 
-        entityList.add(new DetailDataEntity(flow, "ref_calendar"));
-
-        */
-//        entityList.add(new DetailDataEntity(flow, "ref_calendar"));
-//        entityList.add(new DetailDataEntity(flow, "hub_board"));
-//        entityList.add(new DetailDataEntity(flow, "hub_security"));
-        /*
+        entityList.add(new DetailDataEntity(flow, "hub_board"));
+        entityList.add(new DetailDataEntity(flow, "hub_emitent"));
+        entityList.add(new DetailDataEntity(flow, "hub_security"));
         entityList.add(new DetailDataEntity(flow, "hub_security_type"));
-*/
-//        entityList.add(new DetailDataEntity(flow, "sat_sal_emitent"));
-/*        entityList.add(new DetailDataEntity(flow, "hub_emitent"));
+        entityList.add(new DetailDataEntity(flow, "ref_calendar"));
+        entityList.add(new DetailDataEntity(flow, "ref_currency"));
+
+        entityList.add(new DetailDataEntity(flow, "sat_security"));
+        entityList.add(new DetailDataEntity(flow, "sat_security_bond"));
+
+        entityList.add(new DetailDataEntity(flow, "lnk_security_board"));
+        entityList.add(new DetailDataEntity(flow, "sat_security_board"));
+
+        entityList.add(new DetailDataEntity(flow, "lnk_security_type"));
+        entityList.add(new DetailDataEntity(flow, "lnk_emitent_security"));
+
         entityList.add(new DetailDataEntity(flow, "sat_emitent_moex"));
         entityList.add(new DetailDataEntity(flow, "sat_emitent_master_data"));
-        entityList.add(new DetailDataEntity(flow, "sal_emitent"));*/
+
+        entityList.add(new DetailDataEntity(flow, "sal_emitent"));
         entityList.add(new DetailDataEntity(flow, "sat_sal_emitent"));
+
+        entityList.add(new DetailDataEntity(flow, "lnk_index_security"));
+        entityList.add(new DetailDataEntity(flow, "sat_index_security"));
+
+        entityList.add(new DetailDataEntity(flow, "lnk_index_security_bus"));
+        entityList.add(new DetailDataEntity(flow, "sat_index_security_bus"));
+
         for (AbstractEntity entity : entityList) {
             entity.call();
         }

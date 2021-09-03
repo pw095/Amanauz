@@ -93,16 +93,15 @@ public class DetailDataEntity extends PeriodEntity {
             sqlStmtToExecute = getQuery(getTechSingleSQL());
             try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
                 switch (this.getEntityCode()) {
+                    case "sat_index_security_bus":
                     case "sat_sal_emitent":
                         stmt.setString(1, getEffectiveFromDt());
-                        stmt.setString(2, getEffectiveFromDt());/*
-                        stmt.setString(3, getEffectiveFromDt());
-                        stmt.setString(4, getEffectiveFromDt());*/
+                        stmt.setString(2, "2000-01-01");
                         stmt.setLong(3, getFlowLoadId());
                         break;
                     default:
-                        stmt.setLong(1, getFlowLoadId());
-                        stmt.setString(2, getEffectiveFromDt());
+                        stmt.setString(1, getEffectiveFromDt());
+                        stmt.setLong(2, getFlowLoadId());
                         break;
                 }
                 stmt.executeUpdate();
@@ -110,6 +109,7 @@ public class DetailDataEntity extends PeriodEntity {
 
             // delete SQL
             switch (this.getEntityCode()) {
+                case "sat_index_security_bus":
                 case "sat_sal_emitent":
                     sqlStmtToExecute = getQuery(getDeleteSQL());
                     try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
@@ -131,6 +131,7 @@ public class DetailDataEntity extends PeriodEntity {
 
             // update SQL
             switch (this.getEntityCode()) {
+                case "sat_index_security_bus":
                 case "sat_sal_emitent":
                     sqlStmtToExecute = getQuery(getUpdateSQL());
                     try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
