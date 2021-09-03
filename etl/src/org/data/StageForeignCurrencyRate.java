@@ -50,14 +50,23 @@ public class StageForeignCurrencyRate extends PeriodEntity implements CbrSourceE
         String urlStringRaw = "http://www.cbr.ru/scripts/XML_dynamic.asp?VAL_NM_RQ=";
         String urlStringData;
         Document document;
-        urlStringData = urlStringRaw.concat("R01010")
-                .concat("&date_req1=")
-                .concat(LocalDate.parse(this.getEffectiveFromDt(), dateFormat).format(cbrPutDateFormat))
-                .concat("&date_req2=")
-                .concat(LocalDate.parse(this.getEffectiveToDt(), dateFormat).format(cbrPutDateFormat));
+        ArrayList<String> currencyList = new ArrayList<>();
+        currencyList.add("R01239"); // Евро
+        currencyList.add("R01235"); // Доллар США
+        currencyList.add("R01035"); // Фунт стерлингов Соединенного королевства
+        currencyList.add("R01010"); // Австралийский доллар
+        currencyList.add("R01265"); // Израильский новый шекель
+        currencyList.add("R01265C"); // Новый израильский шекель
 
-        document = load(urlStringData);
-        saveData(stmtUpdate, accumulateData(document));
+        for (String lString : currencyList) {
+            urlStringData = urlStringRaw.concat(lString)
+                    .concat("&date_req1=")
+                    .concat(LocalDate.parse(this.getEffectiveFromDt(), dateFormat).format(cbrPutDateFormat))
+                    .concat("&date_req2=")
+                    .concat(LocalDate.parse(this.getEffectiveToDt(), dateFormat).format(cbrPutDateFormat));
+            document = load(urlStringData);
+            saveData(stmtUpdate, accumulateData(document));
+        }
     }
 
     @Override

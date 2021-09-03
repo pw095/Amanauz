@@ -71,9 +71,10 @@ public class Flow {
 
 //        Данные справочника с cbr.ru, лист 1
         entityList.add(new StageForeignCurrencyDictionary(flow)); // OK
+        */
 //        Данные не из справочника, но лист тоже всегда 1.
         entityList.add(new StageForeignCurrencyRate(flow)); // OK
-
+/*
 //        Данные за 1 день, но много листов
         entityList.add(new StageSecurityEmitentMap(flow)); // OK
 //        Данные за несколько дней, листов много
@@ -103,6 +104,7 @@ public class Flow {
 //        entityList.add(new ReplicationEntity(flow, "security_types"));
 
 
+/*
         entityList.add(new StageDefaultDataBoard(flow));
         entityList.add(new StageDefaultDataEmitent(flow));
         entityList.add(new StageDefaultDataCurrency(flow));
@@ -114,12 +116,14 @@ public class Flow {
         entityList.add(new StageMasterDataEmitent(flow));
         entityList.add(new StageMasterDataRefFinStatement(flow));
         entityList.add(new StageMasterDataRefCalendar(flow));
+*/
 
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
         entityList.clear();
 
+/*
         entityList.add(new ReplicationEntity(flow, "master_data_security_type_map"));
         entityList.add(new ReplicationEntity(flow, "master_data_emitent_map"));
         entityList.add(new ReplicationEntity(flow, "master_data_emitent"));
@@ -131,13 +135,14 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "default_data_currency"));
         entityList.add(new ReplicationEntity(flow, "default_data_security"));
         entityList.add(new ReplicationEntity(flow, "default_data_security_type"));
+*/
 
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
         entityList.clear();
 
-
+/*
         entityList.add(new DetailDataEntity(flow, "hub_board"));
         entityList.add(new DetailDataEntity(flow, "hub_emitent"));
         entityList.add(new DetailDataEntity(flow, "hub_security"));
@@ -165,6 +170,7 @@ public class Flow {
 
         entityList.add(new DetailDataEntity(flow, "lnk_index_security_bus"));
         entityList.add(new DetailDataEntity(flow, "sat_index_security_bus"));
+*/
 
         for (AbstractEntity entity : entityList) {
             entity.call();
