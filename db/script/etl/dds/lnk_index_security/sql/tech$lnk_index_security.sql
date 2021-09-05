@@ -32,8 +32,8 @@ WITH
                                 tech$last_seen_dt,
                                 '_' || IFNULL(CAST(trade_date  AS TEXT), '!@#$%^&*') ||
                                 '_' || IFNULL(CAST(index_id    AS TEXT), '!@#$%^&*') ||
-                                '_' || IFNULL(CAST(security_id AS TEXT), '!@#$%^&*')    AS concat_value,
-                                trade_date                                              AS trade_dt,
+                                '_' || IFNULL(CAST(security_id AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                                trade_date                                                  AS trade_dt,
                                 index_id,
                                 security_id
                            FROM src.index_security_weight
