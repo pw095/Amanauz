@@ -82,6 +82,10 @@
 .read sat_index_security_bus/data/tbl_entity.sql
 .read sat_index_security_bus/data/tbl_entity_layer_map.sql
 .read sat_index_security_bus/data/tbl_elm_dependency.sql
+
+.read lnk_currency_rate/data/tbl_entity.sql
+.read lnk_currency_rate/data/tbl_entity_layer_map.sql
+.read lnk_currency_rate/data/tbl_elm_dependency.sql
 .cd ../../../file
 
 .open dds.db
@@ -141,5 +145,8 @@
 
 .read sat_index_security_bus/model/tech$sat_index_security_bus.sql
 .read sat_index_security_bus/model/sat_index_security_bus.sql
+
+.read lnk_currency_rate/model/tech$lnk_currency_rate.sql
+.read lnk_currency_rate/model/lnk_currency_rate.sql
 
 .quit
