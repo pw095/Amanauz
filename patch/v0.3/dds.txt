@@ -86,6 +86,10 @@
 .read lnk_currency_rate/data/tbl_entity.sql
 .read lnk_currency_rate/data/tbl_entity_layer_map.sql
 .read lnk_currency_rate/data/tbl_elm_dependency.sql
+
+.read sat_currency_rate/data/tbl_entity.sql
+.read sat_currency_rate/data/tbl_entity_layer_map.sql
+.read sat_currency_rate/data/tbl_elm_dependency.sql
 .cd ../../../file
 
 .open dds.db
@@ -148,5 +152,8 @@
 
 .read lnk_currency_rate/model/tech$lnk_currency_rate.sql
 .read lnk_currency_rate/model/lnk_currency_rate.sql
+
+.read sat_currency_rate/model/tech$sat_currency_rate.sql
+.read sat_currency_rate/model/sat_currency_rate.sql
 
 .quit
