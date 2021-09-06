@@ -175,8 +175,9 @@ public class Flow {
 
 /*        entityList.add(new DetailDataEntity(flow, "ref_currency"));
         entityList.add(new DetailDataEntity(flow, "lnk_currency_rate"));
-        entityList.add(new DetailDataEntity(flow, "sat_currency_rate"));*/
-        entityList.add(new DetailDataEntity(flow, "sat_currency_rate_bus"));
+        entityList.add(new DetailDataEntity(flow, "sat_currency_rate"));
+        entityList.add(new DetailDataEntity(flow, "sat_currency_rate_bus"));*/
+        entityList.add(new DetailDataEntity(flow, "ref_fin_statement"));
 
         for (AbstractEntity entity : entityList) {
             entity.call();
