@@ -90,6 +90,10 @@
 .read sat_currency_rate/data/tbl_entity.sql
 .read sat_currency_rate/data/tbl_entity_layer_map.sql
 .read sat_currency_rate/data/tbl_elm_dependency.sql
+
+.read sat_currency_rate_bus/data/tbl_entity.sql
+.read sat_currency_rate_bus/data/tbl_entity_layer_map.sql
+.read sat_currency_rate_bus/data/tbl_elm_dependency.sql
 .cd ../../../file
 
 .open dds.db
@@ -155,5 +159,8 @@
 
 .read sat_currency_rate/model/tech$sat_currency_rate.sql
 .read sat_currency_rate/model/sat_currency_rate.sql
+
+.read sat_currency_rate_bus/model/tech$sat_currency_rate_bus.sql
+.read sat_currency_rate_bus/model/sat_currency_rate_bus.sql
 
 .quit

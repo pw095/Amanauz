@@ -110,6 +110,7 @@ public class DetailDataEntity extends PeriodEntity {
             // delete SQL
             switch (this.getEntityCode()) {
                 case "sat_index_security_bus":
+                case "sat_currency_rate_bus":
                 case "sat_sal_emitent":
                     sqlStmtToExecute = getQuery(getDeleteSQL());
                     try (PreparedStatement stmt = conn.prepareStatement(sqlStmtToExecute)) {
