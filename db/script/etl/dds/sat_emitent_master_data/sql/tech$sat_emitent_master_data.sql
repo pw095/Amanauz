@@ -65,7 +65,7 @@ SELECT
        hub.tech$hash_key,
        pre.tech$effective_dt,
        LEAD(DATE(pre.tech$effective_dt, '-1 DAY'), 1, '2999-12-31') OVER (wnd) AS tech$expiration_dt,
-       hub.tech$record_source,
+       'master_data'                                                           AS tech$record_source,
        pre.hash_value                                                          AS tech$hash_value,
        pre.full_name,
        pre.short_name,
@@ -75,7 +75,6 @@ SELECT
   FROM w_pre pre
        JOIN
        hub_emitent hub
-           ON hub.code = pre.short_name
-          AND hub.tech$record_source = 'master_data'
+           ON hub.code = pre.full_name
 WINDOW wnd AS (PARTITION BY pre.short_name
                    ORDER BY pre.tech$effective_dt)
