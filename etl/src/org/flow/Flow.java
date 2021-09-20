@@ -73,7 +73,7 @@ public class Flow {
         entityList.add(new StageForeignCurrencyDictionary(flow)); // OK
         */
 //        Данные не из справочника, но лист тоже всегда 1.
-        entityList.add(new StageForeignCurrencyRate(flow)); // OK
+//        entityList.add(new StageForeignCurrencyRate(flow)); // OK
 /*
 //        Данные за 1 день, но много листов
         entityList.add(new StageSecurityEmitentMap(flow)); // OK
@@ -114,9 +114,11 @@ public class Flow {
         entityList.add(new StageMasterDataSecurityTypeMap(flow));
         entityList.add(new StageMasterDataEmitentMap(flow));
         entityList.add(new StageMasterDataEmitent(flow));
-        entityList.add(new StageMasterDataRefFinStatement(flow));
+//        entityList.add(new StageMasterDataRefFinStatement(flow));
         entityList.add(new StageMasterDataRefCalendar(flow));
 */
+        entityList.add(new StageMasterDataRefFinStatement(flow));
+        entityList.add(new StageFinStatement(flow));
 
         for (AbstractEntity entity : entityList) {
             entity.call();
@@ -137,7 +139,7 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "default_data_security_type"));
 */
 
-        entityList.add(new ReplicationEntity(flow, "foreign_currency_rate"));
+//        entityList.add(new ReplicationEntity(flow, "foreign_currency_rate"));
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
@@ -177,7 +179,7 @@ public class Flow {
         entityList.add(new DetailDataEntity(flow, "lnk_currency_rate"));
         entityList.add(new DetailDataEntity(flow, "sat_currency_rate"));
         entityList.add(new DetailDataEntity(flow, "sat_currency_rate_bus"));*/
-        entityList.add(new DetailDataEntity(flow, "ref_fin_statement"));
+//        entityList.add(new DetailDataEntity(flow, "ref_fin_statement"));
 
         for (AbstractEntity entity : entityList) {
             entity.call();

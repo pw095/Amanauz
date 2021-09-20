@@ -210,12 +210,14 @@ public final class Meta {
                 } else if (entity instanceof FileEntity) {
                     stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_entity_file_load_log.sql"));
                     try (PreparedStatement stmt = conn.prepareStatement(stmtString)) {
-                        stmt.setLong(1, entity.getEntityLoadLogId());
-                        stmt.setString(2, ((FileEntity) entity).getFileName());
-                        stmt.setLong(3, ((FileEntity) entity).getFileSize());
-                        stmt.setString(4, ((FileEntity) entity).getFileHash());
+                        for (FileEntity.FileInfo fileInfo : ((FileEntity) entity).getFileInfo()) {
+                            stmt.setLong(1, entity.getEntityLoadLogId());
+                            stmt.setString(2, fileInfo.getFileName());
+                            stmt.setLong(3, fileInfo.getFileSize());
+                            stmt.setString(4, fileInfo.getFileHash());
 
-                        stmt.executeUpdate();
+                            stmt.executeUpdate();
+                        }
                     }
                 }
             }

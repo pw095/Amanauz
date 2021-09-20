@@ -12,6 +12,7 @@ import org.flow.Flow;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -53,7 +54,13 @@ public class StageMasterDataRefFinStatement extends org.data.FileEntity implemen
         concreteLoad(conn);
     }
 
-    public StageMasterDataRefFinStatementData readRow(Row row) {
+    public List<StageMasterDataRefFinStatementData> readRow(Row row) {
+        List<StageMasterDataRefFinStatementData> arrList = new ArrayList<>();
+        arrList.add(readTuple(row));
+        return arrList;
+    }
+
+    public StageMasterDataRefFinStatementData readTuple(Row row) {
         Iterator<Cell> cellIterator = row.iterator();
 
         int hierLevel = -1;

@@ -7,6 +7,7 @@ import org.flow.Flow;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -39,7 +40,13 @@ public class StageDefaultDataCurrency extends org.data.FileEntity implements Exc
         concreteLoad(conn);
     }
 
-    public StageDefaultDataCurrencyData readRow(Row row) {
+    public List<StageDefaultDataCurrencyData> readRow(Row row) {
+        List<StageDefaultDataCurrencyData> arrList = new ArrayList<>();
+        arrList.add(readTuple(row));
+        return arrList;
+    }
+
+    public StageDefaultDataCurrencyData readTuple(Row row) {
         Iterator<Cell> cellIterator = row.iterator();
         String isoCharCode = null;
         String isoNumCode = null;

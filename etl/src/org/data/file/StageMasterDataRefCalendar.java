@@ -7,12 +7,13 @@ import org.flow.Flow;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static org.util.AuxUtil.*;
 
-public class StageMasterDataRefCalendar extends org.data.FileEntity implements ExcelEntity {
+public class StageMasterDataRefCalendar extends org.data.FileEntity {
 
     static class StageMasterDataRefCalendarData extends ExternalData {
         String fullDate;
@@ -34,7 +35,13 @@ public class StageMasterDataRefCalendar extends org.data.FileEntity implements E
         concreteLoad(conn);
     }
 
-    public StageMasterDataRefCalendarData readRow(Row row) {
+    public List<StageMasterDataRefCalendarData> readRow(Row row) {
+        List<StageMasterDataRefCalendarData> arrList = new ArrayList<>();
+        arrList.add(readTuple(row));
+        return arrList;
+    }
+
+    public StageMasterDataRefCalendarData readTuple(Row row) {
         Iterator<Cell> cellIterator = row.iterator();
         String fullDate = null;
         String holidayFlag = null;

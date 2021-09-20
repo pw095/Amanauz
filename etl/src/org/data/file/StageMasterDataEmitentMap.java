@@ -7,6 +7,7 @@ import org.flow.Flow;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,7 +39,13 @@ public class StageMasterDataEmitentMap extends org.data.FileEntity implements Ex
     @Override
     public void callLoad(Connection conn) { concreteLoad(conn); }
 
-    public StageMasterDataEmitentMapData readRow(Row row) {
+    public List<StageMasterDataEmitentMapData> readRow(Row row) {
+        List<StageMasterDataEmitentMapData> arrList = new ArrayList<>();
+        arrList.add(readTuple(row));
+        return arrList;
+    }
+
+    public StageMasterDataEmitentMapData readTuple(Row row) {
         Iterator<Cell> cellIterator = row.iterator();
         String sourceSystemCode = null;
         String emitentCode = null;

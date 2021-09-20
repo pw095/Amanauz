@@ -7,6 +7,7 @@ import org.flow.Flow;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,7 +39,13 @@ public class StageMasterDataSecurityTypeMap extends org.data.FileEntity implemen
     @Override
     public void callLoad(Connection conn) { concreteLoad(conn); }
 
-    public StageMasterDataSecurityTypeMapData readRow(Row row) {
+    public List<StageMasterDataSecurityTypeMapData> readRow(Row row) {
+        List<StageMasterDataSecurityTypeMapData> arrList = new ArrayList<>();
+        arrList.add(readTuple(row));
+        return arrList;
+    }
+
+    public StageMasterDataSecurityTypeMapData readTuple(Row row) {
         Iterator<Cell> cellIterator = row.iterator();
         String tableName = null;
         String typeId = null;

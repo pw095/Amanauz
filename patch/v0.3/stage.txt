@@ -1,6 +1,8 @@
 .cd ../..
 .open db/file/meta.db
 .cd db/script/etl/stage
+.read emitent_fin_statement/data/tbl_entity.sql
+.read emitent_fin_statement/data/tbl_entity_layer_map.sql
 .read master_data_ref_calendar/data/tbl_entity.sql
 .read master_data_ref_calendar/data/tbl_entity_layer_map.sql
 .read master_data_ref_fin_statement/data/tbl_entity.sql
@@ -27,6 +29,7 @@
 
 .open stage.db
 .cd ../script/etl/stage
+.read emitent_fin_statement/model/emitent_fin_statement.sql
 .read master_data_ref_calendar/model/master_data_ref_calendar.sql
 .read master_data_ref_fin_statement/model/master_data_ref_fin_statement.sql
 .read master_data_emitent/model/master_data_emitent.sql

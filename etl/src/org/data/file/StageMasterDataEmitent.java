@@ -7,6 +7,7 @@ import org.flow.Flow;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -44,7 +45,13 @@ public class StageMasterDataEmitent extends org.data.FileEntity implements Excel
         concreteLoad(conn);
     }
 
-    public StageMasterDataEmitentData readRow(Row row) {
+    public List<StageMasterDataEmitentData> readRow(Row row) {
+        List<StageMasterDataEmitentData> arrList = new ArrayList<>();
+        arrList.add(readTuple(row));
+        return arrList;
+    }
+
+    public StageMasterDataEmitentData readTuple(Row row) {
         Iterator<Cell> cellIterator = row.iterator();
         String fullName = null;
         String shortName = null;

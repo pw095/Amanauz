@@ -1,0 +1,23 @@
+INSERT
+  INTO emitent_fin_statement
+  (
+    tech$load_id,
+    tech$load_dttm,
+    emitent_name,
+    currency,
+    report_dt,
+    fin_stmt_code,
+    fin_stmt_name,
+    value
+  )
+VALUES
+  (
+    :tech$load_id,
+    :tech$load_dttm,
+    :emitent_name,
+    :currency,
+    :report_dt,
+    :fin_stmt_code,
+    :fin_stmt_name,
+    :value
+  )

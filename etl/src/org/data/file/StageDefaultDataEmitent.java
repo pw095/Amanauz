@@ -7,6 +7,7 @@ import org.flow.Flow;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -33,7 +34,13 @@ public class StageDefaultDataEmitent extends org.data.FileEntity implements Exce
         concreteLoad(conn);
     }
 
-    public StageDefaultDataEmitentData readRow(Row row) {
+    public List<StageDefaultDataEmitentData> readRow(Row row) {
+        List<StageDefaultDataEmitentData> arrList = new ArrayList<>();
+        arrList.add(readTuple(row));
+        return arrList;
+    }
+
+    public StageDefaultDataEmitentData readTuple(Row row) {
         Iterator<Cell> cellIterator = row.iterator();
         String emitentCode = null;
         String emitentName = null;

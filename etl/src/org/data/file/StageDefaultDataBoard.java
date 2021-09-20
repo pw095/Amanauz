@@ -7,12 +7,13 @@ import org.flow.Flow;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import static org.util.AuxUtil.dateTimeFormat;
 
-public class StageDefaultDataBoard extends org.data.FileEntity implements ExcelEntity {
+public class StageDefaultDataBoard extends org.data.FileEntity {
 
     static class StageDefaultDataBoardData extends ExternalData {
         String boardId;
@@ -33,7 +34,13 @@ public class StageDefaultDataBoard extends org.data.FileEntity implements ExcelE
         concreteLoad(conn);
     }
 
-    public StageDefaultDataBoardData readRow(Row row) {
+    public List<StageDefaultDataBoardData> readRow(Row row) {
+        List<StageDefaultDataBoardData> arrList = new ArrayList<>();
+        arrList.add(readTuple(row));
+        return arrList;
+    }
+
+    public StageDefaultDataBoardData readTuple(Row row) {
         Iterator<Cell> cellIterator = row.iterator();
         String boardId = null;
         String boardTitle = null;
