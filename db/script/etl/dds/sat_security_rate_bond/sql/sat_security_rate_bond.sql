@@ -129,7 +129,7 @@ SELECT
                                   ELSE
                                       tech$hash_value
                              END,
-           accrued_interest = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.accrued_interest ELSE coupon_value   END,
-           yield            = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.yield            ELSE coupon_percent END,
-           duration         = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.duration         ELSE coupon_period  END;
+           accrued_interest = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.accrued_interest ELSE accrued_interest END,
+           yield            = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.yield            ELSE yield            END,
+           duration         = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.duration         ELSE duration         END;
 
