@@ -118,18 +118,16 @@ public class StageFinStatement extends org.data.FileEntity {
         String finStmtCode = null;
         String finStmtName = null;
         double value;
-
         ArrayList<StageFinStatementData> arrList = new ArrayList<>();
 
         while (cellIterator.hasNext()) {
+
             Cell cell = cellIterator.next();
             PARENT_SWITCH: switch (cell.getColumnIndex()) {
                 case 0:
                     switch (cell.getCellType()) {
                         case STRING:
                             finStmtCode = cell.getStringCellValue();
-                            break;
-                        case BLANK:
                             break;
                         default:
                             throw new RuntimeException("Invalid fin statement code!");
@@ -158,13 +156,14 @@ public class StageFinStatement extends org.data.FileEntity {
                         default:
                             throw new RuntimeException("Invalid value: " + cell.getCellType());
                     }
-                    arrList.add(new StageFinStatementData(currency,
-                                                          headerProperties.get(Integer.valueOf(cell.getColumnIndex()).toString()),
-                                                          finStmtCode,
-                                                          finStmtName,
-                                                          value));
+                    if (finStmtCode != null) {
+                        arrList.add(new StageFinStatementData(currency,
+                                    headerProperties.get(Integer.valueOf(cell.getColumnIndex()).toString()),
+                                    finStmtCode,
+                                    finStmtName,
+                                    value));
+                    }
             }
-
         }
         return arrList;
     }

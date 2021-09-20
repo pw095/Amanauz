@@ -6,7 +6,7 @@ CREATE TABLE emitent_fin_statement
     emitent_name   TEXT    NOT NULL,
     currency       TEXT    NOT NULL,
     report_dt      TEXT    NOT NULL,
-    fin_stmt_code  TEXT,
+    fin_stmt_code  TEXT    NOT NULL,
     fin_stmt_name  TEXT    NOT NULL,
     value          REAL    NOT NULL
   );
