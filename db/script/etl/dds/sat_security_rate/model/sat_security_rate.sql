@@ -15,6 +15,6 @@ CREATE TABLE sat_security_rate
     price_low          REAL,
     price_high         REAL,
     PRIMARY KEY(tech$hash_key, tech$effective_dt),
-    FOREIGN KEY (tech$hash_key) REFERENCES lnk_security_rate(tech$hash_key) ON DELETE CASCADE
+    FOREIGN KEY(tech$hash_key) REFERENCES lnk_security_rate(tech$hash_key) ON DELETE CASCADE
   )
 WITHOUT ROWID;

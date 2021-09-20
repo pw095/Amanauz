@@ -20,7 +20,8 @@ WITH
      (
          SELECT
                 tech$effective_dt,
-                trade_date AS trade_dt,
+                hash_value,
+                trade_dt,
                 security_id,
                 board_id,
                 trade_count,
@@ -29,13 +30,12 @@ WITH
                 price_open,
                 price_close,
                 price_low,
-                price_high,
-                ROW_NUMBER() OVER (wnd) AS rn
+                price_high
            FROM (SELECT
                         tech$effective_dt,
                         hash_value,
                         LAG(hash_value) OVER (wnd) AS lag_hash_value,
-                        trade_date,
+                        trade_dt,
                         security_id,
                         board_id,
                         trade_count,
@@ -48,7 +48,7 @@ WITH
                    FROM (SELECT
                                 tech$effective_dt,
                                 sha1(concat_value) AS hash_value,
-                                trade_date,
+                                trade_dt,
                                 security_id,
                                 board_id,
                                 trade_count,
@@ -61,13 +61,13 @@ WITH
                            FROM (SELECT
                                         tech$effective_dt,
                                         '_' || IFNULL(CAST(trade_count AS TEXT), '!@#$%^&*') ||
-                                        '_' || IFNULL(CAST(value        AS TEXT), '!@#$%^&*') ||
-                                        '_' || IFNULL(CAST(volume       AS TEXT), '!@#$%^&*') ||
-                                        '_' || IFNULL(CAST(price_open   AS TEXT), '!@#$%^&*') ||
-                                        '_' || IFNULL(CAST(price_close  AS TEXT), '!@#$%^&*') ||
-                                        '_' || IFNULL(CAST(price_low    AS TEXT), '!@#$%^&*') ||
-                                        '_' || IFNULL(CAST(price_high   AS TEXT), '!@#$%^&*') || '_' AS concat_value,
-                                        trade_date,
+                                        '_' || IFNULL(CAST(value       AS TEXT), '!@#$%^&*') ||
+                                        '_' || IFNULL(CAST(volume      AS TEXT), '!@#$%^&*') ||
+                                        '_' || IFNULL(CAST(price_open  AS TEXT), '!@#$%^&*') ||
+                                        '_' || IFNULL(CAST(price_close AS TEXT), '!@#$%^&*') ||
+                                        '_' || IFNULL(CAST(price_low   AS TEXT), '!@#$%^&*') ||
+                                        '_' || IFNULL(CAST(price_high  AS TEXT), '!@#$%^&*') || '_' AS concat_value,
+                                        trade_date                                                  AS trade_dt,
                                         security_id,
                                         board_id,
                                         trade_count,
@@ -82,52 +82,35 @@ WITH
                                                 trade_date,
                                                 security_id,
                                                 board_id,
-                                                trade_count,
+                                                num_trades        AS trade_count,
                                                 value,
                                                 volume,
-                                                price_open,
-                                                price_close,
-                                                price_low,
-                                                price_high
-                                           FROM (SELECT
-                                                        tech$effective_dt,
-                                                        trade_date,
-                                                        security_id,
-                                                        board_id,
-                                                        trade_count,
-                                                        value,
-                                                        volume,
-                                                        price_open,
-                                                        price_close,
-                                                        price_low,
-                                                        price_high
-                                                   FROM src.security_rate_shares
-                                                  UNION ALL
-                                                 SELECT
-                                                        tech$effective_dt,
-                                                        trade_date,
-                                                        security_id,
-                                                        board_id,
-                                                        trade_count,
-                                                        value,
-                                                        volume,
-                                                        price_open,
-                                                        price_close,
-                                                        price_low,
-                                                        price_high
-                                                   FROM src.security_rate_bonds)
-                                          WHERE tech$effective_dt >= :tech$effective_dt)))
-                 WINDOW wnd AS (PARTITION BY trade_date,
+                                                open              AS price_open,
+                                                close             AS price_close,
+                                                low               AS price_low,
+                                                high              AS price_high
+                                           FROM src.security_rate_shares
+                                          UNION ALL
+                                         SELECT
+                                                tech$effective_dt,
+                                                trade_date,
+                                                security_id,
+                                                board_id,
+                                                num_trades        AS trade_count,
+                                                value,
+                                                volume,
+                                                open              AS price_open,
+                                                close             AS price_close,
+                                                low               AS price_low,
+                                                high              AS price_high
+                                           FROM src.security_rate_bonds)
+                                  WHERE tech$effective_dt >= :tech$effective_dt))
+                 WINDOW wnd AS (PARTITION BY trade_dt,
                                              security_id,
                                              board_id
                                     ORDER BY tech$effective_dt))
           WHERE hash_value != lag_hash_value
              OR lag_hash_value IS NULL
-         WINDOW wnd AS (PARTITION BY trade_date,
-                                     security_id,
-                                     board_id,
-                                     tech$effective_dt
-                            ORDER BY face_value DESC)
      )
 SELECT
        :tech$load_id                                                           AS tech$load_id,
@@ -152,11 +135,9 @@ SELECT
            ON board.board_id = pre.board_id
        JOIN
        lnk_security_rate lnk
-           ON lnk.trade_dt = pre.trade_date
-          AND lnk.security_id = pre.security_id
-          AND lnk.board_id = pre.board_id
+           ON lnk.trade_dt = pre.trade_dt
+          AND lnk.security_hash_key = security.tech$hash_key
+          AND lnk.board_hash_key = board.tech$hash_key
           AND lnk.tech$record_source = 'moex.com'
- WHERE pre.rn = 1 -- Брать наибольший номинал, если у ЦБ он отличается в различных режимах торгов
-                  -- Пока это относится только к индексируемым облигациям на этапе размещения
 WINDOW wnd AS (PARTITION BY lnk.tech$hash_key
                    ORDER BY pre.tech$effective_dt)

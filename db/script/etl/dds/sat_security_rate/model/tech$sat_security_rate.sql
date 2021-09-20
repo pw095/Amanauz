@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS tech$sat_security;
-CREATE TABLE tech$sat_security
+DROP TABLE IF EXISTS tech$sat_security_rate;
+CREATE TABLE tech$sat_security_rate
   (
     tech$load_id       INTEGER NOT NULL,
     tech$hash_key      TEXT    NOT NULL,
