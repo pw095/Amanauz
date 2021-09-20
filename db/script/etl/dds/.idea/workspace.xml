@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="4a5e15e3-d8ea-4a8b-8666-2a23d51ae440" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ProjectId" id="1xjDiP7o60iKpF8lNkvQvFAyJXG" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DBE.Init.BalloonShown" value="true" />
+    <property name="DatabaseDriversLRU" value="sqlite" />
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="last_opened_file_path" value="$USER_HOME$" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.appearance" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="845" y="442" key="#Notifications" timestamp="1630859740538">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state x="845" y="442" key="#Notifications/0.0.1920.1160@0.0.1920.1160" timestamp="1630859740538" />
+    <state x="552" y="238" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1632128888654">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state x="552" y="238" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1160/-1920.0.1920.1160@0.0.1920.1160" timestamp="1632128888654" />
+    <state x="552" y="238" key="#com.intellij.execution.impl.EditConfigurationsDialog/0.0.1920.1160@0.0.1920.1160" timestamp="1630865479096" />
+    <state x="740" y="334" key="FileChooserDialogImpl" timestamp="1632145106874">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state x="740" y="334" key="FileChooserDialogImpl/0.0.1920.1160/-1920.0.1920.1160@0.0.1920.1160" timestamp="1632145106874" />
+    <state x="740" y="334" key="FileChooserDialogImpl/0.0.1920.1160@0.0.1920.1160" timestamp="1630864844973" />
+    <state width="0" height="0" key="GridCell.Tab.0.bottom" timestamp="1632144872823">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.0.bottom/0.0.1920.1160/-1920.0.1920.1160@0.0.1920.1160" timestamp="1632144872823" />
+    <state width="1293" height="321" key="GridCell.Tab.0.bottom/0.0.1920.1160@0.0.1920.1160" timestamp="1630868862483" />
+    <state width="0" height="0" key="GridCell.Tab.0.center" timestamp="1632144872823">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.0.center/0.0.1920.1160/-1920.0.1920.1160@0.0.1920.1160" timestamp="1632144872823" />
+    <state width="1293" height="321" key="GridCell.Tab.0.center/0.0.1920.1160@0.0.1920.1160" timestamp="1630868862483" />
+    <state width="0" height="0" key="GridCell.Tab.0.left" timestamp="1632144872823">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.0.left/0.0.1920.1160/-1920.0.1920.1160@0.0.1920.1160" timestamp="1632144872823" />
+    <state width="1293" height="321" key="GridCell.Tab.0.left/0.0.1920.1160@0.0.1920.1160" timestamp="1630868862483" />
+    <state width="0" height="0" key="GridCell.Tab.0.right" timestamp="1632144872823">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state width="0" height="0" key="GridCell.Tab.0.right/0.0.1920.1160/-1920.0.1920.1160@0.0.1920.1160" timestamp="1632144872823" />
+    <state width="1293" height="321" key="GridCell.Tab.0.right/0.0.1920.1160@0.0.1920.1160" timestamp="1630868862483" />
+    <state x="461" y="224" key="SettingsEditor" timestamp="1630867327735">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state x="461" y="224" key="SettingsEditor/0.0.1920.1160@0.0.1920.1160" timestamp="1630867327735" />
+    <state x="883" y="525" key="com.intellij.database.run.ParametersPanel.Standalone" timestamp="1630869183278">
+      <screen x="0" y="0" width="1920" height="1160" />
+    </state>
+    <state x="883" y="525" key="com.intellij.database.run.ParametersPanel.Standalone/0.0.1920.1160@0.0.1920.1160" timestamp="1630869183278" />
+  </component>
+</project>

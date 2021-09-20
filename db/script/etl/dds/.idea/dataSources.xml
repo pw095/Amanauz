@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
+    <data-source source="LOCAL" name="SQLite - dds.db" uuid="b52094f6-a4b6-4fb1-bf9e-57a094a56e4f">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:$PROJECT_DIR$/../../../../../dwh/dds.db</jdbc-url>
+    </data-source>
+    <data-source source="LOCAL" name="dasha-pf" uuid="84a8b3cb-103f-4aae-8d6a-125cfa48fa03">
+      <driver-ref>sqlite.xerial</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
+      <jdbc-url>jdbc:sqlite:Z:/1002  PV/Даша/rates/db/pf.db</jdbc-url>
+    </data-source>
+  </component>
+</project>
