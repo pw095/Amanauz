@@ -133,8 +133,8 @@ public class Flow {
         entityList.add(new ReplicationEntity(flow, "master_data_ref_calendar"));
 
         entityList.add(new ReplicationEntity(flow, "default_data_board"));
-        entityList.add(new ReplicationEntity(flow, "default_data_emitent"));
         entityList.add(new ReplicationEntity(flow, "default_data_currency"));
+        entityList.add(new ReplicationEntity(flow, "default_data_emitent"));
         entityList.add(new ReplicationEntity(flow, "default_data_security"));
         entityList.add(new ReplicationEntity(flow, "default_data_security_type"));
 */
@@ -164,7 +164,6 @@ public class Flow {
         entityList.add(new DetailDataEntity(flow, "lnk_emitent_security"));
 
         entityList.add(new DetailDataEntity(flow, "sat_emitent_moex"));
-        entityList.add(new DetailDataEntity(flow, "sat_emitent_master_data"));
 
         entityList.add(new DetailDataEntity(flow, "sal_emitent"));
         entityList.add(new DetailDataEntity(flow, "sat_sal_emitent"));
@@ -174,6 +173,7 @@ public class Flow {
 
         entityList.add(new DetailDataEntity(flow, "lnk_index_security_bus"));
         entityList.add(new DetailDataEntity(flow, "sat_index_security_bus"));
+        entityList.add(new DetailDataEntity(flow, "sat_emitent_master_data"));
 */
 
 /*        entityList.add(new DetailDataEntity(flow, "ref_currency"));
@@ -182,6 +182,8 @@ public class Flow {
         entityList.add(new DetailDataEntity(flow, "sat_currency_rate_bus"));*/
 //        entityList.add(new DetailDataEntity(flow, "ref_fin_statement"));
 
+        entityList.add(new DetailDataEntity(flow, "lnk_fin_report"));
+        entityList.add(new DetailDataEntity(flow, "sat_fin_report"));
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
