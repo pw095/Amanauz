@@ -1,0 +1,1 @@
+DELETE FROM tech$emitent_fin_statement

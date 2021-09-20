@@ -117,8 +117,8 @@ public class Flow {
 //        entityList.add(new StageMasterDataRefFinStatement(flow));
         entityList.add(new StageMasterDataRefCalendar(flow));
 */
-        entityList.add(new StageMasterDataRefFinStatement(flow));
-        entityList.add(new StageFinStatement(flow));
+//        entityList.add(new StageMasterDataRefFinStatement(flow));
+//        entityList.add(new StageFinStatement(flow));
 
         for (AbstractEntity entity : entityList) {
             entity.call();
@@ -140,6 +140,7 @@ public class Flow {
 */
 
 //        entityList.add(new ReplicationEntity(flow, "foreign_currency_rate"));
+        entityList.add(new ReplicationEntity(flow, "emitent_fin_statement"));
         for (AbstractEntity entity : entityList) {
             entity.call();
         }
