@@ -9,6 +9,6 @@ CREATE TABLE sat_fin_report
     tech$hash_value    TEXT    NOT NULL,
     value              REAL    NOT NULL,
     PRIMARY KEY(tech$hash_key, tech$effective_dt),
-    FOREIGN KEY(tech$hash_key) REFERENCES lnk_fin_report(tech$hash_key)
+    FOREIGN KEY(tech$hash_key) REFERENCES lnk_fin_report(tech$hash_key) ON DELETE CASCADE
   )
 WITHOUT ROWID;

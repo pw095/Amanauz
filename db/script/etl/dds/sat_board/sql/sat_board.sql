@@ -12,7 +12,7 @@ INSERT
     primary_flag
   )
 SELECT
-       :tech$load_id       AS tech$load_id,
+       :tech$load_id      AS tech$load_id,
        tech$hash_key,
        tech$effective_dt,
        tech$expiration_dt,
@@ -118,17 +118,17 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
- ON CONFLICT(tech$hash_key, tech$effective_dt)
- DO UPDATE
-       SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id,
-           tech$hash_value = CASE
-                                  WHEN tech$expiration_dt = '2999-12-31'
-                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
-                                      excluded.tech$hash_value
-                                  ELSE
-                                      tech$hash_value
-                             END,
-           board_id = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.board_id ELSE board_id END,
-           title = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.title ELSE title END,
-           primary_flag = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.primary_flag ELSE primary_flag END
+ON CONFLICT(tech$hash_key, tech$effective_dt)
+   DO UPDATE
+         SET tech$expiration_dt = excluded.tech$expiration_dt,
+             tech$load_id = excluded.tech$load_id,
+             tech$hash_value = CASE
+                                    WHEN tech$expiration_dt = '2999-12-31'
+                                     AND excluded.tech$expiration_dt = '2999-12-31' THEN
+                                        excluded.tech$hash_value
+                                    ELSE
+                                        tech$hash_value
+                               END,
+             board_id     = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.board_id     ELSE board_id     END,
+             title        = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.title        ELSE title        END,
+             primary_flag = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.primary_flag ELSE primary_flag END

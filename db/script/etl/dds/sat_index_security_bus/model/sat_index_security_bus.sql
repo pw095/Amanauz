@@ -9,6 +9,6 @@ CREATE TABLE sat_index_security_bus
     tech$hash_value    TEXT    NOT NULL,
     weight             REAL    NOT NULL,
     PRIMARY KEY(tech$hash_key, tech$effective_dt),
-    FOREIGN KEY(tech$hash_key) REFERENCES lnk_index_security_bus(tech$hash_key)
+    FOREIGN KEY(tech$hash_key) REFERENCES lnk_index_security_bus(tech$hash_key) ON DELETE CASCADE
   )
 WITHOUT ROWID;

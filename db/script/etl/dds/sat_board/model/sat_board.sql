@@ -11,6 +11,6 @@ CREATE TABLE sat_board
     title              TEXT    NOT NULL,
     primary_flag       TEXT    NOT NULL,
     PRIMARY KEY(tech$hash_key, tech$effective_dt),
-    FOREIGN KEY (tech$hash_key) REFERENCES hub_board(tech$hash_key) ON DELETE CASCADE
+    FOREIGN KEY(tech$hash_key) REFERENCES hub_board(tech$hash_key) ON DELETE CASCADE
   )
 WITHOUT ROWID;

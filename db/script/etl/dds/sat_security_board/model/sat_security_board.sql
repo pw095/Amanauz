@@ -8,6 +8,7 @@ CREATE TABLE sat_security_board
     tech$record_source TEXT    NOT NULL,
     tech$hash_value    TEXT    NOT NULL,
     lot_size           INTEGER NOT NULL,
-    PRIMARY KEY(tech$hash_key, tech$effective_dt)
+    PRIMARY KEY(tech$hash_key, tech$effective_dt),
+    FOREIGN KEY(tech$hash_key) REFERENCES lnk_security_board(tech$hash_key) ON DELETE CASCADE
   )
 WITHOUT ROWID;

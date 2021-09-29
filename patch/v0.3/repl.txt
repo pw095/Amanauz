@@ -2,6 +2,9 @@
 .open db/file/meta.db
 .cd db/script/etl/repl
 
+.read emitent_fin_statement/data/tbl_entity.sql
+.read emitent_fin_statement/data/tbl_entity_layer_map.sql
+.read emitent_fin_statement/data/tbl_elm_dependency.sql
 .read master_data_emitent/data/tbl_entity.sql
 .read master_data_emitent/data/tbl_entity_layer_map.sql
 .read master_data_emitent/data/tbl_elm_dependency.sql
@@ -32,10 +35,13 @@
 .read default_data_currency/data/tbl_entity.sql
 .read default_data_currency/data/tbl_entity_layer_map.sql
 .read default_data_currency/data/tbl_elm_dependency.sql
+
 .cd ../../../file
 
 .open repl.db
 .cd ../script/etl/repl
+.read emitent_fin_statement/model/emitent_fin_statement.sql
+.read emitent_fin_statement/model/tech$emitent_fin_statement.sql
 .read master_data_emitent/model/master_data_emitent.sql
 .read master_data_emitent/model/tech$master_data_emitent.sql
 .read master_data_emitent_map/model/master_data_emitent_map.sql

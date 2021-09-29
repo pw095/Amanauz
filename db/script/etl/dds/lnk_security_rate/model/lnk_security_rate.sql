@@ -11,8 +11,8 @@ CREATE TABLE lnk_security_rate
     board_hash_key     TEXT    NOT NULL,
     PRIMARY KEY(tech$hash_key),
     UNIQUE(trade_dt, security_hash_key, board_hash_key),
-    FOREIGN KEY(security_hash_key)      REFERENCES hub_security(tech$hash_key),
-    FOREIGN KEY(board_hash_key)         REFERENCES hub_board(tech$hash_key),
-    FOREIGN KEY(trade_dt)               REFERENCES ref_calendar(clndr_dt)
+    FOREIGN KEY(security_hash_key)      REFERENCES hub_security(tech$hash_key) ON DELETE CASCADE,
+    FOREIGN KEY(board_hash_key)         REFERENCES hub_board(tech$hash_key)    ON DELETE CASCADE,
+    FOREIGN KEY(trade_dt)               REFERENCES ref_calendar(clndr_dt)      ON DELETE CASCADE
   )
 WITHOUT ROWID;

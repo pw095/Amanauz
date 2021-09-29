@@ -13,6 +13,7 @@ CREATE TABLE sat_sal_emitent
     ogrn               TEXT,
     inn                TEXT,
     okpo               TEXT,
-    PRIMARY KEY(tech$hash_key, tech$effective_dt)
+    PRIMARY KEY(tech$hash_key, tech$effective_dt),
+    FOREIGN KEY(tech$hash_key) REFERENCES sal_emitent(tech$hash_key) ON DELETE CASCADE
   )
 WITHOUT ROWID;

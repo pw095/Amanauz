@@ -63,6 +63,5 @@ SELECT
        JOIN
        hub_security_type hub
            ON hub.id = pre.id
-          AND hub.tech$record_source = 'moex.com'
 WINDOW wnd AS (PARTITION BY pre.id
                    ORDER BY pre.tech$effective_dt)

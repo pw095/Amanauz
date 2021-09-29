@@ -118,18 +118,18 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
- ON CONFLICT(tech$hash_key, tech$effective_dt)
- DO UPDATE
-       SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id,
-           tech$hash_value = CASE
-                                  WHEN tech$expiration_dt = '2999-12-31'
-                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
-                                      excluded.tech$hash_value
-                                  ELSE
-                                      tech$hash_value
-                             END,
-           accrued_interest = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.accrued_interest ELSE accrued_interest END,
-           yield            = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.yield            ELSE yield            END,
-           duration         = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.duration         ELSE duration         END;
+ON CONFLICT(tech$hash_key, tech$effective_dt)
+   DO UPDATE
+         SET tech$expiration_dt = excluded.tech$expiration_dt,
+             tech$load_id = excluded.tech$load_id,
+             tech$hash_value = CASE
+                                    WHEN tech$expiration_dt = '2999-12-31'
+                                     AND excluded.tech$expiration_dt = '2999-12-31' THEN
+                                        excluded.tech$hash_value
+                                    ELSE
+                                        tech$hash_value
+                               END,
+             accrued_interest = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.accrued_interest ELSE accrued_interest END,
+             yield            = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.yield            ELSE yield            END,
+             duration         = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.duration         ELSE duration         END;
 

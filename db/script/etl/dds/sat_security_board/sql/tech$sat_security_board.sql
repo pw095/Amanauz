@@ -81,4 +81,4 @@ SELECT
            ON lnk_sb.security_hash_key = security.tech$hash_key
           AND lnk_sb.board_hash_key = board.tech$hash_key
 WINDOW wnd AS (PARTITION BY lnk_sb.tech$hash_key
-                   ORDER BY pre.tech$effective_dt);
+                   ORDER BY pre.tech$effective_dt)

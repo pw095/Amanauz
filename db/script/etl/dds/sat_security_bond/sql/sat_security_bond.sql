@@ -10,9 +10,10 @@ INSERT
     coupon_value,
     coupon_percent,
     coupon_period,
-    mature_date,
-    buy_back_date,
-    offer_date
+    mature_dt,
+    buy_back_dt,
+    buy_back_price,
+    offer_dt
   )
 SELECT
        :tech$load_id AS tech$load_id,
@@ -24,9 +25,10 @@ SELECT
        coupon_value,
        coupon_percent,
        coupon_period,
-       mature_date,
-       buy_back_date,
-       offer_date
+       mature_dt,
+       buy_back_dt,
+       buy_back_price,
+       offer_dt
   FROM (SELECT
                tech$hash_key,
                tech$effective_dt,
@@ -36,9 +38,10 @@ SELECT
                coupon_value,
                coupon_percent,
                coupon_period,
-               mature_date,
-               buy_back_date,
-               offer_date
+               mature_dt,
+               buy_back_dt,
+               buy_back_price,
+               offer_dt
           FROM tech$sat_security_bond src
          WHERE NOT EXISTS(SELECT
                                  NULL
@@ -70,9 +73,10 @@ SELECT
                coupon_value,
                coupon_percent,
                coupon_period,
-               mature_date,
-               buy_back_date,
-               offer_date
+               mature_dt,
+               buy_back_dt,
+               buy_back_price,
+               offer_dt
           FROM (SELECT
                        tech$hash_key,
                        tech$effective_dt,
@@ -84,9 +88,10 @@ SELECT
                        coupon_value,
                        coupon_percent,
                        coupon_period,
-                       mature_date,
-                       buy_back_date,
-                       offer_date,
+                       mature_dt,
+                       buy_back_dt,
+                       buy_back_price,
+                       offer_dt,
                        CASE
                             WHEN rn = 1
                              AND fv_equal_flag = 'NON_EQUAL'
@@ -109,9 +114,10 @@ SELECT
                                src.coupon_value,
                                src.coupon_percent,
                                src.coupon_period,
-                               src.mature_date,
-                               src.buy_back_date,
-                               src.offer_date,
+                               src.mature_dt,
+                               src.buy_back_dt,
+                               src.buy_back_price,
+                               src.offer_dt,
                                FIRST_VALUE(CASE
                                                 WHEN src.tech$hash_value != sat.tech$hash_value THEN
                                                     'NON_EQUAL'
@@ -136,21 +142,22 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
- ON CONFLICT(tech$hash_key, tech$effective_dt)
- DO UPDATE
-       SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id,
-           tech$hash_value = CASE
-                                  WHEN tech$expiration_dt = '2999-12-31'
-                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
-                                      excluded.tech$hash_value
-                                  ELSE
-                                      tech$hash_value
-                             END,
-           coupon_value   = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.coupon_value   ELSE coupon_value   END,
-           coupon_percent = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.coupon_percent ELSE coupon_percent END,
-           coupon_period  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.coupon_period  ELSE coupon_period  END,
-           mature_date    = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.mature_date    ELSE mature_date    END,
-           buy_back_date  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.buy_back_date  ELSE buy_back_date  END,
-           offer_date     = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.offer_date     ELSE offer_date     END
+ON CONFLICT(tech$hash_key, tech$effective_dt)
+   DO UPDATE
+         SET tech$expiration_dt = excluded.tech$expiration_dt,
+             tech$load_id = excluded.tech$load_id,
+             tech$hash_value = CASE
+                                    WHEN tech$expiration_dt = '2999-12-31'
+                                     AND excluded.tech$expiration_dt = '2999-12-31' THEN
+                                        excluded.tech$hash_value
+                                    ELSE
+                                        tech$hash_value
+                               END,
+             coupon_value   = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.coupon_value   ELSE coupon_value   END,
+             coupon_percent = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.coupon_percent ELSE coupon_percent END,
+             coupon_period  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.coupon_period  ELSE coupon_period  END,
+             mature_dt      = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.mature_dt      ELSE mature_dt      END,
+             buy_back_dt    = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.buy_back_dt    ELSE buy_back_dt    END,
+             buy_back_price = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.buy_back_price ELSE buy_back_price END,
+             offer_dt       = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.offer_dt       ELSE offer_dt       END
 

@@ -13,6 +13,6 @@ CREATE TABLE sat_emitent_master_data
     ogrn               TEXT,
     inn                TEXT,
     PRIMARY KEY(tech$hash_key, tech$effective_dt),
-    FOREIGN KEY (tech$hash_key) REFERENCES hub_emitent(tech$hash_key) ON DELETE CASCADE
+    FOREIGN KEY(tech$hash_key) REFERENCES hub_emitent(tech$hash_key) ON DELETE CASCADE
   )
 WITHOUT ROWID;

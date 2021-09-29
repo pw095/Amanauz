@@ -9,7 +9,7 @@ CREATE TABLE tech$sat_board
     tech$hash_value    TEXT    NOT NULL,
     board_id           INTEGER NOT NULL,
     title              TEXT    NOT NULL,
-    primary_flag        TEXT    NOT NULL,
+    primary_flag       TEXT    NOT NULL,
     PRIMARY KEY(tech$hash_key, tech$effective_dt)
   )
 WITHOUT ROWID;

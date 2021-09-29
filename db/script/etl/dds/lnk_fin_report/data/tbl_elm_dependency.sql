@@ -36,8 +36,7 @@ SELECT
                          AND ent.ent_code IN ('ref_currency',
                                               'ref_fin_statement',
                                               'ref_calendar',
-                                              'hub_emitent',
-                                              'sat_emitent_master_data'))
+                                              'hub_emitent'))
          UNION ALL
         SELECT
                elm_id
@@ -51,4 +50,5 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code IN ('emitent_fin_statement'))) parent;
+                         AND ent.ent_code IN ('emitent_fin_statement',
+                                              'master_data_emitent'))) parent;

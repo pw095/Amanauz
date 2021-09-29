@@ -138,6 +138,5 @@ SELECT
            ON lnk.trade_dt = pre.trade_dt
           AND lnk.security_hash_key = security.tech$hash_key
           AND lnk.board_hash_key = board.tech$hash_key
-          AND lnk.tech$record_source = 'moex.com'
 WINDOW wnd AS (PARTITION BY lnk.tech$hash_key
                    ORDER BY pre.tech$effective_dt)

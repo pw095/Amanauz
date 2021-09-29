@@ -11,6 +11,6 @@ CREATE TABLE sat_security_type
     name               TEXT    NOT NULL,
     title              TEXT    NOT NULL,
     PRIMARY KEY(tech$hash_key, tech$effective_dt),
-    FOREIGN KEY (tech$hash_key) REFERENCES hub_security_type(tech$hash_key) ON DELETE CASCADE
+    FOREIGN KEY(tech$hash_key) REFERENCES hub_security_type(tech$hash_key) ON DELETE CASCADE
   )
 WITHOUT ROWID;

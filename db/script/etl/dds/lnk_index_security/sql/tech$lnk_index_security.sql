@@ -3,9 +3,9 @@ INSERT
   (
     tech$load_id,
     tech$hash_key,
-    tech$record_source,
     tech$load_dt,
     tech$last_seen_dt,
+    tech$record_source,
     trade_dt,
     index_hash_key,
     security_hash_key
@@ -37,17 +37,16 @@ WITH
                                 index_id,
                                 security_id
                            FROM src.index_security_weight
-                          WHERE 1 = 1
-                             OR tech$effective_dt >= :tech$effective_dt))
+                          WHERE tech$effective_dt >= :tech$effective_dt))
           GROUP BY
                    tech$hash_key
      )
 SELECT
        :tech$load_id              AS tech$load_id,
        pre.tech$hash_key,
-       'moex.com'                 AS tech$record_source,
        pre.tech$load_dt,
        pre.tech$last_seen_dt,
+       'moex.com'                 AS tech$record_source,
        pre.trade_dt,
        hub_index.tech$hash_key    AS index_hash_key,
        hub_security.tech$hash_key AS security_hash_key

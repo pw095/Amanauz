@@ -23,14 +23,14 @@ WITH
                 nominal
            FROM (SELECT
                         tech$effective_dt,
-                        'cbr.ru'                 AS tech$record_source,
-                        iso_char_code            AS crnc_code,
+                        'cbr.ru'                                   AS tech$record_source,
+                        iso_char_code                              AS crnc_code,
                         iso_num_code,
-                        name                     AS rus_name,
+                        name                                       AS rus_name,
                         eng_name,
-                        CAST(nominal AS INTEGER) AS nominal,
-                        COUNT() OVER (PARTITION BY iso_char_code) AS cnt
-                   FROM src.foreign_currency_dictionary src
+                        CAST(nominal AS INTEGER)                   AS nominal,
+                        COUNT(*) OVER (PARTITION BY iso_char_code) AS cnt
+                   FROM src.foreign_currency_dictionary
                   WHERE 1 = 1
                     AND tech$expiration_dt = '2999-12-31'
                     AND tech$effective_dt >= :tech$effective_dt

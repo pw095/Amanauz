@@ -154,23 +154,23 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
- ON CONFLICT(tech$hash_key, tech$effective_dt)
- DO UPDATE
-       SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id,
-           tech$hash_value = CASE
-                                  WHEN tech$expiration_dt = '2999-12-31'
-                                   AND excluded.tech$expiration_dt = '2999-12-31' THEN
-                                      excluded.tech$hash_value
-                                  ELSE
-                                      tech$hash_value
-                             END,
-           security_id = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.security_id ELSE security_id END,
-           full_name   = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.full_name   ELSE full_name   END,
-           short_name  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.short_name  ELSE short_name  END,
-           isin        = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.isin        ELSE isin        END,
-           reg_number  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.reg_number  ELSE reg_number  END,
-           issue_size  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.issue_size  ELSE issue_size  END,
-           face_value  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.face_value  ELSE face_value  END,
-           face_crnc   = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.face_crnc   ELSE face_crnc   END,
-           list_level  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.list_level  ELSE list_level  END
+ON CONFLICT(tech$hash_key, tech$effective_dt)
+   DO UPDATE
+         SET tech$expiration_dt = excluded.tech$expiration_dt,
+             tech$load_id = excluded.tech$load_id,
+             tech$hash_value = CASE
+                                    WHEN tech$expiration_dt = '2999-12-31'
+                                     AND excluded.tech$expiration_dt = '2999-12-31' THEN
+                                        excluded.tech$hash_value
+                                    ELSE
+                                        tech$hash_value
+                               END,
+             security_id = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.security_id ELSE security_id END,
+             full_name   = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.full_name   ELSE full_name   END,
+             short_name  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.short_name  ELSE short_name  END,
+             isin        = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.isin        ELSE isin        END,
+             reg_number  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.reg_number  ELSE reg_number  END,
+             issue_size  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.issue_size  ELSE issue_size  END,
+             face_value  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.face_value  ELSE face_value  END,
+             face_crnc   = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.face_crnc   ELSE face_crnc   END,
+             list_level  = CASE WHEN tech$expiration_dt = '2999-12-31' AND excluded.tech$expiration_dt = '2999-12-31' THEN excluded.list_level  ELSE list_level  END

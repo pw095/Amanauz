@@ -129,8 +129,8 @@ SELECT
                    WHERE sat.clndr_dt = src.clndr_dt
                      AND sat.holiday_flag = src.holiday_flag)
 ON CONFLICT(clndr_dt)
-DO UPDATE
-   SET tech$load_id = excluded.tech$load_id,
-       tech$load_dt = excluded.tech$load_dt,
-       tech$record_source = excluded.tech$record_source,
-       holiday_flag = excluded.holiday_flag
+   DO UPDATE
+         SET tech$load_id       = excluded.tech$load_id,
+             tech$load_dt       = excluded.tech$load_dt,
+             tech$record_source = excluded.tech$record_source,
+             holiday_flag       = excluded.holiday_flag

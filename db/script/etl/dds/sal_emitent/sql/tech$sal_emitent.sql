@@ -3,9 +3,9 @@ INSERT
   (
     tech$load_id,
     tech$hash_key,
-    tech$record_source,
     tech$load_dt,
     tech$last_seen_dt,
+    tech$record_source,
     emitent_master_hash_key,
     emitent_duplicate_hash_key
   )
@@ -53,9 +53,9 @@ WITH
 SELECT
        :tech$load_id                   AS tech$load_id,
        pre.tech$hash_key,
-       'master_data'                   AS tech$record_source,
        pre.tech$load_dt,
        pre.tech$last_seen_dt,
+       'master_data'                   AS tech$record_source,
        emitent_master.tech$hash_key    AS emitent_master_hash_key,
        emitent_duplicate.tech$hash_key AS emitent_duplicate_hash_key
   FROM w_pre pre

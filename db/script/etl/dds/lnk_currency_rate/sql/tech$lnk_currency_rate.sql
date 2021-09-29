@@ -4,8 +4,8 @@ INSERT
     tech$load_id,
     tech$hash_key,
     tech$load_dt,
-    tech$record_source,
     tech$last_seen_dt,
+    tech$record_source,
     trade_dt,
     crnc_code
   )
@@ -41,17 +41,16 @@ WITH
                                         src.foreign_currency_dictionary dict
                                             ON dict.id = rate.id
                                            AND dict.tech$expiration_dt = '2999-12-31'
-                                  WHERE 1 = 1
-                                     OR rate.tech$effective_dt >= :tech$effective_dt)))
+                                  WHERE rate.tech$effective_dt >= :tech$effective_dt)))
           GROUP BY
                    tech$hash_key
      )
 SELECT
-       :tech$load_id          AS tech$load_id,
+       :tech$load_id           AS tech$load_id,
        pre.tech$hash_key,
        pre.tech$load_dt,
-       crnc.tech$record_source,
        pre.tech$last_seen_dt,
+       crnc.tech$record_source,
        pre.trade_dt,
        pre.crnc_code
   FROM w_pre pre

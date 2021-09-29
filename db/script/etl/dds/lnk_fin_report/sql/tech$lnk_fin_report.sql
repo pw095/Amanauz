@@ -43,7 +43,6 @@ WITH
                                 report_dt
                            FROM (SELECT
                                         tech$effective_dt,
-                                        tech$expiration_dt,
                                         tech$last_seen_dt,
                                         emitent_name,
                                         currency,
@@ -60,16 +59,19 @@ SELECT
        pre.tech$hash_key,
        pre.tech$load_dt,
        pre.tech$last_seen_dt,
-       'moex.com'             AS tech$record_source,
+       'master_data'          AS tech$record_source,
        pre.currency           AS crnc_code,
        pre.fin_stmt_code      AS fs_code,
-       sat_emit.tech$hash_key AS emitent_hash_key,
+       hub_emit.tech$hash_key AS emitent_hash_key,
        pre.report_dt
   FROM w_pre pre
        JOIN
-       sat_emitent_master_data sat_emit
-           ON sat_emit.short_name = pre.emitent_name
-          AND sat_emit.tech$expiration_dt = '2999-12-31'
+       src.master_data_emitent src_emit
+           ON src_emit.short_name = pre.emitent_name
+          AND src_emit.tech$expiration_dt = '2999-12-31'
+       JOIN
+       hub_emitent hub_emit
+           ON hub_emit.code = src_emit.full_name
  WHERE EXISTS(SELECT
                      NULL
                 FROM ref_currency crnc

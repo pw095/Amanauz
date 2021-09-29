@@ -11,6 +11,6 @@ CREATE TABLE sat_emitent_moex
     inn                TEXT,
     okpo               TEXT,
     PRIMARY KEY(tech$hash_key, tech$effective_dt),
-    FOREIGN KEY (tech$hash_key) REFERENCES hub_emitent(tech$hash_key) ON DELETE CASCADE
+    FOREIGN KEY(tech$hash_key) REFERENCES hub_emitent(tech$hash_key) ON DELETE CASCADE
   )
 WITHOUT ROWID;

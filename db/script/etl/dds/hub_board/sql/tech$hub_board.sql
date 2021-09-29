@@ -3,9 +3,9 @@ INSERT
   (
     tech$load_id,
     tech$hash_key,
-    tech$record_source,
     tech$load_dt,
     tech$last_seen_dt,
+    tech$record_source,
     board_id
   )
 WITH
@@ -13,9 +13,9 @@ WITH
      (
          SELECT
                 sha1(board_id)         AS tech$hash_key,
-                tech$record_source,
                 MIN(tech$effective_dt) AS tech$load_dt,
                 MAX(tech$last_seen_dt) AS tech$last_seen_dt,
+                tech$record_source,
                 board_id
            FROM (SELECT
                         'moex.com'         AS tech$record_source,
@@ -57,8 +57,7 @@ WITH
                                 tech$last_seen_dt,
                                 board_id
                            FROM src.security_daily_info_shares)
-                  WHERE board_id IS NOT NULL
-                    AND board_id != ""
+                  WHERE NULLIF(board_id, '') IS NOT NULL
                   UNION ALL
                  SELECT
                         'master_data'      AS tech$record_source,
@@ -77,8 +76,8 @@ WITH
 SELECT
        :tech$load_id      AS tech$load_id,
        tech$hash_key,
-       tech$record_source,
        tech$load_dt,
        tech$last_seen_dt,
+       tech$record_source,
        board_id
   FROM w_pre

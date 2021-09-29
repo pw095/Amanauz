@@ -65,14 +65,17 @@ SELECT
        pre.value
   FROM w_pre pre
        JOIN
-       sat_emitent_master_data sat_emitent
-           ON sat_emitent.short_name = pre.emitent_name
-          AND sat_emitent.tech$expiration_dt = '2999-12-31'
+       src.master_data_emitent src_emit
+           ON src_emit.short_name = pre.emitent_name
+          AND src_emit.tech$expiration_dt = '2999-12-31'
+       JOIN
+       hub_emitent hub_emit
+           ON hub_emit.code = src_emit.full_name
        JOIN
        lnk_fin_report lnk_fin
            ON lnk_fin.crnc_code = pre.currency
           AND lnk_fin.fs_code = pre.fin_stmt_code
-          AND lnk_fin.emitent_hash_key = sat_emitent.tech$hash_key
+          AND lnk_fin.emitent_hash_key = hub_emit.tech$hash_key
           AND lnk_fin.report_dt = pre.report_dt
 WINDOW wnd AS (PARTITION BY lnk_fin.tech$hash_key
                    ORDER BY pre.tech$effective_dt)

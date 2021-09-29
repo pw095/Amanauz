@@ -12,9 +12,9 @@ CREATE TABLE lnk_fin_report
     report_dt          TEXT    NOT NULL,
     PRIMARY KEY(tech$hash_key),
     UNIQUE(crnc_code, fs_code, emitent_hash_key, report_dt),
-    FOREIGN KEY(crnc_code)        REFERENCES ref_currency(crnc_code),
-    FOREIGN KEY(fs_code)          REFERENCES ref_fin_statement(fs_code),
-    FOREIGN KEY(emitent_hash_key) REFERENCES hub_emitent(tech$hash_key),
-    FOREIGN KEY(report_dt)        REFERENCES ref_calendar(clndr_dt)
+    FOREIGN KEY(crnc_code)        REFERENCES ref_currency(crnc_code)     ON DELETE CASCADE,
+    FOREIGN KEY(fs_code)          REFERENCES ref_fin_statement(fs_code)  ON DELETE CASCADE,
+    FOREIGN KEY(emitent_hash_key) REFERENCES hub_emitent(tech$hash_key)  ON DELETE CASCADE,
+    FOREIGN KEY(report_dt)        REFERENCES ref_calendar(clndr_dt)      ON DELETE CASCADE
   )
 WITHOUT ROWID;

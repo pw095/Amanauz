@@ -106,7 +106,7 @@ SELECT
     WHERE src.upsert_flg = 'UPSERT'
        OR src.upsert_flg = mrg.flg)
  WHERE 1 = 1
- ON CONFLICT(crnc_code, tech$effective_dt)
- DO UPDATE
-       SET tech$expiration_dt = excluded.tech$expiration_dt,
-           tech$load_id = excluded.tech$load_id
+ON CONFLICT(crnc_code, tech$effective_dt)
+   DO UPDATE
+         SET tech$expiration_dt = excluded.tech$expiration_dt,
+             tech$load_id       = excluded.tech$load_id

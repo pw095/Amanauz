@@ -33,7 +33,8 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code IN('emitent_fin_statement'))
+                         AND ent.ent_code IN ('emitent_fin_statement',
+                                              'master_data_emitent'))
          UNION ALL
         SELECT
                elm_id
@@ -47,5 +48,4 @@ SELECT
                              NULL
                         FROM tbl_entity ent
                        WHERE ent.ent_id = elm.elm_ent_id
-                         AND ent.ent_code IN ('lnk_fin_report',
-                                              'sat_emitent_master_data'))) parent;
+                         AND ent.ent_code IN ('lnk_fin_report'))) parent;

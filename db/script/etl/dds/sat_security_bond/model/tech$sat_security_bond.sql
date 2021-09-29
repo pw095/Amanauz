@@ -10,10 +10,10 @@ CREATE TABLE tech$sat_security_bond
     coupon_value       REAL    NOT NULL,
     coupon_percent     REAL,
     coupon_period      INTEGER NOT NULL,
-    mature_date        TEXT    NOT NULL,
-    buy_back_date      TEXT,
+    mature_dt          TEXT    NOT NULL,
+    buy_back_dt        TEXT,
     buy_back_price     REAL,
-    offer_date         TEXT    NOT NULL,
+    offer_dt           TEXT,
     PRIMARY KEY(tech$hash_key, tech$effective_dt)
   )
 WITHOUT ROWID;

@@ -199,6 +199,14 @@ public final class Meta {
             if (entity.getInsertCount() + entity.getUpdateCount() + entity.getDeleteCount() > 0) {
                 if (entity instanceof PeriodEntity) {
                     stmtString = getQuery(getInstance().getProperty("metaSqlDirectory").concat("put_entity_relation_load_log.sql"));
+
+                    System.out.println("ent_code = " + entity.getEntityCode());
+                    System.out.println("ell_id = " + entity.getEntityLoadLogId());
+                    System.out.println("rll_mode = " + entity.getEntityLoadMode().getDbMode());
+                    System.out.println("eff_from_dt = " + ((PeriodEntity) entity).getEffectiveFromDt());
+                    System.out.println("eff_to_dt = " + ((PeriodEntity) entity).getEffectiveToDt());
+                    System.out.println("\n");
+
                     try (PreparedStatement stmt = conn.prepareStatement(stmtString)) {
                         stmt.setLong(1, entity.getEntityLoadLogId());
                         stmt.setString(2, entity.getEntityLoadMode().getDbMode());

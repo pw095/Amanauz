@@ -3,9 +3,9 @@ INSERT
   (
     tech$load_id,
     tech$hash_key,
-    tech$record_source,
     tech$load_dt,
     tech$last_seen_dt,
+    tech$record_source,
     index_hash_key,
     security_hash_key
   )
@@ -38,17 +38,16 @@ WITH
                                 JOIN
                                 hub_security hub_sec
                                     ON hub_sec.tech$hash_key = lnk_ind_sec.security_hash_key
-                          WHERE 1 = 1
-                             OR lnk_ind_sec.trade_dt >= :trade_dt))
+                          WHERE lnk_ind_sec.trade_dt >= :trade_dt))
           GROUP BY
                    tech$hash_key
      )
 SELECT
-       :tech$load_id              AS tech$load_id,
+       :tech$load_id         AS tech$load_id,
        pre.tech$hash_key,
-       'moex.com'                 AS tech$record_source,
        pre.tech$load_dt,
        pre.tech$last_seen_dt,
+       'moex.com'            AS tech$record_source,
        index_hash_key,
        security_hash_key
   FROM w_pre pre

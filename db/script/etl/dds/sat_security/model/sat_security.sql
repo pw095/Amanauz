@@ -17,6 +17,6 @@ CREATE TABLE sat_security
     face_crnc          TEXT,
     list_level         INTEGER NOT NULL,
     PRIMARY KEY(tech$hash_key, tech$effective_dt),
-    FOREIGN KEY (tech$hash_key) REFERENCES hub_security(tech$hash_key) ON DELETE CASCADE
+    FOREIGN KEY(tech$hash_key) REFERENCES hub_security(tech$hash_key) ON DELETE CASCADE
   )
 WITHOUT ROWID;

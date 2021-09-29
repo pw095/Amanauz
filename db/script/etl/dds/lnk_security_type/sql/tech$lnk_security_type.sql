@@ -3,9 +3,9 @@ INSERT
   (
     tech$load_id,
     tech$hash_key,
-    tech$record_source,
     tech$load_dt,
     tech$last_seen_dt,
+    tech$record_source,
     security_hash_key,
     security_type_hash_key
   )
@@ -89,9 +89,9 @@ WITH
 SELECT
        :tech$load_id               AS tech$load_id,
        pre.tech$hash_key,
-       'moex.com'                  AS tech$record_source,
        pre.tech$load_dt,
        pre.tech$last_seen_dt,
+       'moex.com'                  AS tech$record_source,
        security.tech$hash_key      AS security_hash_key,
        security_type.tech$hash_key AS security_type_hash_key
   FROM w_pre pre

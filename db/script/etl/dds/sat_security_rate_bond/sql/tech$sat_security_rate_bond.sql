@@ -63,7 +63,9 @@ WITH
                                                 duration
                                            FROM src.security_rate_bonds
                                           WHERE tech$effective_dt >= :tech$effective_dt)))
-                 WINDOW wnd AS (PARTITION BY security_id
+                 WINDOW wnd AS (PARTITION BY trade_dt,
+                                             security_id,
+                                             board_id
                                     ORDER BY tech$effective_dt))
           WHERE hash_value != lag_hash_value
              OR lag_hash_value IS NULL
@@ -73,7 +75,7 @@ SELECT
        lnk.tech$hash_key,
        pre.tech$effective_dt,
        LEAD(DATE(pre.tech$effective_dt, '-1 DAY'), 1, '2999-12-31') OVER (wnd) AS tech$expiration_dt,
-       'moex.com'                                                              AS tech$record_source,
+       lnk.tech$record_source,
        pre.hash_value                                                          AS tech$hash_value,
        pre.accrued_interest,
        pre.yield,
@@ -90,5 +92,5 @@ SELECT
            ON lnk.security_hash_key = security.tech$hash_key
           AND lnk.board_hash_key = board.tech$hash_key
           AND lnk.trade_dt = pre.trade_dt
-WINDOW wnd AS (PARTITION BY pre.security_id
+WINDOW wnd AS (PARTITION BY lnk.tech$hash_key
                    ORDER BY pre.tech$effective_dt)

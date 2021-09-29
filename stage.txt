@@ -13,6 +13,8 @@
 .read tbl_file_load_queue.sql
 .cd ../../etl/stage
 .read data/tbl_layer.sql
+.read emitent_fin_statement/data/tbl_entity.sql
+.read emitent_fin_statement/data/tbl_entity_layer_map.sql
 .read foreign_currency_dictionary/data/tbl_entity.sql
 .read foreign_currency_dictionary/data/tbl_entity_layer_map.sql
 .read foreign_currency_rate/data/tbl_entity.sql
@@ -68,12 +70,12 @@
 .read default_data_currency/data/tbl_entity.sql
 .read default_data_currency/data/tbl_entity_layer_map.sql
 
-
 .cd ../../../file
 .save meta.db
 
 .open stage.db
 .cd ../script/etl/stage
+.read emitent_fin_statement/model/emitent_fin_statement.sql
 .read foreign_currency_dictionary/model/foreign_currency_dictionary.sql
 .read foreign_currency_rate/model/foreign_currency_rate.sql
 .read index_security_weight/model/index_security_weight.sql

@@ -1,6 +1,10 @@
 .open db/file/meta.db
 .cd db/script/etl/repl
 .read data/tbl_layer.sql
+
+.read emitent_fin_statement/data/tbl_entity.sql
+.read emitent_fin_statement/data/tbl_entity_layer_map.sql
+.read emitent_fin_statement/data/tbl_elm_dependency.sql
 .read foreign_currency_dictionary/data/tbl_entity.sql
 .read foreign_currency_dictionary/data/tbl_entity_layer_map.sql
 .read foreign_currency_dictionary/data/tbl_elm_dependency.sql
@@ -83,6 +87,8 @@
 
 .open repl.db
 .cd ../script/etl/repl
+.read emitent_fin_statement/model/emitent_fin_statement.sql
+.read emitent_fin_statement/model/tech$emitent_fin_statement.sql
 .read foreign_currency_dictionary/model/foreign_currency_dictionary.sql
 .read foreign_currency_dictionary/model/tech$foreign_currency_dictionary.sql
 .read foreign_currency_rate/model/foreign_currency_rate.sql
