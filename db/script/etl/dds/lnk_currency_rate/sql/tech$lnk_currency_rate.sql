@@ -37,8 +37,8 @@ WITH
                                         trade_date                       AS trade_dt,
                                         IFNULL(iso_char_code, 'UNKNOWN') AS crnc_code
                                    FROM (SELECT
-                                                rate.tech$effective_dt,
-                                                rate.tech$last_seen_dt,
+                                                MAX(rate.tech$effective_dt, dict.tech$effective_dt) AS tech$effective_dt,
+                                                MAX(rate.tech$last_seen_dt, dict.tech$last_seen_dt) AS tech$last_seen_dt,
                                                 rate.trade_date,
                                                 dict.iso_char_code
                                            FROM src.foreign_currency_rate rate
@@ -49,9 +49,9 @@ WITH
                                           WHERE rate.tech$effective_dt >= :tech$effective_dt
                                           UNION ALL
                                          SELECT
-                                                dict.tech$effective_dt,
-                                                dict.tech$last_seen_dt,
-                                                rate.trade_date         AS trade_dt,
+                                                MAX(dict.tech$effective_dt, rate.tech$effective_dt) AS tech$effective_dt,
+                                                MAX(dict.tech$last_seen_dt, rate.tech$last_seen_dt) AS tech$last_seen_dt,
+                                                rate.trade_date,
                                                 dict.iso_char_code
                                            FROM src.foreign_currency_dictionary dict
                                                 JOIN
