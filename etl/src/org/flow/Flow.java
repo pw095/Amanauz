@@ -165,7 +165,6 @@ public class Flow {
         entityList.add(new DetailDataEntity(flow, "lnk_emitent_security"));
         entityList.add(new DetailDataEntity(flow, "lnk_fin_report"));
         entityList.add(new DetailDataEntity(flow, "lnk_index_security"));
-        entityList.add(new DetailDataEntity(flow, "lnk_index_security_bus"));
         entityList.add(new DetailDataEntity(flow, "lnk_security_board"));
         entityList.add(new DetailDataEntity(flow, "lnk_security_rate"));
         entityList.add(new DetailDataEntity(flow, "lnk_security_type"));
@@ -178,6 +177,16 @@ public class Flow {
         }
         entityList.clear();
 
+
+
+        entityList.add(new DetailDataEntity(flow, "lnk_index_security_bus"));
+
+
+        for (AbstractEntity entity : entityList) {
+            entity.call();
+        }
+        entityList.clear();
+        
 
 
         entityList.add(new DetailDataEntity(flow, "sat_board"));
