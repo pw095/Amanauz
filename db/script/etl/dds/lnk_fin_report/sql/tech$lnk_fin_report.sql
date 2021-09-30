@@ -10,7 +10,7 @@ INSERT
     fs_code,
     emitent_hash_key,
     report_dt
-  )ы
+  )
 WITH
      w_pre AS
      (
@@ -42,8 +42,8 @@ WITH
                                 full_name                                                     AS emitent_name,
                                 report_dt
                            FROM (SELECT
-                                        fs.tech$effective_dt,
-                                        fs.tech$last_seen_dt,
+                                        MAX(fs.tech$effective_dt, emit.tech$effective_dt) AS tech$effective_dt,
+                                        MAX(fs.tech$last_seen_dt, emit.tech$last_seen_dt) AS tech$last_seen_dt,
                                         emit.full_name,
                                         fs.currency,
                                         fs.report_dt,
@@ -55,8 +55,8 @@ WITH
                                            AND fs.tech$expiration_dt BETWEEN emit.tech$effective_dt AND emit.tech$expiration_dt
                                   UNION ALL
                                  SELECT
-                                        emit.tech$effective_dt,
-                                        emit.tech$last_seen_dt,
+                                        MAX(emit.tech$effective_dt, fs.tech$effective_dt) AS tech$effective_dt,
+                                        MAX(emit.tech$last_seen_dt, fs.tech$last_seen_dt) AS tech$last_seen_dt,
                                         emit.full_name,
                                         fs.currency,
                                         fs.report_dt,
