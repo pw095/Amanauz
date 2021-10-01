@@ -7,7 +7,7 @@ INSERT
     tech$last_seen_dt,
     tech$record_source,
     security_id
-  )
+  );
 WITH
      w_pre AS
      (
@@ -21,69 +21,62 @@ WITH
            FROM (SELECT
                         'moex.com'         AS tech$record_source,
                         tech$effective_dt,
-                        tech$expiration_dt,
                         tech$last_seen_dt,
                         security_id
                    FROM (SELECT
                                 tech$effective_dt,
-                                tech$expiration_dt,
                                 tech$last_seen_dt,
                                 security_id
                            FROM src.security_emitent_map
                           UNION ALL
                          SELECT
                                 tech$effective_dt,
-                                tech$expiration_dt,
-                                tech$last_seen_dt,
-                                security_id
-                           FROM src.security_rate_bonds
-                          UNION ALL
-                         SELECT
-                                tech$effective_dt,
-                                tech$expiration_dt,
-                                tech$last_seen_dt,
-                                security_id
-                           FROM src.security_rate_shares
-                          UNION ALL
-                         SELECT
-                                tech$effective_dt,
-                                tech$expiration_dt,
                                 tech$last_seen_dt,
                                 security_id
                            FROM src.security_daily_info_bonds
                           UNION ALL
                          SELECT
                                 tech$effective_dt,
-                                tech$expiration_dt,
                                 tech$last_seen_dt,
                                 security_id
                            FROM src.security_daily_info_shares
                           UNION ALL
                          SELECT
                                 tech$effective_dt,
-                                tech$expiration_dt,
-                                tech$last_seen_dt,
-                                index_id
-                           FROM src.index_security_weight
-                          UNION ALL
-                         SELECT
-                                tech$effective_dt,
-                                tech$expiration_dt,
                                 tech$last_seen_dt,
                                 security_id
-                           FROM src.index_security_weight)
+                           FROM (SELECT
+                                        tech$effective_dt,
+                                        tech$last_seen_dt,
+                                        security_id
+                                   FROM src.security_rate_bonds
+                                  UNION ALL
+                                 SELECT
+                                        tech$effective_dt,
+                                        tech$last_seen_dt,
+                                        security_id
+                                   FROM src.security_rate_shares
+                                  UNION ALL
+                                 SELECT
+                                        tech$effective_dt,
+                                        tech$last_seen_dt,
+                                        index_id AS security_id
+                                   FROM src.index_security_weight
+                                  UNION ALL
+                                 SELECT
+                                        tech$effective_dt,
+                                        tech$last_seen_dt,
+                                        security_id
+                                   FROM src.index_security_weight)
+                          WHERE tech$effective_dt >= :tech$effective_dt)
                   WHERE NULLIF(security_id, '') IS NOT NULL
                   UNION ALL
                  SELECT
                         'master_data'      AS tech$record_source,
                         tech$effective_dt,
-                        tech$expiration_dt,
                         tech$last_seen_dt,
                         security_id
                    FROM src.default_data_security)
-          WHERE (   1 = 1
-                 OR tech$effective_dt >= :tech$effective_dt)
-            AND tech$expiration_dt = '2999-12-31'
           GROUP BY
                    security_id
      )
