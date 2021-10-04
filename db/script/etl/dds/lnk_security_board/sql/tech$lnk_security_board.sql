@@ -39,22 +39,26 @@ WITH
                                         IFNULL(board_id,    'UNKNOWN') AS board_id
                                    FROM (SELECT
                                                 tech$effective_dt,
-                                                tech$expiration_dt,
                                                 tech$last_seen_dt,
-                                                security_id,
-                                                board_id
-                                           FROM src.security_daily_info_shares
-                                          UNION ALL
-                                         SELECT
-                                                tech$effective_dt,
-                                                tech$expiration_dt,
-                                                tech$last_seen_dt,
-                                                security_id,
-                                                board_id
-                                           FROM src.security_daily_info_bonds)
+                                                NULLIF(security_id, '') AS security_id,
+                                                NULLIF(board_id,    '') AS board_id
+                                           FROM (SELECT
+                                                        tech$effective_dt,
+                                                        tech$last_seen_dt,
+                                                        security_id,
+                                                        board_id
+                                                   FROM src.security_daily_info_shares
+                                                  UNION ALL
+                                                 SELECT
+                                                        tech$effective_dt,
+                                                        tech$last_seen_dt,
+                                                        security_id,
+                                                        board_id
+                                                   FROM src.security_daily_info_bonds)
+                                          WHERE 1 = 1
+                                             OR tech$effective_dt >= :tech$effective_dt)
                                   WHERE NOT (security_id IS NULL AND board_id IS NULL)
-                                    AND (   1 = 1
-                                         OR tech$effective_dt >= :tech$effective_dt))))
+)))
                   GROUP BY
                            tech$hash_key
      )
