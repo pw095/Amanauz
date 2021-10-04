@@ -21,7 +21,6 @@ WITH
            FROM (SELECT
                         'moex.com'          AS tech$record_source,
                         tech$effective_dt,
-                        tech$expiration_dt,
                         tech$last_seen_dt,
                         CAST(id AS VARCHAR) AS id
                    FROM src.security_types
@@ -30,13 +29,11 @@ WITH
                  SELECT
                         'master_data'      AS tech$record_source,
                         tech$effective_dt,
-                        tech$expiration_dt,
                         tech$last_seen_dt,
                         security_type_id   AS id
                    FROM src.default_data_security_type)
           WHERE (   1 = 1
                  OR tech$effective_dt >= :tech$effective_dt)
-            AND tech$expiration_dt = '2999-12-31'
           GROUP BY
                    id
      )
