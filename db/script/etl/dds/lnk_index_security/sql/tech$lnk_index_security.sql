@@ -30,14 +30,21 @@ WITH
                    FROM (SELECT
                                 tech$effective_dt,
                                 tech$last_seen_dt,
-                                '_' || IFNULL(CAST(trade_date  AS TEXT), '!@#$%^&*') ||
+                                '_' || IFNULL(CAST(trade_dt    AS TEXT), '!@#$%^&*') ||
                                 '_' || IFNULL(CAST(index_id    AS TEXT), '!@#$%^&*') ||
                                 '_' || IFNULL(CAST(security_id AS TEXT), '!@#$%^&*') || '_' AS concat_value,
-                                trade_date                                                  AS trade_dt,
+                                trade_dt,
                                 index_id,
                                 security_id
-                           FROM src.index_security_weight
-                          WHERE tech$effective_dt >= :tech$effective_dt))
+                           FROM (SELECT
+                                        tech$effective_dt,
+                                        tech$last_seen_dt,
+                                        trade_date              AS trade_dt,
+                                        NULLIF(index_id,    '') AS index_id,
+                                        NULLIF(security_id, '') AS security_id
+                                   FROM src.index_security_weight
+                                  WHERE tech$effective_dt >= :tech$effective_dt)
+                          W)
           GROUP BY
                    tech$hash_key
      )
