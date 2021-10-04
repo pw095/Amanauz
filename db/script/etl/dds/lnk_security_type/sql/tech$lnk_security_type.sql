@@ -13,8 +13,9 @@ WITH
      w_raw AS
      (
          SELECT
-                MIN(tech$effective_dt) AS tech$load_dt,
-                MAX(tech$last_seen_dt) AS tech$last_seen_dt,
+                tech$effective_dt,
+                tech$expiration_dt,
+                tech$last_seen_dt,
                 record_source,
                 security_id,
                 security_type
@@ -23,8 +24,8 @@ WITH
                         tech$expiration_dt,
                         tech$last_seen_dt,
                         record_source,
-                        security_id,
-                        security_type
+                        NULLIF(security_id,   '') AS security_id,
+                        NULLIF(security_type, '') AS security_type
                    FROM (SELECT
                                 tech$effective_dt,
                                 tech$expiration_dt,
@@ -41,48 +42,60 @@ WITH
                                 'security_daily_info_bonds' AS record_source,
                                 security_id,
                                 security_type
-                           FROM src.security_daily_info_bonds)
-                  WHERE NOT (security_id IS NULL AND security_type IS NULL)
-                    AND (   1 = 1
-                         OR tech$effective_dt >= :tech$effective_dt))
-          GROUP BY
-                   record_source,
-                   security_id,
-                   security_type
+                           FROM src.security_daily_info_bonds))
+          WHERE NOT (security_id IS NULL AND security_type IS NULL)
+            AND (   1 = 1
+                 OR tech$effective_dt >= :tech$effective_dt)
      ),
      w_pre AS
      (
          SELECT
                 tech$hash_key,
-                MIN(tech$load_dt)      AS tech$load_dt,
+                MIN(tech$effective_dt) AS tech$load_dt,
                 MAX(tech$last_seen_dt) AS tech$last_seen_dt,
                 MIN(security_id)       AS security_id,
                 MIN(security_type_id)  AS security_type
            FROM (SELECT
                         sha1(concat_value) AS tech$hash_key,
-                        tech$load_dt,
+                        tech$effective_dt,
                         tech$last_seen_dt,
                         security_id,
                         security_type_id
                    FROM (SELECT
-                                tech$load_dt,
+                                tech$effective_dt,
                                 tech$last_seen_dt,
                                 '_' || IFNULL(CAST(security_id      AS TEXT), '!@#$%^&*') ||
                                 '_' || IFNULL(CAST(security_type_id AS TEXT), '!@#$%^&*') || '_' AS concat_value,
                                 security_id,
                                 security_type_id
                            FROM (SELECT
-                                        raw.tech$load_dt,
-                                        raw.tech$last_seen_dt,
+                                        tech$effective_dt,
+                                        tech$last_seen_dt,
+                                        IFNULL(security_id,                    'UNKNOWN') AS security_id,
+                                        IFNULL(CAST(security_type_id AS TEXT), 'UNKNOWN') AS security_type_id
+                           FROM (SELECT
+                                        MAX(raw.tech$effective_dt, stm.tech$effective_dt) AS tech$effective_dt,
+                                        MAX(raw.tech$last_seen_dt, stm.tech$last_seen_dt) AS tech$last_seen_dt,
                                         raw.security_id,
-                                        IFNULL(security_id,                        'UNKNOWN') AS security_id,
-                                        IFNULL(CAST(stm.security_type_id AS TEXT), 'UNKNOWN') AS security_type_id
+                                        stm.security_type_id
                                    FROM w_raw raw
-                                        LEFT JOIN
+                                        JOIN
                                         src.master_data_security_type_map stm
                                             ON stm.type_id = raw.security_type
                                            AND stm.table_name = raw.record_source
-                                           AND stm.tech$expiration_dt = '2999-12-31')))
+                                           AND raw.tech$expiration_dt BETWEEN stm.tech$effective_dt AND stm.tech$expiration_dt
+                                  UNION ALL
+                                 SELECT
+                                        MAX(stm.tech$effective_dt, raw.tech$effective_dt) AS tech$effective_dt,
+                                        MAX(stm.tech$last_seen_dt, raw.tech$last_seen_dt) AS tech$last_seen_dt,
+                                        raw.security_id,
+                                        stm.security_type_id
+                                   FROM src.master_data_security_type_map stm
+                                        JOIN
+                                        w_raw raw
+                                            ON raw.security_type = stm.type_id
+                                           AND raw.record_source = stm.table_name
+                                           AND stm.tech$expiration_dt BETWEEN raw.tech$effective_dt AND raw.tech$expiration_dt))))
           GROUP BY
                    tech$hash_key
      )
