@@ -36,17 +36,16 @@ WITH
                                 emitent_full_name
                            FROM (SELECT
                                         tech$effective_dt,
-                                        tech$expiration_dt,
                                         tech$last_seen_dt,
                                         source_system_code,
-                                        emitent_source_name,
-                                        emitent_full_name
-                                   FROM src.master_data_emitent_map
-                                  WHERE (   1 = 1
-                                         OR tech$effective_dt >= :tech$effective_dt)
-                                    AND NULLIF(emitent_source_name, '') IS NOT NULL
-                                    AND NULLIF(emitent_full_name, '')   IS NOT NULL
-                                    AND tech$expiration_dt = '2999-12-31')))
+                                        NULLIF(emitent_source_name, '') AS emitent_source_name,
+                                        NULLIF(emitent_full_name,   '') AS emitent_full_name
+                                   FROM src.master_data_emitent_map)
+                          WHERE emitent_source_name IS NOT NULL
+                            AND emitent_full_name IS NOT NULL
+                            AND (   1 = 1
+                                 OR tech$effective_dt >= :tech$effective_dt)
+                            AND tech$expiration_dt = '2999-12-31'))
           GROUP BY
                    tech$hash_key
      )
