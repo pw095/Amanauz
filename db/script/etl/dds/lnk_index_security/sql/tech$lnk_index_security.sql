@@ -44,7 +44,7 @@ WITH
                                         NULLIF(security_id, '') AS security_id
                                    FROM src.index_security_weight
                                   WHERE tech$effective_dt >= :tech$effective_dt)
-                          W)
+                          WHERE NOT (index_id IS NULL AND security_id IS NULL))
           GROUP BY
                    tech$hash_key
      )
