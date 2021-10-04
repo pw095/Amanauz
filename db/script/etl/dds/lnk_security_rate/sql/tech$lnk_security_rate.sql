@@ -46,18 +46,25 @@ WITH
                                                 tech$effective_dt,
                                                 tech$last_seen_dt,
                                                 trade_date,
-                                                security_id,
-                                                board_id
-                                           FROM src.security_rate_shares
-                                          UNION ALL
-                                         SELECT
-                                                tech$effective_dt,
-                                                tech$last_seen_dt,
-                                                trade_date,
-                                                security_id,
-                                                board_id
-                                           FROM src.security_rate_bonds)
-                                  WHERE tech$effective_dt >= :tech$effective_dt)))
+                                                NULLIF(security_id, '') AS security_id,
+                                                NULLIF(board_id,    '') AS board_id
+                                           FROM (SELECT
+                                                        tech$effective_dt,
+                                                        tech$last_seen_dt,
+                                                        trade_date,
+                                                        security_id,
+                                                        board_id
+                                                   FROM src.security_rate_shares
+                                                  UNION ALL
+                                                 SELECT
+                                                        tech$effective_dt,
+                                                        tech$last_seen_dt,
+                                                        trade_date,
+                                                        security_id,
+                                                        board_id
+                                                   FROM src.security_rate_bonds))
+                                  WHERE NOT (security_id IS NULL AND board_id IS NULL)
+                                    AND tech$effective_dt >= :tech$effective_dt)))
           GROUP BY
                    tech$hash_key
      )
